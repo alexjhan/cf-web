@@ -1,0 +1,12 @@
+{
+  "source_file": "output\\477-RESOLUCIÓN 304.pdf",
+  "total_chunks": 0,
+  "chunks": [],
+  "metadata": {
+    "original_spans": 388,
+    "filtered_spans": 320,
+    "extracted_articles": 0,
+    "final_chunks": 0,
+    "processing_method": "legal_document_cleaner_v1"
+  }
+}

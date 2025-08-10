@@ -1,0 +1,47 @@
+[
+  {
+    "fecha": "2025-07-31",
+    "titulo": "Nuevo Laboratorio Metalúrgico Inaugurado",
+    "descripcionCorta": "Inauguración de laboratorio con equipos de última generación.",
+    "descripcionLarga": "Se inauguró el nuevo laboratorio con equipos de última generación para prácticas y proyectos de investigación. Este espacio permitirá a los estudiantes y docentes realizar investigaciones avanzadas, experimentos y trabajos colaborativos en el área de metalurgia. La ceremonia contó con la presencia de autoridades y especialistas del sector.",
+    "autor": "Admin",
+    "categoria": ["Eventos"],
+    "imagen": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "fecha": "2025-07-15",
+    "titulo": "Conferencia Internacional de Materiales",
+    "descripcionCorta": "Participación destacada en conferencia internacional.",
+    "descripcionLarga": "Docentes y estudiantes participaron en la conferencia internacional, presentando investigaciones innovadoras sobre nuevos materiales y procesos metalúrgicos. El evento reunió a expertos de todo el mundo y permitió el intercambio de conocimientos y experiencias en el campo de la ciencia de materiales.",
+    "autor": "Admin",
+    "categoria": ["Conferencias"],
+    "imagen": "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "fecha": "2025-07-10",
+    "titulo": "Visita Técnica a Planta Siderúrgica",
+    "descripcionCorta": "Estudiantes visitan planta para conocer procesos industriales.",
+    "descripcionLarga": "Un grupo de estudiantes realizó una visita técnica a la planta siderúrgica local, donde pudieron observar en terreno los procesos de fundición y laminación, así como interactuar con ingenieros de la industria.",
+    "autor": "Dra. López",
+    "categoria": ["Visitas", "Industria"],
+    "imagen": "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "fecha": "2025-06-28",
+    "titulo": "Premio Nacional a Proyecto de Investigación",
+    "descripcionCorta": "Reconocimiento a la innovación en materiales.",
+    "descripcionLarga": "El proyecto de investigación sobre nuevos materiales compuestos recibió el Premio Nacional de Innovación, destacando el trabajo colaborativo entre docentes y alumnos de la carrera.",
+    "autor": "Ing. Ramírez",
+    "categoria": ["Premios", "Investigación"],
+    "imagen": "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "fecha": "2025-06-15",
+    "titulo": "Charla Magistral: Futuro de la Metalurgia",
+    "descripcionCorta": "Expertos internacionales debaten sobre tendencias.",
+    "descripcionLarga": "En el auditorio principal se realizó una charla magistral con la participación de expertos internacionales, quienes analizaron los desafíos y oportunidades de la metalurgia en el siglo XXI.",
+    "autor": "Invitado Internacional",
+    "categoria": ["Charlas", "Tendencias"],
+    "imagen": "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=600&q=80"
+  }
+]
