@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ProtectedRoute from '../../components/ProtectedRoute/ProtectedRoute';
 
 interface Oportunidad {
   id: number;
@@ -19,7 +20,7 @@ interface Oportunidad {
   activa: boolean;
 }
 
-const AdminOportunidades: React.FC = () => {
+const AdminOportunidadesContent: React.FC = () => {
   const [oportunidades, setOportunidades] = useState<Oportunidad[]>([]);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [editandoId, setEditandoId] = useState<number | null>(null);
@@ -551,6 +552,14 @@ const AdminOportunidades: React.FC = () => {
         )}
       </div>
     </div>
+  );
+};
+
+const AdminOportunidades: React.FC = () => {
+  return (
+    <ProtectedRoute title="Administración de Oportunidades">
+      <AdminOportunidadesContent />
+    </ProtectedRoute>
   );
 };
 

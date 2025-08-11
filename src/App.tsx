@@ -29,6 +29,7 @@ function App() {
         <Route path="/chatbot" element={<ChatBot />} />
         <Route path="/especialidades" element={<Especialidades />} />
         <Route path="/admin" element={<AdminSelector />} />
+        <Route path="/admin-selector" element={<AdminSelector />} />
         <Route path="/admin-especialidades" element={<AdminEspecialidades />} />
         <Route path="/admin-oportunidades" element={<AdminOportunidades />} />
       </Routes>

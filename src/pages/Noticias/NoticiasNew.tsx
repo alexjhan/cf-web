@@ -116,7 +116,79 @@ const Noticias: React.FC = () => {
             {/* Layout principal: Dos columnas */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
               
-              {/* Noticia principal - Izquierda */}
+              {/* Lista de noticias - Izquierda */}
+              <div className="lg:col-span-1">
+                <div className="sticky top-0">
+                  <h2 className="text-xl font-bold text-[#FFD700] mb-6 flex items-center gap-3">
+                    <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#FFD700] to-[#C9B037] flex items-center justify-center text-black text-sm">📋</span>
+                    Lista de Noticias
+                  </h2>
+                  
+                  <div className="space-y-3 max-h-[calc(100vh-200px)] overflow-y-auto pr-2" style={{
+                    scrollbarWidth: 'thin',
+                    scrollbarColor: '#FFD700 transparent'
+                  }}>
+                    {noticiasOrdenadas.map((noticia, index) => (
+                      <div
+                        key={noticia.id}
+                        onClick={() => setSelectedIdx(index)}
+                        className={`group relative p-4 rounded-2xl cursor-pointer transition-all duration-300 border backdrop-blur-md ${
+                          selectedIdx === index
+                            ? 'bg-[#1a1a1a]/60 border-[#FFD700] shadow-2xl shadow-[#FFD700]/20'
+                            : 'bg-[#1a1a1a]/30 border-[#FFD700]/20 hover:border-[#FFD700]/50 hover:bg-[#1a1a1a]/50'
+                        }`}
+                      >
+                        {/* Efecto hover */}
+                        {selectedIdx !== index && (
+                          <div className="absolute -inset-1 bg-gradient-to-r from-[#FFD700]/20 to-[#C9B037]/20 rounded-2xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+                        )}
+                        
+                        {/* Categorías */}
+                        <div className="flex flex-wrap gap-1 mb-3">
+                          {noticia.categoria.slice(0, 2).map((cat: string, i: number) => (
+                            <span 
+                              key={i}
+                              className="px-2 py-1 bg-[#FFD700]/20 text-[#FFD700] rounded-lg text-xs font-bold border border-[#FFD700]/30"
+                            >
+                              {cat}
+                            </span>
+                          ))}
+                          {noticia.destacada && (
+                            <span className="px-2 py-1 bg-gradient-to-r from-red-500/20 to-orange-500/20 text-red-300 rounded-lg text-xs font-bold border border-red-400/30">
+                              ⭐
+                            </span>
+                          )}
+                        </div>
+                        
+                        {/* Título */}
+                        <h3 className={`font-bold mb-2 line-clamp-2 leading-tight ${
+                          selectedIdx === index 
+                            ? 'text-[#FFD700] text-base' 
+                            : 'text-white text-sm group-hover:text-[#FFD700] transition-colors'
+                        }`}>
+                          {noticia.titulo}
+                        </h3>
+                        
+                        {/* Descripción corta */}
+                        <p className="text-gray-400 text-xs mb-3 line-clamp-2 leading-relaxed">
+                          {noticia.descripcionCorta}
+                        </p>
+                        
+                        {/* Metadatos */}
+                        <div className="flex justify-between items-center text-xs text-gray-500">
+                          <div className="flex items-center gap-2">
+                            <span>⏱️ {tiempoLectura(noticia.descripcionLarga)} min</span>
+                            <span>👁️ {noticia.vistas}</span>
+                          </div>
+                          <span>{formatearFecha(noticia.fecha)}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Noticia principal - Derecha */}
               <div className="lg:col-span-2">
                 {principal ? (
                   <div className="h-full">
@@ -241,78 +313,6 @@ const Noticias: React.FC = () => {
                     </div>
                   </div>
                 )}
-              </div>
-
-              {/* Lista de noticias - Derecha */}
-              <div className="lg:col-span-1">
-                <div className="sticky top-0">
-                  <h2 className="text-xl font-bold text-[#FFD700] mb-6 flex items-center gap-3">
-                    <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#FFD700] to-[#C9B037] flex items-center justify-center text-black text-sm">📋</span>
-                    Lista de Noticias
-                  </h2>
-                  
-                  <div className="space-y-3 max-h-[calc(100vh-200px)] overflow-y-auto pr-2" style={{
-                    scrollbarWidth: 'thin',
-                    scrollbarColor: '#FFD700 transparent'
-                  }}>
-                    {noticiasOrdenadas.map((noticia, index) => (
-                      <div
-                        key={noticia.id}
-                        onClick={() => setSelectedIdx(index)}
-                        className={`group relative p-4 rounded-2xl cursor-pointer transition-all duration-300 border backdrop-blur-md ${
-                          selectedIdx === index
-                            ? 'bg-[#1a1a1a]/60 border-[#FFD700] shadow-2xl shadow-[#FFD700]/20'
-                            : 'bg-[#1a1a1a]/30 border-[#FFD700]/20 hover:border-[#FFD700]/50 hover:bg-[#1a1a1a]/50'
-                        }`}
-                      >
-                        {/* Efecto hover */}
-                        {selectedIdx !== index && (
-                          <div className="absolute -inset-1 bg-gradient-to-r from-[#FFD700]/20 to-[#C9B037]/20 rounded-2xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
-                        )}
-                        
-                        {/* Categorías */}
-                        <div className="flex flex-wrap gap-1 mb-3">
-                          {noticia.categoria.slice(0, 2).map((cat: string, i: number) => (
-                            <span 
-                              key={i}
-                              className="px-2 py-1 bg-[#FFD700]/20 text-[#FFD700] rounded-lg text-xs font-bold border border-[#FFD700]/30"
-                            >
-                              {cat}
-                            </span>
-                          ))}
-                          {noticia.destacada && (
-                            <span className="px-2 py-1 bg-gradient-to-r from-red-500/20 to-orange-500/20 text-red-300 rounded-lg text-xs font-bold border border-red-400/30">
-                              ⭐
-                            </span>
-                          )}
-                        </div>
-                        
-                        {/* Título */}
-                        <h3 className={`font-bold mb-2 line-clamp-2 leading-tight ${
-                          selectedIdx === index 
-                            ? 'text-[#FFD700] text-base' 
-                            : 'text-white text-sm group-hover:text-[#FFD700] transition-colors'
-                        }`}>
-                          {noticia.titulo}
-                        </h3>
-                        
-                        {/* Descripción corta */}
-                        <p className="text-gray-400 text-xs mb-3 line-clamp-2 leading-relaxed">
-                          {noticia.descripcionCorta}
-                        </p>
-                        
-                        {/* Metadatos */}
-                        <div className="flex justify-between items-center text-xs text-gray-500">
-                          <div className="flex items-center gap-2">
-                            <span>⏱️ {tiempoLectura(noticia.descripcionLarga)} min</span>
-                            <span>👁️ {noticia.vistas}</span>
-                          </div>
-                          <span>{formatearFecha(noticia.fecha)}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
               </div>
             </div>
           </div>

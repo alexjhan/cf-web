@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ProtectedRoute from '../../components/ProtectedRoute/ProtectedRoute';
 
 interface Noticia {
   fecha: string; // formato YYYY-MM-DD
@@ -31,10 +32,7 @@ const defaultNoticias: Noticia[] = [
   },
 ];
 
-const AdminNoticias = () => {
-  const [isLogged, setIsLogged] = useState(false);
-  const [user, setUser] = useState("");
-  const [pass, setPass] = useState("");
+const AdminNoticiasContent = () => {
   // Cargar desde localStorage si existe; si no, usar las de defecto
   const [noticias, setNoticias] = useState<Noticia[]>(() => {
     try {
@@ -50,14 +48,6 @@ const AdminNoticias = () => {
   const [preview, setPreview] = useState<string>("");
   const [editIdx, setEditIdx] = useState<number | null>(null);
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (user === "admin" && pass === "admin") {
-      setIsLogged(true);
-    } else {
-      alert("Usuario o contraseña incorrectos");
-    }
-  };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const target = e.target;
     const { name, value, multiple, options } = target as HTMLSelectElement;
@@ -114,34 +104,6 @@ const AdminNoticias = () => {
       localStorage.setItem("noticias", JSON.stringify(noticias));
     } catch {}
   }, [noticias]);
-
-  if (!isLogged) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#3a3a4a] to-[#18181b]">
-        <form className="bg-[#23232a] p-8 rounded-xl shadow-lg border border-gray-700 w-full max-w-sm" onSubmit={handleLogin}>
-          <h2 className="text-2xl font-bold mb-6 text-center text-[#C9B037]">Admin Login</h2>
-          <input
-            type="text"
-            name="user"
-            placeholder="Usuario"
-            className="w-full mb-4 p-2 rounded bg-[#18181b] text-white border border-gray-700"
-            value={user}
-            onChange={e => setUser(e.target.value)}
-            autoFocus
-          />
-          <input
-            type="password"
-            name="pass"
-            placeholder="Contraseña"
-            className="w-full mb-6 p-2 rounded bg-[#18181b] text-white border border-gray-700"
-            value={pass}
-            onChange={e => setPass(e.target.value)}
-          />
-          <button type="submit" className="w-full py-2 rounded bg-[#C9B037] text-black font-bold hover:bg-[#FFD700] transition">Ingresar</button>
-        </form>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#3a3a4a] to-[#18181b] py-16 px-4 flex flex-col items-center">
@@ -288,5 +250,14 @@ const AdminNoticias = () => {
     </div>
   );
 }
+
+const AdminNoticias: React.FC = () => {
+  return (
+    <ProtectedRoute title="Administración de Noticias">
+      <AdminNoticiasContent />
+    </ProtectedRoute>
+  );
+};
+
 export default AdminNoticias;
 

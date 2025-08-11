@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ProtectedRoute from '../../components/ProtectedRoute/ProtectedRoute';
 
 interface Especialidad {
   id: number;
@@ -13,7 +14,7 @@ interface Especialidad {
   nivel: 'Posgrado' | 'Especialización';
 }
 
-const AdminEspecialidades: React.FC = () => {
+const AdminEspecialidadesContent: React.FC = () => {
   const [especialidades, setEspecialidades] = useState<Especialidad[]>([]);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [editandoId, setEditandoId] = useState<number | null>(null);
@@ -416,6 +417,14 @@ const AdminEspecialidades: React.FC = () => {
         )}
       </div>
     </div>
+  );
+};
+
+const AdminEspecialidades: React.FC = () => {
+  return (
+    <ProtectedRoute title="Administración de Especialidades">
+      <AdminEspecialidadesContent />
+    </ProtectedRoute>
   );
 };
 
