@@ -4,7 +4,6 @@ import {
   addEdge,
   useNodesState,
   useEdgesState,
-  MiniMap,
   Controls,
   Background,
   BackgroundVariant
