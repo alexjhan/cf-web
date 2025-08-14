@@ -407,7 +407,7 @@ const initialEdges: Edge[] = [
   { id: 'e-oro-trabinv', source: 'c9-met-oro', sourceHandle: 'r', target: 'c10-trab-inv', targetHandle: 'l', type: 'exitdown', markerEnd: { type: MarkerType.ArrowClosed, color: '#f59e0b', width: 16, height: 16 }, style: { stroke: '#f59e0b', strokeWidth: 2 } },
   { id: 'e-formeval-diseno', source: 'c9-form-eval-proy', sourceHandle: 'r', target: 'c10-dis-plant', targetHandle: 'l', type: 'exitdown', markerEnd: { type: MarkerType.ArrowClosed, color: '#f59e0b', width: 16, height: 16 }, style: { stroke: '#f59e0b', strokeWidth: 2 } }
 ];
-// Flecha especial Estadística General -> Metodología de la Investigación (color distinto, trayecto armonizado)
+// Fleha especial Estadística General -> Metodología de la Investigación (color distinto, trayecto armonizado)
 initialEdges.push({
   id: 'e-estad-metod',
   source: 'c2-estad-gen',
