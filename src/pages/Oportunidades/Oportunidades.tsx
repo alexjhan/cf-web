@@ -205,66 +205,81 @@ const Oportunidades: React.FC = () => {
   const oportunidadesFiltradas = oportunidades.filter(op => op.tipo === categoriaActiva && op.activa);
 
   return (
-    <div className="min-h-screen text-white overflow-x-hidden" style={{ background: 'radial-gradient(ellipse at top, #1a1a1a 0%, #2a2a2a 30%, #0f0f0f 60%, #000000 100%)' }}>
-      
-      {/* Efectos de fondo avanzados */}
-      <div className="fixed inset-0 z-0 overflow-hidden">
-        <div className="absolute top-20 left-20 w-96 h-96 bg-[#FFD700]/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-80 h-80 bg-[#C9B037]/15 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-[#B8860B]/20 rounded-full blur-2xl animate-pulse delay-500"></div>
-        <div className="absolute bottom-1/3 left-20 w-48 h-48 bg-[#FFD700]/5 rounded-full blur-xl animate-pulse delay-2000"></div>
+    <div 
+      className="min-h-screen text-white overflow-hidden relative"
+      style={{ background: 'radial-gradient(ellipse at top, #1a1a1a 0%, #2a2a2a 30%, #0f0f0f 60%, #000000 100%)' }}
+    >
+      {/* Fondo y partículas estilo Carrera */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 via-transparent to-[#C9B037]/3"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#FFD700]/8 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[#C9B037]/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-3/4 left-1/2 w-64 h-64 bg-[#FFD700]/6 rounded-full blur-2xl animate-pulse delay-500"></div>
+        {/* Partículas flotantes responsive */}
+        <div className="absolute top-16 md:top-20 left-6 md:left-10 w-2 md:w-3 h-2 md:h-3 bg-[#FFD700]/60 rounded-full animate-pulse delay-300"></div>
+        <div className="absolute top-32 md:top-40 right-12 md:right-20 w-1.5 md:w-2 h-1.5 md:h-2 bg-[#C9B037]/70 rounded-full animate-pulse delay-700"></div>
+        <div className="absolute bottom-24 md:bottom-32 left-12 md:left-20 w-3 md:w-4 h-3 md:h-4 bg-[#FFD700]/50 rounded-full animate-pulse delay-1000"></div>
+        <div className="absolute bottom-12 md:bottom-20 right-6 md:right-10 w-1.5 md:w-2 h-1.5 md:h-2 bg-[#B8860B]/80 rounded-full animate-pulse delay-500"></div>
+        <div className="absolute top-48 md:top-60 left-1/3 w-2 md:w-3 h-2 md:h-3 bg-[#C9B037]/60 rounded-full animate-pulse delay-1200"></div>
+        <div className="absolute bottom-48 md:bottom-60 right-1/3 w-1.5 md:w-2 h-1.5 md:h-2 bg-[#FFD700]/70 rounded-full animate-pulse delay-800"></div>
       </div>
 
-      {/* Header */}
-      <header className="relative z-20 px-4 sm:px-6 py-5 sm:py-6 border-b border-[#FFD700]/10 backdrop-blur-xl bg-[#1a1a1a]/50">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#FFD700] to-[#C9B037] flex items-center justify-center text-black text-2xl font-bold shadow-2xl flex-shrink-0">
-                🚀
-              </div>
-              <div className="min-w-0">
-                <h1 className="ty-display font-black leading-tight tracking-tight">
-                  <span className="bg-gradient-to-r from-[#FFD700] to-[#C9B037] bg-clip-text text-transparent block">CENTRO DE</span>
-                  <span className="bg-gradient-to-r from-[#FFD700] to-[#C9B037] bg-clip-text text-transparent">OPORTUNIDADES</span>
-                </h1>
-                <p className="ty-meta text-gray-400 truncate mt-1">Centro Federado de Ing. Metalúrgica</p>
-              </div>
-            </div>
-            {/* Desktop Stats */}
-            <div className="hidden md:flex items-center gap-4 px-5 py-3 bg-[#1a1a1a]/60 backdrop-blur-md rounded-2xl border border-[#FFD700]/20">
-              <div className="text-center">
-                <div className="ty-stat text-[#FFD700]">{oportunidades.filter(op => op.activa).length}</div>
-                <div className="ty-meta text-gray-400">Activas</div>
-              </div>
-              <div className="w-px h-8 bg-[#FFD700]/20" />
-              <div className="text-center">
-                <div className="ty-stat text-[#FFD700]">{oportunidadesFiltradas.length}</div>
-                <div className="ty-meta text-gray-400">Categoría</div>
+      {/* Header épico responsivo */}
+      <header className="relative py-8 md:py-16 px-4">
+        <div className="relative max-w-6xl mx-auto">
+          
+          {/* Logo con recuadro */}
+          <div className="text-center mb-6 md:mb-10">
+            <div className="inline-block mb-4 md:mb-6">
+              <div className="bg-[#FFD700]/10 p-4 md:p-6 rounded-full border border-[#FFD700]/30 shadow-2xl hover:shadow-[#FFD700]/40 transition-all duration-500">
+                <span className="text-4xl md:text-5xl lg:text-6xl">🚀</span>
               </div>
             </div>
           </div>
-          {/* Mobile stats */}
-          <div className="mt-4 grid grid-cols-2 gap-3 md:hidden">
-            <div className="bg-[#1a1a1a]/60 backdrop-blur-sm rounded-xl p-2.5 sm:p-3 border border-[#FFD700]/15 text-center">
-              <div className="ty-stat text-[#FFD700] leading-none">{oportunidades.filter(op => op.activa).length}</div>
-              <div className="ty-meta text-gray-400 mt-1">Activas</div>
+          
+          <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold bg-gradient-to-r from-[#FFD700] via-[#FFF8DC] to-[#C9B037] bg-clip-text text-transparent tracking-wide mb-4 md:mb-6 leading-tight text-center">
+            CENTRO DE OPORTUNIDADES
+          </h1>
+          <p className="text-sm md:text-lg lg:text-xl text-[#C9B037] font-medium tracking-wider max-w-3xl mx-auto mb-6 md:mb-10 text-center">
+            Centro Federado de Ingeniería Metalúrgica • Impulsa tu Carrera Profesional
+          </p>
+
+          {/* Stats rápidas épicas - Responsive */}
+          <div className="flex justify-center gap-4 md:gap-8 text-center mb-6 md:mb-10">
+            <div className="group cursor-pointer hover:scale-110 transition-all duration-500">
+              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">{oportunidades.filter(op => op.activa).length}</div>
+              <div className="text-gray-400 text-xs md:text-sm group-hover:text-gray-200 transition-colors duration-300">Activas</div>
             </div>
-            <div className="bg-[#1a1a1a]/60 backdrop-blur-sm rounded-xl p-2.5 sm:p-3 border border-[#FFD700]/15 text-center">
-              <div className="ty-stat text-[#FFD700] leading-none">{oportunidadesFiltradas.length}</div>
-              <div className="ty-meta text-gray-400 mt-1">Categoría</div>
+            <div className="group cursor-pointer hover:scale-110 transition-all duration-500">
+              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">{categorias.length}</div>
+              <div className="text-gray-400 text-xs md:text-sm group-hover:text-gray-200 transition-colors duration-300">Categorías</div>
             </div>
+            <div className="group cursor-pointer hover:scale-110 transition-all duration-500">
+              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">{oportunidadesFiltradas.length}</div>
+              <div className="text-gray-400 text-xs md:text-sm group-hover:text-gray-200 transition-colors duration-300">Filtradas</div>
+            </div>
+          </div>
+
+          {/* Estadísticas por categoría - Responsive */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 lg:gap-6 max-w-5xl mx-auto mb-8 md:mb-12">
+            {categorias.map((categoria) => (
+              <div key={categoria.id} className="group bg-[#1a1a1a]/60 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-4 lg:p-6 border border-[#FFD700]/20 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 hover:scale-105 hover:shadow-xl hover:shadow-[#FFD700]/20 transition-all duration-500 cursor-pointer">
+                <div className="text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 text-[#FFD700] group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">{categoria.icono}</div>
+                <div className="text-base md:text-xl lg:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{oportunidades.filter(op => op.tipo === categoria.id && op.activa).length}</div>
+                <div className="text-xs md:text-sm text-gray-400 group-hover:text-gray-200 transition-colors duration-300">{categoria.nombre}</div>
+              </div>
+            ))}
           </div>
         </div>
       </header>
 
       {/* Contenido principal */}
-      <main className="relative z-10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+      <main className="relative px-4 md:px-6 lg:px-8 pb-16 md:pb-20 lg:pb-24">
+        <div className="max-w-6xl mx-auto">
             
             {/* Navegación de categorías */}
             <div className="mb-8">
-              <h2 className="ty-h3 font-bold text-[#FFD700] mb-5 sm:mb-6 flex items-center gap-3">
+              <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-[#FFD700] mb-5 sm:mb-6 flex items-center gap-3">
                 <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-br from-[#FFD700] to-[#C9B037] flex items-center justify-center text-black text-xs sm:text-sm">📋</span>
                 <span className="truncate">Categorías de Oportunidades</span>
               </h2>
@@ -287,11 +302,11 @@ const Oportunidades: React.FC = () => {
                     
                     <div className="text-center space-y-0.5">
                       <div className="text-xl sm:text-2xl mb-1 sm:mb-1.5">{categoria.icono}</div>
-                      <h3 className={`font-semibold ty-body-sm leading-snug tracking-tight ${categoriaActiva === categoria.id ? 'text-[#FFD700]' : 'text-white group-hover:text-[#FFD700]'}`}>{categoria.nombre}</h3>
-                      <p className="text-gray-400 ty-meta normal-case leading-snug line-clamp-2">
+                      <h3 className={`font-semibold text-sm md:text-base lg:text-lg leading-snug tracking-tight ${categoriaActiva === categoria.id ? 'text-[#FFD700]' : 'text-white group-hover:text-[#FFD700]'}`}>{categoria.nombre}</h3>
+                      <p className="text-gray-400 text-xs md:text-sm normal-case leading-snug line-clamp-2">
                         {categoria.descripcion}
                       </p>
-                      <div className="pt-0.5 ty-meta text-gray-500">
+                      <div className="pt-0.5 text-xs md:text-sm text-gray-500">
                         {oportunidades.filter(op => op.tipo === categoria.id && op.activa).length} disponibles
                       </div>
                     </div>
@@ -302,7 +317,7 @@ const Oportunidades: React.FC = () => {
 
             {/* Lista de oportunidades */}
             <div className="space-y-6">
-              <h3 className="ty-h2 font-bold text-[#FFD700] flex items-center gap-2 sm:gap-3">
+              <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#FFD700] flex items-center gap-2 sm:gap-3">
                 <span className="text-xl sm:text-3xl">{categorias.find(c => c.id === categoriaActiva)?.icono}</span>
                 <span className="truncate max-w-[70%] sm:max-w-none leading-snug">{categorias.find(c => c.id === categoriaActiva)?.nombre}</span>
               </h3>
@@ -321,14 +336,14 @@ const Oportunidades: React.FC = () => {
                         {/* Header */}
                         <div className="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between gap-4 sm:gap-6 items-start mb-6">
                           <div className="flex-1 min-w-0">
-                            <h4 className="ty-h3 font-bold text-[#FFD700] mb-1.5 sm:mb-2 leading-snug break-words break-all">
+                            <h4 className="text-lg md:text-xl lg:text-2xl font-bold text-[#FFD700] mb-1.5 sm:mb-2 leading-snug break-words break-all">
                               {oportunidad.titulo}
                             </h4>
                             {oportunidad.empresa && (
-                              <p className="text-gray-300 font-medium ty-body">📢 {oportunidad.empresa}</p>
+                              <p className="text-gray-300 font-medium text-sm md:text-base lg:text-lg">📢 {oportunidad.empresa}</p>
                             )}
                             {oportunidad.universidad && (
-                              <p className="text-gray-300 font-medium ty-body">🏫 {oportunidad.universidad}</p>
+                              <p className="text-gray-300 font-medium text-sm md:text-base lg:text-lg">🏫 {oportunidad.universidad}</p>
                             )}
                           </div>
                           <div className="flex flex-row sm:flex-col items-center sm:items-end gap-2 sm:gap-2 self-start">
@@ -346,19 +361,19 @@ const Oportunidades: React.FC = () => {
                         </div>
 
                         {/* Descripción */}
-                        <p className="text-gray-200 ty-body leading-relaxed mb-5 sm:mb-6 line-clamp-6">
+                        <p className="text-gray-200 text-sm md:text-base lg:text-lg leading-relaxed mb-5 sm:mb-6 line-clamp-6">
                           {oportunidad.descripcion}
                         </p>
 
                         {/* Requisitos y Beneficios */}
             <div className="grid gap-5 sm:gap-6 md:grid-cols-2 mb-5 sm:mb-6">
                           <div>
-              <h5 className="text-[#FFD700] font-bold mb-3 flex items-center gap-2 ty-h4">
+              <h5 className="text-[#FFD700] font-bold mb-3 flex items-center gap-2 text-lg md:text-xl lg:text-2xl">
                               <span>📋</span> Requisitos
                             </h5>
                             <ul className="space-y-1.5 sm:space-y-2">
                               {oportunidad.requisitos.map((req, idx) => (
-                                <li key={idx} className="text-gray-300 flex items-start gap-2 ty-body-sm break-words">
+                                <li key={idx} className="text-gray-300 flex items-start gap-2 text-sm md:text-base lg:text-lg break-words">
                                   <span className="text-[#FFD700] mt-1">▸</span>
                                   <span>{req}</span>
                                 </li>
@@ -366,12 +381,12 @@ const Oportunidades: React.FC = () => {
                             </ul>
                           </div>
                           <div>
-              <h5 className="text-[#FFD700] font-bold mb-3 flex items-center gap-2 ty-h4">
+              <h5 className="text-[#FFD700] font-bold mb-3 flex items-center gap-2 text-lg md:text-xl lg:text-2xl">
                               <span>🎁</span> Beneficios
                             </h5>
                             <ul className="space-y-1.5 sm:space-y-2">
                               {oportunidad.beneficios.map((ben, idx) => (
-                                <li key={idx} className="text-gray-300 flex items-start gap-2 ty-body-sm break-words">
+                                <li key={idx} className="text-gray-300 flex items-start gap-2 text-sm md:text-base lg:text-lg break-words">
                                   <span className="text-green-400 mt-1">✓</span>
                                   <span>{ben}</span>
                                 </li>
@@ -382,14 +397,14 @@ const Oportunidades: React.FC = () => {
 
                         {/* Footer */}
                         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:justify-between sm:items-center pt-5 sm:pt-6 border-t border-[#FFD700]/10">
-                          <div className="ty-body-sm text-gray-400 order-2 sm:order-1">
+                          <div className="text-sm md:text-base lg:text-lg text-gray-400 order-2 sm:order-1">
                             📅 Publicado: {new Date(oportunidad.fecha).toLocaleDateString('es-ES')}
                           </div>
                           <div className="flex gap-2 sm:gap-3 order-1 sm:order-2">
-                            <button className="px-3.5 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-[#FFD700] to-[#C9B037] text-black font-bold rounded-lg sm:rounded-xl hover:from-[#C9B037] hover:to-[#B8860B] transition-all duration-300 transform hover:scale-105 ty-body-sm">
+                            <button className="px-3.5 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-[#FFD700] to-[#C9B037] text-black font-bold rounded-lg sm:rounded-xl hover:from-[#C9B037] hover:to-[#B8860B] transition-all duration-300 transform hover:scale-105 text-sm md:text-base lg:text-lg">
                               📧 Contactar
                             </button>
-                            <button className="px-3.5 sm:px-6 py-2 sm:py-3 bg-[#1a1a1a]/60 backdrop-blur-sm text-[#FFD700] rounded-lg sm:rounded-xl hover:bg-[#FFD700]/20 transition-all duration-300 border border-[#FFD700]/30 ty-body-sm">
+                            <button className="px-3.5 sm:px-6 py-2 sm:py-3 bg-[#1a1a1a]/60 backdrop-blur-sm text-[#FFD700] rounded-lg sm:rounded-xl hover:bg-[#FFD700]/20 transition-all duration-300 border border-[#FFD700]/30 text-sm md:text-base lg:text-lg">
                               🔖 Guardar
                             </button>
                           </div>
@@ -403,10 +418,10 @@ const Oportunidades: React.FC = () => {
                   <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-[#FFD700] to-[#C9B037] flex items-center justify-center text-black text-3xl sm:text-4xl mb-5 sm:mb-6 mx-auto">
                     🔍
                   </div>
-                  <h3 className="ty-h2 font-bold text-[#FFD700] mb-3 sm:mb-4">
+                  <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#FFD700] mb-3 sm:mb-4">
                     No hay oportunidades disponibles
                   </h3>
-                  <p className="text-gray-400 max-w-md mx-auto ty-body leading-relaxed">
+                  <p className="text-gray-400 max-w-md mx-auto text-sm md:text-base lg:text-lg leading-relaxed">
                     No se encontraron oportunidades en la categoría "{categorias.find(c => c.id === categoriaActiva)?.nombre}". 
                     Revisa otras categorías o vuelve más tarde.
                   </p>
