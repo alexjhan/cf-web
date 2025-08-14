@@ -65,11 +65,12 @@ function Inicio() {
               <div className="absolute -bottom-2 -left-2 w-3 h-3 bg-[#FFD700]/70 rounded-full opacity-50 animate-ping delay-1000"></div>
             </div>
             
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-black mt-6 md:mt-8 mb-2 bg-gradient-to-r from-[#FFD700] via-[#FFF8DC] to-[#C9B037] bg-clip-text text-transparent drop-shadow-2xl tracking-wide">
-              INGENIERÍA METALÚRGICA
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-black mt-6 md:mt-8 mb-2 bg-gradient-to-r from-[#FFD700] via-[#FFF8DC] to-[#C9B037] bg-clip-text text-transparent drop-shadow-2xl tracking-wide leading-tight">
+              <span className="block">CENTRO FEDERADO DE</span>
+              <span className="block">INGENIERÍA METALÚRGICA</span>
             </h1>
             <p className="text-base md:text-xl text-[#C9B037] font-medium tracking-wider">
-              UNIVERSIDAD MAYOR DE SAN ANDRÉS
+              UNIVERSIDAD NACIONAL DE SAN ANTONIO ABAD DEL CUSCO
             </p>
             <div className="w-24 md:w-32 h-1 bg-gradient-to-r from-[#FFD700] to-[#C9B037] mx-auto mt-3 md:mt-4 rounded-full"></div>
           </div>
@@ -98,78 +99,42 @@ function Inicio() {
           </div>
           
           {/* Descripción */}
-          <div className="text-center mb-8 md:mb-12 px-4">
-            <p className="text-sm md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Formamos ingenieros especializados en la transformación de minerales, 
-              procesos metalúrgicos y desarrollo de materiales avanzados con tecnología de vanguardia.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Estadísticas mejoradas */}
-      <div className="relative py-8 md:py-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-[#FFD700]">
-            📊 Nuestra Excelencia en Números
-          </h2>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-            {[
-              { number: "25+", label: "Años de Excelencia", delay: "0" },
-              { number: "500+", label: "Graduados Exitosos", delay: "200" },
-              { number: "15+", label: "Laboratorios Especializados", delay: "400" },
-              { number: "98%", label: "Inserción Laboral", delay: "600" }
-            ].map((stat, index) => (
-              <div 
-                key={index} 
-                className="group relative"
-                style={{ animationDelay: `${stat.delay}ms` }}
-              >
-                <div className="absolute -inset-2 bg-gradient-to-r from-[#FFD700]/20 to-[#C9B037]/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                
-                <div className="relative backdrop-blur-sm bg-gradient-to-br from-[#1a1a1a]/70 via-[#2a2a2a]/50 to-[#0f0f0f]/70 p-4 md:p-6 rounded-2xl border border-[#FFD700]/20 hover:border-[#FFD700]/40 transition-all duration-500 text-center group-hover:scale-105">
-                  <div className="text-2xl md:text-4xl font-black text-[#FFD700] mb-1 md:mb-2">
-                    {stat.number}
-                  </div>
-                  <div className="text-xs md:text-sm text-gray-300">
-                    {stat.label}
-                  </div>
-                </div>
+          <div className="text-center mb-4 md:mb-6 px-4">
+                <p className="text-sm md:text-base text-gray-300 max-w-3xl mx-auto leading-snug">
+                  Acompañamos a los estudiantes de Ingeniería Metalúrgica, velando por sus derechos y promoviendo su desarrollo integral con compromiso y unidad.
+                </p>
               </div>
-            ))}
-          </div>
         </div>
       </div>
 
-      {/* Separador con gradiente */}
-      <div className="relative py-8 md:py-12">
+  {/* Separador con gradiente (espacio reducido) */}
+  <div className="relative py-3 md:py-5">
         <div className="w-full h-px bg-gradient-to-r from-transparent via-[#FFD700]/50 to-transparent"></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-[#FFD700] rounded-full animate-pulse"></div>
       </div>
 
-      {/* Grid de Navegación Mejorado */}
-      <div className="relative py-8 md:py-16 px-4">
+      {/* Sección de Navegación / Otras páginas */}
+  <div className="relative pt-2 pb-6 md:pt-4 md:pb-8 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-5 place-items-center">
             
             {/* Carrera */}
             <div className="group mx-auto">
               <a href="/carrera" className="block">
                 <div className="relative">
-                  <div className="absolute -inset-2 md:-inset-3 bg-gradient-to-r from-[#FFD700]/20 to-[#C9B037]/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                  <div className="absolute -inset-1 sm:-inset-2 md:-inset-3 bg-gradient-to-r from-[#FFD700]/10 to-[#C9B037]/10 rounded-2xl blur-lg sm:blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                   
                   <div 
-                    className="w-56 h-56 md:w-64 md:h-64 relative transform group-hover:scale-105 transition-all duration-500 shadow-xl rounded-2xl mx-auto"
+                    className="w-full h-44 sm:h-52 md:h-56 lg:h-60 max-w-[220px] sm:max-w-[230px] md:max-w-[240px] relative transform group-hover:scale-[1.02] md:group-hover:scale-[1.04] transition-all duration-400 shadow-xl rounded-2xl mx-auto"
                     style={{
                       background: 'linear-gradient(135deg, #FFD700 0%, #C9B037 100%)'
                     }}
                   >
-                    <div className="absolute inset-3 bg-gradient-to-br from-[#1a1a1a]/95 via-[#2a2a2a]/90 to-[#0f0f0f]/95 backdrop-blur-sm flex items-center justify-center rounded-xl border border-[#FFD700]/20">
+                    <div className="absolute inset-2 md:inset-3 bg-gradient-to-br from-[#1a1a1a]/95 via-[#2a2a2a]/90 to-[#0f0f0f]/95 backdrop-blur-sm flex items-center justify-center rounded-xl border border-[#FFD700]/25">
                       <div className="text-center">
-                        <span className="text-5xl md:text-7xl block mb-2 md:mb-3 animate-pulse">🎓</span>
-                        <div className="text-[#FFD700] font-black text-lg md:text-xl tracking-wider">CARRERA</div>
-                        <div className="text-gray-400 text-xs mt-1">Información</div>
+                        <span className="text-4xl sm:text-5xl md:text-6xl block mb-1.5 md:mb-2 animate-pulse">🎓</span>
+                        <div className="text-[#FFD700] font-black text-sm sm:text-base md:text-lg tracking-wider">CARRERA</div>
+                        <div className="text-gray-400 text-[10px] sm:text-xs mt-1">Información</div>
                       </div>
                     </div>
                   </div>
@@ -180,29 +145,27 @@ function Inicio() {
               </a>
             </div>
 
-            {/* Cursos */}
+            {/* Representación Estudiantil */}
             <div className="group mx-auto">
-              <a href="/cursos" className="block">
+              <a href="/representacion" className="block">
                 <div className="relative">
-                  <div className="absolute -inset-2 md:-inset-3 bg-gradient-to-r from-[#B8860B]/20 to-[#FFD700]/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                  
+                  <div className="absolute -inset-1 sm:-inset-2 md:-inset-3 bg-gradient-to-r from-[#FFD700]/10 to-[#B8860B]/10 rounded-2xl blur-lg sm:blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                   <div 
-                    className="w-56 h-56 md:w-64 md:h-64 relative transform group-hover:scale-105 transition-all duration-500 shadow-xl rounded-2xl mx-auto"
+                    className="w-full h-44 sm:h-52 md:h-56 lg:h-60 max-w-[220px] sm:max-w-[230px] md:max-w-[240px] relative transform group-hover:scale-[1.02] md:group-hover:scale-[1.04] transition-all duration-400 shadow-xl rounded-2xl mx-auto"
                     style={{
-                      background: 'linear-gradient(135deg, #B8860B 0%, #FFD700 100%)'
+                      background: 'linear-gradient(135deg, #FFD700 0%, #B8860B 100%)'
                     }}
                   >
-                    <div className="absolute inset-3 bg-gradient-to-br from-[#1a1a1a]/95 via-[#2a2a2a]/90 to-[#0f0f0f]/95 backdrop-blur-sm flex items-center justify-center rounded-xl border border-[#B8860B]/20">
+                    <div className="absolute inset-2 md:inset-3 bg-gradient-to-br from-[#1a1a1a]/95 via-[#2a2a2a]/90 to-[#0f0f0f]/95 backdrop-blur-sm flex items-center justify-center rounded-xl border border-[#FFD700]/25">
                       <div className="text-center">
-                        <span className="text-5xl md:text-7xl block mb-2 md:mb-3 animate-pulse delay-100">📚</span>
-                        <div className="text-[#FFD700] font-black text-lg md:text-xl tracking-wider">CURSOS</div>
-                        <div className="text-gray-400 text-xs mt-1">Materias</div>
+                        <span className="text-4xl sm:text-5xl md:text-6xl block mb-1.5 md:mb-2 animate-pulse delay-100">🤝</span>
+                        <div className="text-[#FFD700] font-black text-sm sm:text-base md:text-lg tracking-wider leading-tight">REPRESENTACIÓN</div>
+                        <div className="text-gray-400 text-[10px] sm:text-xs mt-1">Estudiantil</div>
                       </div>
                     </div>
                   </div>
-                  
-                  <div className="absolute -top-1 md:-top-2 -left-1 md:-left-2 w-3 h-3 md:w-5 md:h-5 bg-[#B8860B] rounded-full opacity-60 animate-ping delay-100"></div>
-                  <div className="absolute -bottom-1 md:-bottom-2 -right-1 md:-right-2 w-2 h-2 md:w-4 md:h-4 bg-[#FFD700] rounded-full opacity-80 animate-pulse delay-300"></div>
+                  <div className="absolute -top-1 md:-top-2 -left-1 md:-left-2 w-3 h-3 md:w-5 md:h-5 bg-[#FFD700] rounded-full opacity-60 animate-ping delay-100"></div>
+                  <div className="absolute -bottom-1 md:-bottom-2 -right-1 md:-right-2 w-2 h-2 md:w-4 md:h-4 bg-[#B8860B] rounded-full opacity-80 animate-pulse delay-300"></div>
                 </div>
               </a>
             </div>
@@ -211,19 +174,19 @@ function Inicio() {
             <div className="group mx-auto">
               <a href="/documentos" className="block">
                 <div className="relative">
-                  <div className="absolute -inset-2 md:-inset-3 bg-gradient-to-r from-[#C9B037]/20 to-[#FFF8DC]/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                  <div className="absolute -inset-1 sm:-inset-2 md:-inset-3 bg-gradient-to-r from-[#C9B037]/10 to-[#FFF8DC]/10 rounded-2xl blur-lg sm:blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                   
                   <div 
-                    className="w-56 h-56 md:w-64 md:h-64 relative transform group-hover:scale-105 transition-all duration-500 shadow-xl rounded-2xl mx-auto"
+                    className="w-full h-44 sm:h-52 md:h-56 lg:h-60 max-w-[220px] sm:max-w-[230px] md:max-w-[240px] relative transform group-hover:scale-[1.02] md:group-hover:scale-[1.04] transition-all duration-400 shadow-xl rounded-2xl mx-auto"
                     style={{
                       background: 'linear-gradient(135deg, #C9B037 0%, #FFF8DC 100%)'
                     }}
                   >
-                    <div className="absolute inset-3 bg-gradient-to-br from-[#1a1a1a]/95 via-[#2a2a2a]/90 to-[#0f0f0f]/95 backdrop-blur-sm flex items-center justify-center rounded-xl border border-[#C9B037]/20">
+                    <div className="absolute inset-2 md:inset-3 bg-gradient-to-br from-[#1a1a1a]/95 via-[#2a2a2a]/90 to-[#0f0f0f]/95 backdrop-blur-sm flex items-center justify-center rounded-xl border border-[#C9B037]/25">
                       <div className="text-center">
-                        <span className="text-5xl md:text-7xl block mb-2 md:mb-3 animate-pulse delay-200">📋</span>
-                        <div className="text-[#FFD700] font-black text-lg md:text-xl tracking-wider">DOCUMENTOS</div>
-                        <div className="text-gray-400 text-xs mt-1">Recursos</div>
+                        <span className="text-4xl sm:text-5xl md:text-6xl block mb-1.5 md:mb-2 animate-pulse delay-200">📋</span>
+                        <div className="text-[#FFD700] font-black text-sm sm:text-base md:text-lg tracking-wider">DOCUMENTOS</div>
+                        <div className="text-gray-400 text-[10px] sm:text-xs mt-1">Recursos</div>
                       </div>
                     </div>
                   </div>
@@ -234,29 +197,29 @@ function Inicio() {
               </a>
             </div>
 
-            {/* Docentes */}
+            {/* Cursos */}
             <div className="group mx-auto">
-              <a href="/docentes" className="block">
+              <a href="/cursos" className="block">
                 <div className="relative">
-                  <div className="absolute -inset-2 md:-inset-3 bg-gradient-to-r from-[#FFD700]/20 to-[#B8860B]/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                  <div className="absolute -inset-1 sm:-inset-2 md:-inset-3 bg-gradient-to-r from-[#B8860B]/10 to-[#FFD700]/10 rounded-2xl blur-lg sm:blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                   
                   <div 
-                    className="w-56 h-56 md:w-64 md:h-64 relative transform group-hover:scale-105 transition-all duration-500 shadow-xl rounded-2xl mx-auto"
+                    className="w-full h-44 sm:h-52 md:h-56 lg:h-60 max-w-[220px] sm:max-w-[230px] md:max-w-[240px] relative transform group-hover:scale-[1.02] md:group-hover:scale-[1.04] transition-all duration-400 shadow-xl rounded-2xl mx-auto"
                     style={{
-                      background: 'linear-gradient(135deg, #FFD700 0%, #B8860B 100%)'
+                      background: 'linear-gradient(135deg, #B8860B 0%, #FFD700 100%)'
                     }}
                   >
-                    <div className="absolute inset-3 bg-gradient-to-br from-[#1a1a1a]/95 via-[#2a2a2a]/90 to-[#0f0f0f]/95 backdrop-blur-sm flex items-center justify-center rounded-xl border border-[#FFD700]/20">
+                    <div className="absolute inset-2 md:inset-3 bg-gradient-to-br from-[#1a1a1a]/95 via-[#2a2a2a]/90 to-[#0f0f0f]/95 backdrop-blur-sm flex items-center justify-center rounded-xl border border-[#B8860B]/25">
                       <div className="text-center">
-                        <span className="text-5xl md:text-7xl block mb-2 md:mb-3 animate-pulse delay-300">👥</span>
-                        <div className="text-[#FFD700] font-black text-lg md:text-xl tracking-wider">DOCENTES</div>
-                        <div className="text-gray-400 text-xs mt-1">Profesores</div>
+                        <span className="text-4xl sm:text-5xl md:text-6xl block mb-1.5 md:mb-2 animate-pulse delay-300">📚</span>
+                        <div className="text-[#FFD700] font-black text-sm sm:text-base md:text-lg tracking-wider">CURSOS</div>
+                        <div className="text-gray-400 text-[10px] sm:text-xs mt-1">Materias</div>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="absolute -top-1 md:-top-2 -left-1 md:-left-2 w-3 h-3 md:w-5 md:h-5 bg-[#FFD700] rounded-full opacity-60 animate-ping delay-300"></div>
-                  <div className="absolute -bottom-1 md:-bottom-2 -right-1 md:-right-2 w-2 h-2 md:w-4 md:h-4 bg-[#B8860B] rounded-full opacity-80 animate-pulse delay-500"></div>
+                  <div className="absolute -top-1 md:-top-2 -left-1 md:-left-2 w-3 h-3 md:w-5 md:h-5 bg-[#B8860B] rounded-full opacity-60 animate-ping delay-300"></div>
+                  <div className="absolute -bottom-1 md:-bottom-2 -right-1 md:-right-2 w-2 h-2 md:w-4 md:h-4 bg-[#FFD700] rounded-full opacity-80 animate-pulse delay-500"></div>
                 </div>
               </a>
             </div>
@@ -265,19 +228,19 @@ function Inicio() {
             <div className="group mx-auto">
               <a href="/oportunidades" className="block">
                 <div className="relative">
-                  <div className="absolute -inset-2 md:-inset-3 bg-gradient-to-r from-[#FFF8DC]/20 to-[#C9B037]/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                  <div className="absolute -inset-1 sm:-inset-2 md:-inset-3 bg-gradient-to-r from-[#FFF8DC]/10 to-[#C9B037]/10 rounded-2xl blur-lg sm:blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                   
                   <div 
-                    className="w-56 h-56 md:w-64 md:h-64 relative transform group-hover:scale-105 transition-all duration-500 shadow-xl rounded-2xl mx-auto"
+                    className="w-full h-44 sm:h-52 md:h-56 lg:h-60 max-w-[220px] sm:max-w-[230px] md:max-w-[240px] relative transform group-hover:scale-[1.02] md:group-hover:scale-[1.04] transition-all duration-400 shadow-xl rounded-2xl mx-auto"
                     style={{
                       background: 'linear-gradient(135deg, #FFF8DC 0%, #C9B037 100%)'
                     }}
                   >
-                    <div className="absolute inset-3 bg-gradient-to-br from-[#1a1a1a]/95 via-[#2a2a2a]/90 to-[#0f0f0f]/95 backdrop-blur-sm flex items-center justify-center rounded-xl border border-[#FFF8DC]/20">
+                    <div className="absolute inset-2 md:inset-3 bg-gradient-to-br from-[#1a1a1a]/95 via-[#2a2a2a]/90 to-[#0f0f0f]/95 backdrop-blur-sm flex items-center justify-center rounded-xl border border-[#FFF8DC]/25">
                       <div className="text-center">
-                        <span className="text-5xl md:text-7xl block mb-2 md:mb-3 animate-pulse delay-400">💼</span>
-                        <div className="text-[#FFD700] font-black text-lg md:text-xl tracking-wider">OPORTUNIDADES</div>
-                        <div className="text-gray-400 text-xs mt-1">Trabajo & Educación</div>
+                        <span className="text-4xl sm:text-5xl md:text-6xl block mb-1.5 md:mb-2 animate-pulse delay-400">💼</span>
+                        <div className="text-[#FFD700] font-black text-sm sm:text-base md:text-lg tracking-wider text-center leading-snug">OPORTUNIDADES</div>
+                        <div className="text-gray-400 text-[10px] sm:text-xs mt-1">Trabajo & Educación</div>
                       </div>
                     </div>
                   </div>
@@ -292,19 +255,19 @@ function Inicio() {
             <div className="group mx-auto">
               <a href="/noticias" className="block">
                 <div className="relative">
-                  <div className="absolute -inset-2 md:-inset-3 bg-gradient-to-r from-[#B8860B]/20 to-[#FFD700]/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                  <div className="absolute -inset-1 sm:-inset-2 md:-inset-3 bg-gradient-to-r from-[#B8860B]/10 to-[#FFD700]/10 rounded-2xl blur-lg sm:blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                   
                   <div 
-                    className="w-56 h-56 md:w-64 md:h-64 relative transform group-hover:scale-105 transition-all duration-500 shadow-xl rounded-2xl mx-auto"
+                    className="w-full h-44 sm:h-52 md:h-56 lg:h-60 max-w-[220px] sm:max-w-[230px] md:max-w-[240px] relative transform group-hover:scale-[1.02] md:group-hover:scale-[1.04] transition-all duration-400 shadow-xl rounded-2xl mx-auto"
                     style={{
                       background: 'linear-gradient(135deg, #B8860B 0%, #FFD700 100%)'
                     }}
                   >
-                    <div className="absolute inset-3 bg-gradient-to-br from-[#1a1a1a]/95 via-[#2a2a2a]/90 to-[#0f0f0f]/95 backdrop-blur-sm flex items-center justify-center rounded-xl border border-[#B8860B]/20">
+                    <div className="absolute inset-2 md:inset-3 bg-gradient-to-br from-[#1a1a1a]/95 via-[#2a2a2a]/90 to-[#0f0f0f]/95 backdrop-blur-sm flex items-center justify-center rounded-xl border border-[#B8860B]/25">
                       <div className="text-center">
-                        <span className="text-5xl md:text-7xl block mb-2 md:mb-3 animate-pulse delay-500">📰</span>
-                        <div className="text-[#FFD700] font-black text-lg md:text-xl tracking-wider">NOTICIAS</div>
-                        <div className="text-gray-400 text-xs mt-1">Actualidad</div>
+                        <span className="text-4xl sm:text-5xl md:text-6xl block mb-1.5 md:mb-2 animate-pulse delay-500">📰</span>
+                        <div className="text-[#FFD700] font-black text-sm sm:text-base md:text-lg tracking-wider">NOTICIAS</div>
+                        <div className="text-gray-400 text-[10px] sm:text-xs mt-1">Actualidad</div>
                       </div>
                     </div>
                   </div>
@@ -318,198 +281,66 @@ function Inicio() {
           </div>
         </div>
       </div>
+      {/* Footer Simplificado */}
+      <footer className="mt-16 md:mt-20 bg-black/40 border-t border-[#FFD700]/20">
+        <div className="max-w-6xl mx-auto px-4 py-10 md:py-12">
+          <div className="flex flex-col md:flex-row md:items-start gap-10 md:gap-14">
+            {/* Identidad */}
+            <div className="flex-1">
+              <div className="flex items-center gap-4 mb-4">
+                <img src="/assets/logo-metalurgia.jpg" alt="Logo" className="w-12 h-12 rounded-full object-cover border border-[#FFD700]/40" />
+                <div>
+                  <h3 className="text-[#FFD700] font-bold text-lg leading-snug">Centro Federado<br className="hidden sm:block" /> Ing. Metalúrgica - UNSAAC</h3>
+                  <p className="text-gray-400 text-xs mt-1">Representación estudiantil | Formación | Comunidad</p>
+                </div>
+              </div>
+              <p className="text-gray-500 text-xs max-w-md leading-relaxed">
+                Espacio informativo y de apoyo académico de los estudiantes de Ingeniería Metalúrgica. Para asuntos oficiales diríjase a la Escuela Profesional o a la UNSAAC.
+              </p>
+            </div>
 
-      {/* Sección de Contacto */}
-      <div className="relative py-8 md:py-16 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="backdrop-blur-sm bg-gradient-to-br from-[#1a1a1a]/70 via-[#2a2a2a]/50 to-[#0f0f0f]/70 p-6 md:p-8 rounded-3xl border border-[#FFD700]/20">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-[#FFD700]">
-              Contáctanos
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 text-sm md:text-base">
-              <div className="flex items-center justify-center md:justify-start">
-                <span className="mr-2">📧</span>
-                <span>metalurgia@umsa.bo</span>
+            {/* Navegación */}
+            <div className="flex-1 grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
+              <a href="/carrera" className="text-gray-400 hover:text-[#FFD700] transition-colors">Carrera</a>
+              <a href="/cursos" className="text-gray-400 hover:text-[#FFD700] transition-colors">Cursos</a>
+              <a href="/documentos" className="text-gray-400 hover:text-[#FFD700] transition-colors">Documentos</a>
+              <a href="/representacion" className="text-gray-400 hover:text-[#FFD700] transition-colors">Representación</a>
+              <a href="/oportunidades" className="text-gray-400 hover:text-[#FFD700] transition-colors">Oportunidades</a>
+              <a href="/noticias" className="text-gray-400 hover:text-[#FFD700] transition-colors">Noticias</a>
+              <a href="/chatbot" className="text-gray-400 hover:text-[#FFD700] transition-colors col-span-2">Consulta Inteligente</a>
+            </div>
+
+            {/* Contacto (actualizar si se requiere) */}
+            <div className="flex-1 space-y-3 text-sm">
+              <h4 className="text-[#FFD700] font-semibold mb-2">Contacto</h4>
+              <div className="flex items-start gap-2">
+                <span className="text-[#C9B037]">📧</span>
+                <a href="mailto:centrofederado.metalurgia@unsaac.edu.pe" className="text-gray-400 hover:text-[#FFD700] break-all">centrofederado.metalurgia@unsaac.edu.pe</a>
               </div>
-              <div className="flex items-center justify-center md:justify-start">
-                <span className="mr-2">📞</span>
-                <span>+591 2 2591234</span>
+              <div className="flex items-start gap-2">
+                <span className="text-[#C9B037]">📞</span>
+                <span className="text-gray-400">(084) 000000</span>
               </div>
-              <div className="flex items-center justify-center md:justify-start">
-                <span className="mr-2">📍</span>
-                <span>Ciudad Universitaria, La Paz</span>
+              <div className="flex items-start gap-2">
+                <span className="text-[#C9B037]">📍</span>
+                <span className="text-gray-400">Ciudad Universitaria de Perayoc, Cusco - Perú</span>
               </div>
-              <div className="flex items-center justify-center md:justify-start">
-                <span className="mr-2">💼</span>
-                <span>Facultad de Ingeniería</span>
-              </div>
+            </div>
+          </div>
+
+          {/* Línea y base */}
+          <div className="mt-10 pt-6 border-t border-[#FFD700]/10 text-center md:text-left flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4">
+            <div className="space-y-1">
+              <p className="text-gray-500 text-xs">© 2025 Centro Federado de Ingeniería Metalúrgica - UNSAAC</p>
+              <p className="text-gray-600 text-[11px]">Desarrollado por <span className="text-[#FFD700] font-medium">Alex Jhan</span></p>
+            </div>
+            <div className="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2 text-xs text-gray-500">
+              <a href="/politica-privacidad" className="hover:text-[#FFD700]">Privacidad</a>
+              <a href="/terminos" className="hover:text-[#FFD700]">Términos</a>
+              <a href="/accesibilidad" className="hover:text-[#FFD700]">Accesibilidad</a>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Footer Mejorado */}
-      <footer className="relative py-12 md:py-16 px-4 mt-16 md:mt-20">
-        {/* Separador superior */}
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-[#FFD700]/40 to-transparent mb-12"></div>
-        
-        <div className="max-w-6xl mx-auto">
-          {/* Contenido principal del footer */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-12">
-            
-            {/* Información de la Universidad */}
-            <div className="text-center md:text-left">
-              <div className="flex justify-center md:justify-start mb-4">
-                <div className="backdrop-blur-sm bg-gradient-to-br from-[#1a1a1a]/60 via-[#2a2a2a]/40 to-[#0f0f0f]/60 p-3 rounded-full border border-[#FFD700]/30">
-                  <img 
-                    src="/assets/logo-metalurgia.jpg" 
-                    alt="Logo Ingeniería Metalúrgica" 
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                </div>
-              </div>
-              <h3 className="text-[#FFD700] font-bold text-lg mb-3">
-                Ingeniería Metalúrgica
-              </h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                Formando profesionales de excelencia en metalurgia, procesamiento de minerales y desarrollo de materiales avanzados.
-              </p>
-            </div>
-
-            {/* Enlaces Rápidos */}
-            <div className="text-center md:text-left">
-              <h4 className="text-[#FFD700] font-semibold text-lg mb-4">
-                Enlaces Rápidos
-              </h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <a href="/carrera" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
-                    📚 Información de la Carrera
-                  </a>
-                </li>
-                <li>
-                  <a href="/cursos" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
-                    📖 Materias y Cursos
-                  </a>
-                </li>
-                <li>
-                  <a href="/docentes" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
-                    👥 Cuerpo Docente
-                  </a>
-                </li>
-                <li>
-                  <a href="/oportunidades" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
-                    � Oportunidades y Especializaciones
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Recursos */}
-            <div className="text-center md:text-left">
-              <h4 className="text-[#FFD700] font-semibold text-lg mb-4">
-                Recursos
-              </h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <a href="/documentos" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
-                    📋 Documentos Académicos
-                  </a>
-                </li>
-                <li>
-                  <a href="/oportunidades" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
-                    💼 Oportunidades Laborales
-                  </a>
-                </li>
-                <li>
-                  <a href="/noticias" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
-                    📰 Noticias y Eventos
-                  </a>
-                </li>
-                <li>
-                  <a href="/chatbot" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
-                    🤖 Consulta Inteligente
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Contacto */}
-            <div className="text-center md:text-left">
-              <h4 className="text-[#FFD700] font-semibold text-lg mb-4">
-                Contacto
-              </h4>
-              <div className="space-y-3 text-sm">
-                <div className="flex items-center justify-center md:justify-start">
-                  <span className="text-[#C9B037] mr-2">📧</span>
-                  <a href="mailto:metalurgia@umsa.bo" className="text-gray-400 hover:text-[#FFD700] transition-colors duration-300">
-                    metalurgia@umsa.bo
-                  </a>
-                </div>
-                <div className="flex items-center justify-center md:justify-start">
-                  <span className="text-[#C9B037] mr-2">📞</span>
-                  <span className="text-gray-400">+591 2 2591234</span>
-                </div>
-                <div className="flex items-center justify-center md:justify-start">
-                  <span className="text-[#C9B037] mr-2">📍</span>
-                  <span className="text-gray-400">Ciudad Universitaria</span>
-                </div>
-                <div className="flex items-center justify-center md:justify-start">
-                  <span className="text-[#C9B037] mr-2">🏛️</span>
-                  <span className="text-gray-400">La Paz, Bolivia</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Separador */}
-          <div className="w-full h-px bg-gradient-to-r from-transparent via-[#FFD700]/20 to-transparent mb-8"></div>
-
-          {/* Información de copyright y enlaces adicionales */}
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="text-center md:text-left">
-              <p className="text-gray-400 text-sm mb-1">
-                © 2025 Ingeniería Metalúrgica - Universidad Mayor de San Andrés
-              </p>
-              <p className="text-gray-500 text-xs">
-                Todos los derechos reservados | Desarrollado con tecnología de vanguardia
-              </p>
-            </div>
-            
-            {/* Enlaces de políticas */}
-            <div className="flex space-x-6 text-xs">
-              <a href="/politica-privacidad" className="text-gray-500 hover:text-[#FFD700] transition-colors duration-300">
-                Política de Privacidad
-              </a>
-              <a href="/terminos" className="text-gray-500 hover:text-[#FFD700] transition-colors duration-300">
-                Términos de Uso
-              </a>
-              <a href="/accesibilidad" className="text-gray-500 hover:text-[#FFD700] transition-colors duration-300">
-                Accesibilidad
-              </a>
-            </div>
-          </div>
-
-          {/* Universidad Mayor de San Andrés */}
-          <div className="text-center mt-8 pt-6 border-t border-[#FFD700]/10">
-            <p className="text-[#C9B037] text-sm font-medium">
-              🏛️ Universidad Mayor de San Andrés
-            </p>
-            <p className="text-gray-500 text-xs mt-1">
-              Fundada en 1830 | Excelencia Académica y Tradición
-            </p>
-          </div>
-        </div>
-        
-        {/* Efectos decorativos del footer */}
-        <div className="absolute top-0 left-1/4 w-32 h-32 bg-[#FFD700]/3 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 right-1/4 w-24 h-24 bg-[#C9B037]/4 rounded-full blur-2xl animate-pulse delay-1000"></div>
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-40 h-20 bg-[#FFD700]/2 rounded-full blur-3xl"></div>
-        
-        {/* Partículas decorativas */}
-        <div className="absolute top-10 left-10 w-2 h-2 bg-[#FFD700]/60 rounded-full animate-pulse delay-300"></div>
-        <div className="absolute top-20 right-20 w-3 h-3 bg-[#C9B037]/50 rounded-full animate-pulse delay-700"></div>
-        <div className="absolute bottom-10 left-20 w-2 h-2 bg-[#FFD700]/40 rounded-full animate-pulse delay-1000"></div>
       </footer>
     </div>
   );

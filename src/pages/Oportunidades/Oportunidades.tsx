@@ -205,7 +205,7 @@ const Oportunidades: React.FC = () => {
   const oportunidadesFiltradas = oportunidades.filter(op => op.tipo === categoriaActiva && op.activa);
 
   return (
-    <div className="h-screen text-white overflow-hidden flex flex-col" style={{ background: 'radial-gradient(ellipse at top, #1a1a1a 0%, #2a2a2a 30%, #0f0f0f 60%, #000000 100%)' }}>
+    <div className="min-h-screen text-white overflow-x-hidden" style={{ background: 'radial-gradient(ellipse at top, #1a1a1a 0%, #2a2a2a 30%, #0f0f0f 60%, #000000 100%)' }}>
       
       {/* Efectos de fondo avanzados */}
       <div className="fixed inset-0 z-0 overflow-hidden">
@@ -215,56 +215,66 @@ const Oportunidades: React.FC = () => {
         <div className="absolute bottom-1/3 left-20 w-48 h-48 bg-[#FFD700]/5 rounded-full blur-xl animate-pulse delay-2000"></div>
       </div>
 
-      {/* Header fijo */}
-      <div className="relative z-20 flex-shrink-0 px-6 py-6 border-b border-[#FFD700]/10 backdrop-blur-xl bg-[#1a1a1a]/40">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#FFD700] to-[#C9B037] flex items-center justify-center text-black text-2xl font-bold shadow-2xl">
-              🚀
+      {/* Header */}
+      <header className="relative z-20 px-4 sm:px-6 py-5 sm:py-6 border-b border-[#FFD700]/10 backdrop-blur-xl bg-[#1a1a1a]/50">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#FFD700] to-[#C9B037] flex items-center justify-center text-black text-2xl font-bold shadow-2xl flex-shrink-0">
+                🚀
+              </div>
+              <div className="min-w-0">
+                <h1 className="ty-display font-black leading-tight tracking-tight">
+                  <span className="bg-gradient-to-r from-[#FFD700] to-[#C9B037] bg-clip-text text-transparent block">CENTRO DE</span>
+                  <span className="bg-gradient-to-r from-[#FFD700] to-[#C9B037] bg-clip-text text-transparent">OPORTUNIDADES</span>
+                </h1>
+                <p className="ty-meta text-gray-400 truncate mt-1">Centro Federado de Ing. Metalúrgica</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-black">
-                <span className="bg-gradient-to-r from-[#FFD700] to-[#C9B037] bg-clip-text text-transparent">
-                  CENTRO DE OPORTUNIDADES
-                </span>
-              </h1>
-              <p className="text-gray-400 text-sm">Centro Federado de Ing. Metalúrgica</p>
+            {/* Desktop Stats */}
+            <div className="hidden md:flex items-center gap-4 px-5 py-3 bg-[#1a1a1a]/60 backdrop-blur-md rounded-2xl border border-[#FFD700]/20">
+              <div className="text-center">
+                <div className="ty-stat text-[#FFD700]">{oportunidades.filter(op => op.activa).length}</div>
+                <div className="ty-meta text-gray-400">Activas</div>
+              </div>
+              <div className="w-px h-8 bg-[#FFD700]/20" />
+              <div className="text-center">
+                <div className="ty-stat text-[#FFD700]">{oportunidadesFiltradas.length}</div>
+                <div className="ty-meta text-gray-400">Categoría</div>
+              </div>
             </div>
           </div>
-          
-          {/* Stats Badge */}
-          <div className="hidden md:flex items-center gap-4 px-6 py-3 bg-[#1a1a1a]/60 backdrop-blur-md rounded-2xl border border-[#FFD700]/20">
-            <div className="text-center">
-              <div className="text-lg font-bold text-[#FFD700]">{oportunidades.filter(op => op.activa).length}</div>
-              <div className="text-xs text-gray-400">Activas</div>
+          {/* Mobile stats */}
+          <div className="mt-4 grid grid-cols-2 gap-3 md:hidden">
+            <div className="bg-[#1a1a1a]/60 backdrop-blur-sm rounded-xl p-2.5 sm:p-3 border border-[#FFD700]/15 text-center">
+              <div className="ty-stat text-[#FFD700] leading-none">{oportunidades.filter(op => op.activa).length}</div>
+              <div className="ty-meta text-gray-400 mt-1">Activas</div>
             </div>
-            <div className="w-px h-8 bg-[#FFD700]/20"></div>
-            <div className="text-center">
-              <div className="text-lg font-bold text-[#FFD700]">{oportunidadesFiltradas.length}</div>
-              <div className="text-xs text-gray-400">Categoría</div>
+            <div className="bg-[#1a1a1a]/60 backdrop-blur-sm rounded-xl p-2.5 sm:p-3 border border-[#FFD700]/15 text-center">
+              <div className="ty-stat text-[#FFD700] leading-none">{oportunidadesFiltradas.length}</div>
+              <div className="ty-meta text-gray-400 mt-1">Categoría</div>
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
       {/* Contenido principal */}
-      <div className="relative z-10 flex-1 overflow-hidden">
-        <div className="h-full overflow-y-auto">
-          <div className="max-w-6xl mx-auto px-6 py-8">
+      <main className="relative z-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
             
             {/* Navegación de categorías */}
             <div className="mb-8">
-              <h2 className="text-xl font-bold text-[#FFD700] mb-6 flex items-center gap-3">
-                <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#FFD700] to-[#C9B037] flex items-center justify-center text-black text-sm">📋</span>
-                Categorías de Oportunidades
+              <h2 className="ty-h3 font-bold text-[#FFD700] mb-5 sm:mb-6 flex items-center gap-3">
+                <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-br from-[#FFD700] to-[#C9B037] flex items-center justify-center text-black text-xs sm:text-sm">📋</span>
+                <span className="truncate">Categorías de Oportunidades</span>
               </h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Scroll horizontal en móvil */}
+      <div className="flex gap-2.5 overflow-x-auto pb-1 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 scrollbar-thin md:overflow-visible snap-x snap-mandatory">
                 {categorias.map((categoria) => (
                   <button
                     key={categoria.id}
                     onClick={() => setCategoriaActiva(categoria.id as any)}
-                    className={`group relative p-6 rounded-2xl border transition-all duration-300 backdrop-blur-md ${
+        className={`group relative px-3.5 py-3 sm:px-4 sm:py-4 rounded-2xl border transition-all duration-300 backdrop-blur-md flex-shrink-0 w-44 sm:w-48 md:w-auto snap-start ${
                       categoriaActiva === categoria.id
                         ? 'bg-[#1a1a1a]/60 border-[#FFD700] shadow-2xl shadow-[#FFD700]/20 transform scale-105'
                         : `bg-[#1a1a1a]/30 ${categoria.borderColor} hover:border-[#FFD700]/50 hover:bg-[#1a1a1a]/50`
@@ -275,17 +285,13 @@ const Oportunidades: React.FC = () => {
                       <div className="absolute -inset-1 bg-gradient-to-r from-[#FFD700]/20 to-[#C9B037]/20 rounded-2xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                     )}
                     
-                    <div className="text-center">
-                      <div className="text-4xl mb-3">{categoria.icono}</div>
-                      <h3 className={`font-bold mb-2 ${
-                        categoriaActiva === categoria.id ? 'text-[#FFD700]' : 'text-white group-hover:text-[#FFD700]'
-                      }`}>
-                        {categoria.nombre}
-                      </h3>
-                      <p className="text-gray-400 text-sm">
+                    <div className="text-center space-y-0.5">
+                      <div className="text-xl sm:text-2xl mb-1 sm:mb-1.5">{categoria.icono}</div>
+                      <h3 className={`font-semibold ty-body-sm leading-snug tracking-tight ${categoriaActiva === categoria.id ? 'text-[#FFD700]' : 'text-white group-hover:text-[#FFD700]'}`}>{categoria.nombre}</h3>
+                      <p className="text-gray-400 ty-meta normal-case leading-snug line-clamp-2">
                         {categoria.descripcion}
                       </p>
-                      <div className="mt-3 text-xs text-gray-500">
+                      <div className="pt-0.5 ty-meta text-gray-500">
                         {oportunidades.filter(op => op.tipo === categoria.id && op.activa).length} disponibles
                       </div>
                     </div>
@@ -296,43 +302,43 @@ const Oportunidades: React.FC = () => {
 
             {/* Lista de oportunidades */}
             <div className="space-y-6">
-              <h3 className="text-2xl font-bold text-[#FFD700] flex items-center gap-3">
-                <span className="text-3xl">{categorias.find(c => c.id === categoriaActiva)?.icono}</span>
-                {categorias.find(c => c.id === categoriaActiva)?.nombre}
+              <h3 className="ty-h2 font-bold text-[#FFD700] flex items-center gap-2 sm:gap-3">
+                <span className="text-xl sm:text-3xl">{categorias.find(c => c.id === categoriaActiva)?.icono}</span>
+                <span className="truncate max-w-[70%] sm:max-w-none leading-snug">{categorias.find(c => c.id === categoriaActiva)?.nombre}</span>
               </h3>
               
               {oportunidadesFiltradas.length > 0 ? (
-                <div className="grid gap-6">
+        <div className="space-y-6">
                   {oportunidadesFiltradas.map((oportunidad) => (
                     <div
                       key={oportunidad.id}
-                      className="relative bg-[#1a1a1a]/40 backdrop-blur-md rounded-3xl border border-[#FFD700]/20 p-8 hover:border-[#FFD700]/50 transition-all duration-300 group"
+                      className="relative bg-[#1a1a1a]/40 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-[#FFD700]/20 p-5 sm:p-7 md:p-8 hover:border-[#FFD700]/50 transition-all duration-300 group"
                     >
                       {/* Efecto de fondo */}
                       <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 via-transparent to-[#C9B037]/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       
                       <div className="relative">
                         {/* Header */}
-                        <div className="flex flex-wrap justify-between items-start mb-6">
-                          <div className="flex-1">
-                            <h4 className="text-2xl font-bold text-[#FFD700] mb-2">
+                        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between gap-4 sm:gap-6 items-start mb-6">
+                          <div className="flex-1 min-w-0">
+                            <h4 className="ty-h3 font-bold text-[#FFD700] mb-1.5 sm:mb-2 leading-snug break-words break-all">
                               {oportunidad.titulo}
                             </h4>
                             {oportunidad.empresa && (
-                              <p className="text-gray-300 font-medium">📢 {oportunidad.empresa}</p>
+                              <p className="text-gray-300 font-medium ty-body">📢 {oportunidad.empresa}</p>
                             )}
                             {oportunidad.universidad && (
-                              <p className="text-gray-300 font-medium">🏫 {oportunidad.universidad}</p>
+                              <p className="text-gray-300 font-medium ty-body">🏫 {oportunidad.universidad}</p>
                             )}
                           </div>
-                          <div className="flex flex-col items-end gap-2">
+                          <div className="flex flex-row sm:flex-col items-center sm:items-end gap-2 sm:gap-2 self-start">
                             {oportunidad.duracion && (
-                              <span className="px-3 py-1 bg-[#FFD700]/20 text-[#FFD700] rounded-xl text-sm font-bold border border-[#FFD700]/30">
+                              <span className="px-2.5 py-1 bg-[#FFD700]/20 text-[#FFD700] rounded-xl text-[11px] sm:text-sm font-bold border border-[#FFD700]/30 whitespace-nowrap">
                                 ⏱️ {oportunidad.duracion}
                               </span>
                             )}
                             {oportunidad.modalidad && (
-                              <span className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-xl text-sm font-bold border border-blue-400/30">
+                              <span className="px-2.5 py-1 bg-blue-500/20 text-blue-300 rounded-xl text-[11px] sm:text-sm font-bold border border-blue-400/30 whitespace-nowrap">
                                 💻 {oportunidad.modalidad}
                               </span>
                             )}
@@ -340,19 +346,19 @@ const Oportunidades: React.FC = () => {
                         </div>
 
                         {/* Descripción */}
-                        <p className="text-gray-200 leading-relaxed mb-6 text-lg">
+                        <p className="text-gray-200 ty-body leading-relaxed mb-5 sm:mb-6 line-clamp-6">
                           {oportunidad.descripcion}
                         </p>
 
                         {/* Requisitos y Beneficios */}
-                        <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div className="grid gap-5 sm:gap-6 md:grid-cols-2 mb-5 sm:mb-6">
                           <div>
-                            <h5 className="text-[#FFD700] font-bold mb-3 flex items-center gap-2">
+              <h5 className="text-[#FFD700] font-bold mb-3 flex items-center gap-2 ty-h4">
                               <span>📋</span> Requisitos
                             </h5>
-                            <ul className="space-y-2">
+                            <ul className="space-y-1.5 sm:space-y-2">
                               {oportunidad.requisitos.map((req, idx) => (
-                                <li key={idx} className="text-gray-300 flex items-start gap-2">
+                                <li key={idx} className="text-gray-300 flex items-start gap-2 ty-body-sm break-words">
                                   <span className="text-[#FFD700] mt-1">▸</span>
                                   <span>{req}</span>
                                 </li>
@@ -360,12 +366,12 @@ const Oportunidades: React.FC = () => {
                             </ul>
                           </div>
                           <div>
-                            <h5 className="text-[#FFD700] font-bold mb-3 flex items-center gap-2">
+              <h5 className="text-[#FFD700] font-bold mb-3 flex items-center gap-2 ty-h4">
                               <span>🎁</span> Beneficios
                             </h5>
-                            <ul className="space-y-2">
+                            <ul className="space-y-1.5 sm:space-y-2">
                               {oportunidad.beneficios.map((ben, idx) => (
-                                <li key={idx} className="text-gray-300 flex items-start gap-2">
+                                <li key={idx} className="text-gray-300 flex items-start gap-2 ty-body-sm break-words">
                                   <span className="text-green-400 mt-1">✓</span>
                                   <span>{ben}</span>
                                 </li>
@@ -375,15 +381,15 @@ const Oportunidades: React.FC = () => {
                         </div>
 
                         {/* Footer */}
-                        <div className="flex flex-wrap justify-between items-center pt-6 border-t border-[#FFD700]/10">
-                          <div className="text-sm text-gray-400">
+                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:justify-between sm:items-center pt-5 sm:pt-6 border-t border-[#FFD700]/10">
+                          <div className="ty-body-sm text-gray-400 order-2 sm:order-1">
                             📅 Publicado: {new Date(oportunidad.fecha).toLocaleDateString('es-ES')}
                           </div>
-                          <div className="flex gap-3">
-                            <button className="px-6 py-3 bg-gradient-to-r from-[#FFD700] to-[#C9B037] text-black font-bold rounded-xl hover:from-[#C9B037] hover:to-[#B8860B] transition-all duration-300 transform hover:scale-105">
+                          <div className="flex gap-2 sm:gap-3 order-1 sm:order-2">
+                            <button className="px-3.5 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-[#FFD700] to-[#C9B037] text-black font-bold rounded-lg sm:rounded-xl hover:from-[#C9B037] hover:to-[#B8860B] transition-all duration-300 transform hover:scale-105 ty-body-sm">
                               📧 Contactar
                             </button>
-                            <button className="px-6 py-3 bg-[#1a1a1a]/60 backdrop-blur-sm text-[#FFD700] rounded-xl hover:bg-[#FFD700]/20 transition-all duration-300 border border-[#FFD700]/30">
+                            <button className="px-3.5 sm:px-6 py-2 sm:py-3 bg-[#1a1a1a]/60 backdrop-blur-sm text-[#FFD700] rounded-lg sm:rounded-xl hover:bg-[#FFD700]/20 transition-all duration-300 border border-[#FFD700]/30 ty-body-sm">
                               🔖 Guardar
                             </button>
                           </div>
@@ -393,14 +399,14 @@ const Oportunidades: React.FC = () => {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-16">
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#FFD700] to-[#C9B037] flex items-center justify-center text-black text-4xl mb-6 mx-auto">
+                <div className="text-center py-14 sm:py-16">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-[#FFD700] to-[#C9B037] flex items-center justify-center text-black text-3xl sm:text-4xl mb-5 sm:mb-6 mx-auto">
                     🔍
                   </div>
-                  <h3 className="text-2xl font-bold text-[#FFD700] mb-4">
+                  <h3 className="ty-h2 font-bold text-[#FFD700] mb-3 sm:mb-4">
                     No hay oportunidades disponibles
                   </h3>
-                  <p className="text-gray-400 max-w-md mx-auto">
+                  <p className="text-gray-400 max-w-md mx-auto ty-body leading-relaxed">
                     No se encontraron oportunidades en la categoría "{categorias.find(c => c.id === categoriaActiva)?.nombre}". 
                     Revisa otras categorías o vuelve más tarde.
                   </p>
@@ -408,8 +414,7 @@ const Oportunidades: React.FC = () => {
               )}
             </div>
           </div>
-        </div>
-      </div>
+      </main>
     </div>
   );
 };
