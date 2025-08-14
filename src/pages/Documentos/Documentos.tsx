@@ -221,122 +221,130 @@ const Documentos = () => {
         background: 'radial-gradient(ellipse at top, #1a1a1a 0%, #2a2a2a 30%, #0f0f0f 60%, #000000 100%)'
       }}
     >
-      {/* Efectos de fondo épicos */}
+      {/* Efectos de fondo épicos con partículas flotantes */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 via-transparent to-[#C9B037]/3"></div>
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#FFD700]/8 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[#C9B037]/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
         <div className="absolute top-3/4 left-1/2 w-64 h-64 bg-[#FFD700]/6 rounded-full blur-2xl animate-pulse delay-500"></div>
+        
+        {/* Partículas flotantes responsive */}
+        <div className="absolute top-16 md:top-20 left-6 md:left-10 w-2 md:w-3 h-2 md:h-3 bg-[#FFD700]/60 rounded-full animate-pulse delay-300"></div>
+        <div className="absolute top-32 md:top-40 right-12 md:right-20 w-1.5 md:w-2 h-1.5 md:h-2 bg-[#C9B037]/70 rounded-full animate-pulse delay-700"></div>
+        <div className="absolute bottom-24 md:bottom-32 left-12 md:left-20 w-3 md:w-4 h-3 md:h-4 bg-[#FFD700]/50 rounded-full animate-pulse delay-1000"></div>
+        <div className="absolute bottom-12 md:bottom-20 right-6 md:right-10 w-1.5 md:w-2 h-1.5 md:h-2 bg-[#B8860B]/80 rounded-full animate-pulse delay-500"></div>
+        <div className="absolute top-48 md:top-60 left-1/3 w-2 md:w-3 h-2 md:h-3 bg-[#C9B037]/60 rounded-full animate-pulse delay-1200"></div>
+        <div className="absolute bottom-48 md:bottom-60 right-1/3 w-1.5 md:w-2 h-1.5 md:h-2 bg-[#FFD700]/70 rounded-full animate-pulse delay-800"></div>
       </div>
 
       <div className="relative">
-        {/* Header Épico */}
-        <div className="text-center px-4 pt-10 pb-10 sm:pt-12 sm:pb-14 md:pt-14 md:pb-16">
-          <div className="inline-block mb-5 sm:mb-6">
-            <div className="bg-[#FFD700]/10 p-3 sm:p-4 rounded-full border border-[#FFD700]/30">
-              <span className="text-3xl sm:text-4xl">📚</span>
+        {/* Header Épico - Responsive como Inicio.tsx */}
+        <div className="text-center px-4 py-8 md:py-16">
+          <div className="inline-block mb-6 md:mb-10">
+            <div className="bg-[#FFD700]/10 p-4 md:p-6 rounded-full border border-[#FFD700]/30 shadow-2xl hover:shadow-[#FFD700]/40 transition-all duration-500">
+              <span className="text-4xl md:text-5xl lg:text-6xl">📚</span>
             </div>
           </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold bg-gradient-to-r from-[#FFD700] via-[#FFF8DC] to-[#C9B037] bg-clip-text text-transparent tracking-wide mb-3 sm:mb-4 md:mb-6">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold bg-gradient-to-r from-[#FFD700] via-[#FFF8DC] to-[#C9B037] bg-clip-text text-transparent tracking-wide mb-4 md:mb-6 leading-tight">
             <span className="block">Centro de</span>
             <span className="block">Documentos</span>
           </h1>
-          <p className="text-base sm:text-lg md:text-xl text-[#C9B037] font-medium tracking-wide max-w-2xl mx-auto mb-6 md:mb-8">
+          <p className="text-sm md:text-lg lg:text-xl text-[#C9B037] font-medium tracking-wider max-w-3xl mx-auto mb-6 md:mb-10">
             Escuela Profesional de Ingeniería Metalúrgica • Acceso Digital 24/7
           </p>
 
-          {/* Stats rápidas épicas */}
-          <div className="flex justify-center gap-8 text-center mb-8">
+          {/* Stats rápidas épicas - Responsive */}
+          <div className="flex justify-center gap-4 md:gap-8 text-center mb-6 md:mb-10">
             <div className="group cursor-pointer hover:scale-110 transition-all duration-500">
-              <div className="text-2xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">180+</div>
-              <div className="text-gray-400 text-sm group-hover:text-gray-200 transition-colors duration-300">Documentos</div>
+              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">180+</div>
+              <div className="text-gray-400 text-xs md:text-sm group-hover:text-gray-200 transition-colors duration-300">Documentos</div>
             </div>
             <div className="group cursor-pointer hover:scale-110 transition-all duration-500">
-              <div className="text-2xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">6</div>
-              <div className="text-gray-400 text-sm group-hover:text-gray-200 transition-colors duration-300">Categorías</div>
+              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">6</div>
+              <div className="text-gray-400 text-xs md:text-sm group-hover:text-gray-200 transition-colors duration-300">Categorías</div>
             </div>
             <div className="group cursor-pointer hover:scale-110 transition-all duration-500">
-              <div className="text-2xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">24/7</div>
-              <div className="text-gray-400 text-sm group-hover:text-gray-200 transition-colors duration-300">Disponible</div>
+              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">24/7</div>
+              <div className="text-gray-400 text-xs md:text-sm group-hover:text-gray-200 transition-colors duration-300">Disponible</div>
             </div>
           </div>
 
-          {/* Estadísticas detalladas épicas */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 md:gap-4 max-w-4xl mx-auto mb-8 md:mb-12">
+          {/* Estadísticas detalladas épicas - Responsive mejorado */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 lg:gap-6 max-w-5xl mx-auto mb-8 md:mb-12">
             {estadisticas.map((stat, index) => (
-              <div key={index} className="group bg-[#1a1a1a]/60 backdrop-blur-sm rounded-lg sm:rounded-xl md:rounded-2xl p-2.5 sm:p-3 md:p-4 border border-[#FFD700]/20 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 hover:scale-105 hover:shadow-xl hover:shadow-[#FFD700]/20 transition-all duration-500 cursor-pointer">
-                <div className="text-lg sm:text-xl md:text-2xl mb-1 md:mb-2 text-[#FFD700] group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">{stat.icono}</div>
-                <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{stat.numero}</div>
-                <div className="text-xs sm:text-sm text-gray-400 group-hover:text-gray-200 transition-colors duration-300">{stat.texto}</div>
+              <div key={index} className="group bg-[#1a1a1a]/60 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-4 lg:p-6 border border-[#FFD700]/20 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 hover:scale-105 hover:shadow-xl hover:shadow-[#FFD700]/20 transition-all duration-500 cursor-pointer">
+                <div className="text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 text-[#FFD700] group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">{stat.icono}</div>
+                <div className="text-base md:text-xl lg:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{stat.numero}</div>
+                <div className="text-xs md:text-sm text-gray-400 group-hover:text-gray-200 transition-colors duration-300">{stat.texto}</div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Navegación por categorías - Responsive */}
-        <div className="px-4 mb-6 md:mb-8">
+        {/* Navegación por categorías - Responsive como Inicio.tsx */}
+        <div className="px-4 mb-6 md:mb-10">
           <div className="max-w-6xl mx-auto">
-            <div className="flex gap-2 md:gap-4 mb-6 md:mb-8 overflow-x-auto no-scrollbar pb-2 md:pb-0 snap-x snap-mandatory">
+            <div className="flex gap-2 md:gap-4 mb-8 md:mb-12 overflow-x-auto no-scrollbar pb-3 md:pb-0 snap-x snap-mandatory scrollbar-hide">
               {categorias.map((categoria) => (
                 <button
                   key={categoria.id}
                   onClick={() => setCategoriaActiva(categoria.id)}
                   className={`
-                    flex items-center gap-2 px-3 sm:px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-2xl font-medium transition-all duration-300 text-xs sm:text-sm md:text-base flex-shrink-0 snap-start hover:scale-105
+                    flex items-center gap-2 px-4 md:px-6 lg:px-8 py-2.5 md:py-3 lg:py-4 rounded-xl md:rounded-2xl font-medium transition-all duration-300 text-sm md:text-base lg:text-lg flex-shrink-0 snap-start hover:scale-105 transform
                     ${categoriaActiva === categoria.id
-                      ? 'bg-[#FFD700] text-black shadow-lg shadow-[#FFD700]/30'
+                      ? 'bg-[#FFD700] text-black shadow-lg shadow-[#FFD700]/25 scale-105'
                       : 'bg-[#1a1a1a]/60 text-gray-300 hover:bg-[#1a1a1a]/80 border border-[#FFD700]/20 hover:border-[#FFD700]/40'
                     }
                   `}
                 >
-                  <span className="text-sm sm:text-base md:text-lg">{categoria.icono}</span>
-                  <span className="hidden sm:inline whitespace-nowrap">{categoria.nombre}</span>
+                  <span className="text-base md:text-lg lg:text-xl">{categoria.icono}</span>
+                  <span className="whitespace-nowrap font-medium">{categoria.nombre}</span>
                 </button>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Contenido principal */}
-        <div className="px-4 pb-12 md:pb-16">
+        {/* Contenido principal - Responsive mejorado */}
+        <div className="px-4 pb-16 md:pb-20 lg:pb-24">
           <div className="max-w-6xl mx-auto">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 md:gap-6 lg:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {documentos[categoriaActiva as keyof typeof documentos].map((doc, index) => (
                 <div
                   key={index}
-                  className="group bg-[#1a1a1a]/60 backdrop-blur-sm rounded-2xl p-6 border border-[#FFD700]/20 hover:border-[#FFD700]/40 hover:bg-[#FFD700]/5 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-[#FFD700]/10"
+                  className="group bg-[#1a1a1a]/60 backdrop-blur-sm rounded-xl md:rounded-2xl lg:rounded-3xl p-4 md:p-6 lg:p-8 border border-[#FFD700]/20 hover:border-[#FFD700]/40 hover:bg-[#FFD700]/5 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-[#FFD700]/10"
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="text-2xl">📄</div>
+                  <div className="flex items-start justify-between mb-3 md:mb-4">
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <div className="text-xl md:text-2xl lg:text-3xl">📄</div>
                       {doc.urgente && (
-                        <div className="bg-red-500/20 text-red-300 text-xs px-2 py-1 rounded-full border border-red-500/30 animate-pulse">
+                        <div className="bg-red-500/20 text-red-300 text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded-full border border-red-500/30 animate-pulse">
                           Urgente
                         </div>
                       )}
                     </div>
-                    <div className={`text-xs px-2 py-1 rounded-lg border ${getTipoColor(doc.tipo)}`}>
+                    <div className={`text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded-md md:rounded-lg border ${getTipoColor(doc.tipo)}`}>
                       {doc.tipo}
                     </div>
                   </div>
 
-                  <h3 className="text-lg font-bold text-[#FFD700] mb-3 group-hover:text-white transition-colors duration-300">
+                  <h3 className="text-base md:text-lg lg:text-xl font-bold text-[#FFD700] mb-2 md:mb-3 group-hover:text-white transition-colors duration-300 leading-tight">
                     {doc.titulo}
                   </h3>
                   
-                  <p className="text-gray-300 text-sm mb-4 leading-relaxed">
+                  <p className="text-gray-300 text-xs md:text-sm lg:text-base mb-3 md:mb-4 leading-relaxed">
                     {doc.descripcion}
                   </p>
 
-                  <div className="flex items-center justify-between text-xs text-gray-400 mb-4">
+                  <div className="flex items-center justify-between text-[10px] md:text-xs text-gray-400 mb-3 md:mb-4">
                     <span>📅 {doc.fecha}</span>
                     <span>📊 {doc.tamaño}</span>
                   </div>
 
-                  <button className="w-full bg-gradient-to-r from-[#FFD700] to-[#C9B037] text-black font-medium py-3 px-4 rounded-xl hover:shadow-lg hover:shadow-[#FFD700]/30 transition-all duration-300 hover:scale-105">
-                    <span className="flex items-center justify-center gap-2">
-                      <span>⬇️</span>
-                      Descargar
+                  <button className="w-full bg-gradient-to-r from-[#FFD700] to-[#C9B037] text-black font-medium py-2.5 md:py-3 lg:py-4 px-3 md:px-4 lg:px-6 rounded-lg md:rounded-xl lg:rounded-2xl hover:shadow-lg hover:shadow-[#FFD700]/30 transition-all duration-300 hover:scale-105 text-sm md:text-base">
+                    <span className="flex items-center justify-center gap-1 md:gap-2">
+                      <span className="text-sm md:text-base">⬇️</span>
+                      <span className="font-semibold">Descargar</span>
                     </span>
                   </button>
                 </div>

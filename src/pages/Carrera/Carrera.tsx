@@ -59,10 +59,10 @@ const Carrera: React.FC = () => {
             {/* Misión y Visión */}
             <div className="grid gap-6 md:gap-8 md:grid-cols-2">
               <div className="bg-[#1a1a1a]/60 backdrop-blur-sm rounded-2xl md:rounded-3xl p-6 md:p-8 border border-[#FFD700]/20">
-                <h3 className="text-xl md:text-2xl font-bold text-[#FFD700] mb-4 md:mb-6 flex items-center gap-3">
-                  <span className="text-2xl md:text-3xl">🎯</span> Misión
+                <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#FFD700] mb-4 md:mb-6 flex items-center gap-3">
+                  <span className="text-xl md:text-2xl lg:text-3xl">🎯</span> Misión
                 </h3>
-                <p className="text-gray-200 leading-relaxed text-sm md:text-base">
+                <p className="text-gray-200 leading-relaxed text-sm md:text-base lg:text-lg">
                   Brindar formación profesional científica, tecnológica y humanística de calidad, 
                   con valores y principios y responsabilidad social, afirmando la interculturalidad, 
                   reconociendo la diversidad natural, cultural y fortaleciendo nuestra identidad 
@@ -71,10 +71,10 @@ const Carrera: React.FC = () => {
               </div>
               
               <div className="bg-[#1a1a1a]/60 backdrop-blur-sm rounded-2xl md:rounded-3xl p-6 md:p-8 border border-[#FFD700]/20">
-                <h3 className="text-xl md:text-2xl font-bold text-[#FFD700] mb-4 md:mb-6 flex items-center gap-3">
-                  <span className="text-2xl md:text-3xl">🌟</span> Visión
+                <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#FFD700] mb-4 md:mb-6 flex items-center gap-3">
+                  <span className="text-xl md:text-2xl lg:text-3xl">🌟</span> Visión
                 </h3>
-                <p className="text-gray-200 leading-relaxed text-sm md:text-base">
+                <p className="text-gray-200 leading-relaxed text-sm md:text-base lg:text-lg">
                   Formar ciudadanos que valoran su cultura, conocen sus derechos y responsabilidades, 
                   desarrollan sus talentos y participan de manera innovadora, competitiva y comprometida 
                   en las dinámicas sociales, contribuyendo al desarrollo de sus comunidades y del país.
@@ -84,10 +84,10 @@ const Carrera: React.FC = () => {
 
             {/* Historia */}
             <div className="bg-[#1a1a1a]/60 backdrop-blur-sm rounded-2xl md:rounded-3xl p-6 md:p-8 border border-[#FFD700]/20">
-              <h3 className="text-xl md:text-2xl font-bold text-[#FFD700] mb-4 md:mb-6 flex items-center gap-3">
-                <span className="text-2xl md:text-3xl">📜</span> Reseña Histórica
+              <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#FFD700] mb-4 md:mb-6 flex items-center gap-3">
+                <span className="text-xl md:text-2xl lg:text-3xl">📜</span> Reseña Histórica
               </h3>
-              <div className="space-y-3 md:space-y-4 text-gray-200 leading-relaxed text-sm md:text-base">
+              <div className="space-y-3 md:space-y-4 text-gray-200 leading-relaxed text-sm md:text-base lg:text-lg">
                 <p>
                   La Escuela Profesional de Ingeniería Metalúrgica de la Universidad Nacional de San Antonio Abad del Cusco, 
                   fue creada el <strong className="text-[#FFD700]">07 de mayo de 1975</strong> por Resolución Nº 2241-75-CONUP, 
@@ -108,10 +108,10 @@ const Carrera: React.FC = () => {
 
             {/* Lema */}
             <div className="text-center bg-gradient-to-r from-[#FFD700]/10 to-[#C9B037]/10 rounded-2xl md:rounded-3xl p-8 md:p-12 border border-[#FFD700]/30">
-              <h2 className="text-2xl md:text-4xl font-black text-[#FFD700] mb-3 md:mb-4">
+              <h2 className="text-lg md:text-xl lg:text-2xl font-black text-[#FFD700] mb-3 md:mb-4">
                 "Metalurgia innovadora para un futuro sostenible"
               </h2>
-              <p className="text-gray-300 text-base md:text-lg">
+              <p className="text-gray-300 text-sm md:text-base lg:text-lg">
                 Lema de la Escuela Profesional de Ingeniería Metalúrgica
               </p>
             </div>
@@ -123,13 +123,13 @@ const Carrera: React.FC = () => {
           <div className="space-y-8">
             {/* Perfil del Ingresante */}
             <div className="bg-[#1a1a1a]/60 backdrop-blur-sm rounded-3xl p-8 border border-[#FFD700]/20">
-              <h3 className="text-2xl font-bold text-[#FFD700] mb-6 flex items-center gap-3">
-                <span className="text-3xl">🚪</span> Perfil del Ingresante
+              <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#FFD700] mb-6 flex items-center gap-3">
+                <span className="text-xl md:text-2xl lg:text-3xl">🚪</span> Perfil del Ingresante
               </h3>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="text-lg font-semibold text-[#FFD700] mb-3">Conocimientos Básicos</h4>
-                  <ul className="space-y-2 text-gray-200">
+                  <h4 className="text-base md:text-lg font-semibold text-[#FFD700] mb-3">Conocimientos Básicos</h4>
+                  <ul className="space-y-2 text-gray-200 text-sm md:text-base lg:text-lg">
                     <li className="flex items-start gap-2">
                       <span className="text-[#FFD700] mt-1">▸</span>
                       Matemática, física y química a nivel básico
@@ -145,8 +145,8 @@ const Carrera: React.FC = () => {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-[#FFD700] mb-3">Habilidades y Actitudes</h4>
-                  <ul className="space-y-2 text-gray-200">
+                  <h4 className="text-base md:text-lg font-semibold text-[#FFD700] mb-3">Habilidades y Actitudes</h4>
+                  <ul className="space-y-2 text-gray-200 text-sm md:text-base lg:text-lg">
                     <li className="flex items-start gap-2">
                       <span className="text-[#FFD700] mt-1">▸</span>
                       Capacidad creativa para resolver problemas
@@ -166,10 +166,10 @@ const Carrera: React.FC = () => {
 
             {/* Perfil del Egresado */}
             <div className="bg-[#1a1a1a]/60 backdrop-blur-sm rounded-2xl md:rounded-3xl p-6 md:p-8 border border-[#FFD700]/20">
-              <h3 className="text-xl md:text-2xl font-bold text-[#FFD700] mb-4 md:mb-6 flex items-center gap-3">
-                <span className="text-2xl md:text-3xl">🎯</span> Perfil del Egresado
+              <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#FFD700] mb-4 md:mb-6 flex items-center gap-3">
+                <span className="text-xl md:text-2xl lg:text-3xl">🎯</span> Perfil del Egresado
               </h3>
-              <p className="text-gray-200 mb-4 md:mb-6 text-base md:text-lg">
+              <p className="text-gray-200 mb-4 md:mb-6 text-sm md:text-base lg:text-lg">
                 El Ingeniero Metalúrgico egresado está preparado para transformar y optimizar materiales metálicos 
                 con una sólida base científica y tecnológica, desarrollando procesos eficientes y sostenibles 
                 en la industria minera y metalúrgica.
@@ -202,8 +202,8 @@ const Carrera: React.FC = () => {
 
             {/* Competencias */}
             <div className="bg-[#1a1a1a]/60 backdrop-blur-sm rounded-2xl md:rounded-3xl p-6 md:p-8 border border-[#FFD700]/20">
-              <h3 className="text-xl md:text-2xl font-bold text-[#FFD700] mb-4 md:mb-6 flex items-center gap-3">
-                <span className="text-2xl md:text-3xl">⚡</span> Competencias Profesionales
+              <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#FFD700] mb-4 md:mb-6 flex items-center gap-3">
+                <span className="text-xl md:text-2xl lg:text-3xl">⚡</span> Competencias Profesionales
               </h3>
               <div className="grid gap-6 md:gap-8 md:grid-cols-2">
                 <div>
@@ -251,8 +251,8 @@ const Carrera: React.FC = () => {
           <div className="space-y-8">
             {/* Información General del Plan */}
             <div className="bg-[#1a1a1a]/60 backdrop-blur-sm rounded-2xl md:rounded-3xl p-6 md:p-8 border border-[#FFD700]/20">
-              <h3 className="text-xl md:text-2xl font-bold text-[#FFD700] mb-4 md:mb-6 flex items-center gap-3">
-                <span className="text-2xl md:text-3xl">📋</span> Información Académica
+              <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#FFD700] mb-4 md:mb-6 flex items-center gap-3">
+                <span className="text-xl md:text-2xl lg:text-3xl">📋</span> Información Académica
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                 <div className="text-center p-4 md:p-6 bg-[#1a1a1a]/40 rounded-xl md:rounded-2xl border border-[#FFD700]/10">
@@ -280,10 +280,10 @@ const Carrera: React.FC = () => {
 
             {/* Plan de Estudios por Semestres */}
             <div className="bg-[#1a1a1a]/60 backdrop-blur-sm rounded-2xl md:rounded-3xl p-6 md:p-8 border border-[#FFD700]/20">
-              <h3 className="ty-h3 font-bold text-[#FFD700] mb-4 md:mb-6 flex items-center gap-3">
-                <span className="text-2xl md:text-3xl">📚</span> Estructura Curricular
+              <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#FFD700] mb-4 md:mb-6 flex items-center gap-3">
+                <span className="text-xl md:text-2xl lg:text-3xl">📚</span> Estructura Curricular
               </h3>
-              <p className="text-gray-200 ty-body mb-6 md:mb-8 text-center">
+              <p className="text-gray-200 text-sm md:text-base lg:text-lg mb-6 md:mb-8 text-center">
                 La carrera está estructurada en 10 semestres académicos, con énfasis en formación 
                 científica, tecnológica y humanística de calidad.
               </p>
@@ -291,9 +291,9 @@ const Carrera: React.FC = () => {
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
                 {[...Array(10)].map((_, index) => (
                   <div key={index} className="bg-[#1a1a1a]/40 rounded-xl md:rounded-2xl p-4 md:p-6 border border-[#FFD700]/10 text-center">
-                    <div className="text-xl md:text-2xl mb-2 md:mb-3">{index < 2 ? '📖' : index < 6 ? '🔬' : '⚙️'}</div>
-                    <h4 className="text-[#FFD700] font-bold ty-body-sm mb-1 md:mb-2">Semestre {index + 1}</h4>
-                    <div className="text-gray-400 ty-meta normal-case">
+                    <div className="text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3">{index < 2 ? '📖' : index < 6 ? '🔬' : '⚙️'}</div>
+                    <h4 className="text-[#FFD700] font-bold text-sm md:text-base lg:text-lg mb-1 md:mb-2">Semestre {index + 1}</h4>
+                    <div className="text-gray-400 text-xs md:text-sm normal-case">
                       {index < 2 && 'Formación Básica'}
                       {index >= 2 && index < 6 && 'Formación Específica'}
                       {index >= 6 && index < 8 && 'Especialización'}
@@ -313,8 +313,8 @@ const Carrera: React.FC = () => {
                     <div className="flex items-center gap-6 text-center">
                       <div className="text-4xl md:text-5xl animate-pulse">📚</div>
                       <div className="flex-1">
-                        <h3 className="text-[#FFD700] font-bold ty-h4 md:ty-h3 mb-2">Ver Plan de Estudios Completo</h3>
-                        <p className="text-gray-300 ty-body-sm md:ty-body leading-relaxed">Consulta todas las materias organizadas por semestres y conoce el mapa curricular completo</p>
+                        <h3 className="text-[#FFD700] font-bold text-sm md:text-base lg:text-lg mb-2">Ver Plan de Estudios Completo</h3>
+                        <p className="text-gray-300 text-xs md:text-sm leading-relaxed">Consulta todas las materias organizadas por semestres y conoce el mapa curricular completo</p>
                       </div>
                       <div className="text-[#FFD700] text-2xl md:text-3xl group-hover:translate-x-2 transition-transform duration-300">→</div>
                     </div>
@@ -330,19 +330,19 @@ const Carrera: React.FC = () => {
           <div className="space-y-8">
             {/* Campo Ocupacional */}
             <div className="bg-[#1a1a1a]/60 backdrop-blur-sm rounded-2xl md:rounded-3xl p-6 md:p-8 border border-[#FFD700]/20">
-              <h3 className="ty-h3 font-bold text-[#FFD700] mb-4 md:mb-6 flex items-center gap-3">
-                <span className="text-2xl md:text-3xl">💼</span> Áreas de Desempeño Profesional
+              <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#FFD700] mb-4 md:mb-6 flex items-center gap-3">
+                <span className="text-xl md:text-2xl lg:text-3xl">💼</span> Áreas de Desempeño Profesional
               </h3>
-              <p className="text-gray-200 ty-body mb-6 md:mb-8 text-center">
+              <p className="text-gray-200 text-sm md:text-base lg:text-lg mb-6 md:mb-8 text-center">
                 Los egresados se encuentran laborando en el ámbito nacional e internacional, 
                 cumpliendo su desempeño profesional dentro de las áreas de especialización.
               </p>
               
               <div className="grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <div className="bg-[#1a1a1a]/40 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-6 border border-[#FFD700]/10 text-center group hover:border-[#FFD700]/30 transition-all duration-300">
-                  <div className="text-3xl md:text-4xl mb-3 md:mb-4">⛏️</div>
-                  <h4 className="text-[#FFD700] font-bold ty-h4 mb-2 md:mb-3">Industria Minera</h4>
-                  <ul className="text-gray-300 ty-body-sm space-y-1">
+                  <div className="text-xl md:text-2xl lg:text-3xl mb-3 md:mb-4">⛏️</div>
+                  <h4 className="text-[#FFD700] font-bold text-sm md:text-base lg:text-lg mb-2 md:mb-3">Industria Minera</h4>
+                  <ul className="text-gray-300 text-xs md:text-sm space-y-1">
                     <li>• Plantas concentradoras</li>
                     <li>• Operaciones mineras</li>
                     <li>• Procesamiento de minerales</li>
@@ -351,9 +351,9 @@ const Carrera: React.FC = () => {
                 </div>
                 
                 <div className="bg-[#1a1a1a]/40 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-6 border border-[#FFD700]/10 text-center group hover:border-[#FFD700]/30 transition-all duration-300">
-                  <div className="text-3xl md:text-4xl mb-3 md:mb-4">🏭</div>
-                  <h4 className="text-[#FFD700] font-bold ty-h4 mb-2 md:mb-3">Industria Siderúrgica</h4>
-                  <ul className="text-gray-300 ty-body-sm space-y-1">
+                  <div className="text-xl md:text-2xl lg:text-3xl mb-3 md:mb-4">🏭</div>
+                  <h4 className="text-[#FFD700] font-bold text-sm md:text-base lg:text-lg mb-2 md:mb-3">Industria Siderúrgica</h4>
+                  <ul className="text-gray-300 text-xs md:text-sm space-y-1">
                     <li>• Fundición y refinación</li>
                     <li>• Producción de acero</li>
                     <li>• Control de calidad</li>
@@ -362,9 +362,9 @@ const Carrera: React.FC = () => {
                 </div>
                 
                 <div className="bg-[#1a1a1a]/40 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-6 border border-[#FFD700]/10 text-center group hover:border-[#FFD700]/30 transition-all duration-300">
-                  <div className="text-3xl md:text-4xl mb-3 md:mb-4">🚗</div>
-                  <h4 className="text-[#FFD700] font-bold ty-h4 mb-2 md:mb-3">Industria Automotriz</h4>
-                  <ul className="text-gray-300 ty-body-sm space-y-1">
+                  <div className="text-xl md:text-2xl lg:text-3xl mb-3 md:mb-4">🚗</div>
+                  <h4 className="text-[#FFD700] font-bold text-sm md:text-base lg:text-lg mb-2 md:mb-3">Industria Automotriz</h4>
+                  <ul className="text-gray-300 text-xs md:text-sm space-y-1">
                     <li>• Componentes metálicos</li>
                     <li>• Tratamientos térmicos</li>
                     <li>• Soldadura especializada</li>
@@ -373,9 +373,9 @@ const Carrera: React.FC = () => {
                 </div>
                 
                 <div className="bg-[#1a1a1a]/40 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-6 border border-[#FFD700]/10 text-center group hover:border-[#FFD700]/30 transition-all duration-300">
-                  <div className="text-3xl md:text-4xl mb-3 md:mb-4">🏢</div>
-                  <h4 className="text-[#FFD700] font-bold ty-h4 mb-2 md:mb-3">Consultoría</h4>
-                  <ul className="text-gray-300 ty-body-sm space-y-1">
+                  <div className="text-xl md:text-2xl lg:text-3xl mb-3 md:mb-4">🏢</div>
+                  <h4 className="text-[#FFD700] font-bold text-sm md:text-base lg:text-lg mb-2 md:mb-3">Consultoría</h4>
+                  <ul className="text-gray-300 text-xs md:text-sm space-y-1">
                     <li>• Asesoría técnica</li>
                     <li>• Evaluación de proyectos</li>
                     <li>• Auditorías técnicas</li>
@@ -384,9 +384,9 @@ const Carrera: React.FC = () => {
                 </div>
                 
                 <div className="bg-[#1a1a1a]/40 backdrop-blur-sm rounded-2xl p-6 border border-[#FFD700]/10 text-center group hover:border-[#FFD700]/30 transition-all duration-300">
-                  <div className="text-4xl mb-4">🔬</div>
-                  <h4 className="text-[#FFD700] font-bold ty-h4 mb-3">Investigación</h4>
-                  <ul className="text-gray-300 ty-body-sm space-y-1">
+                  <div className="text-xl md:text-2xl lg:text-3xl mb-4">🔬</div>
+                  <h4 className="text-[#FFD700] font-bold text-sm md:text-base lg:text-lg mb-3">Investigación</h4>
+                  <ul className="text-gray-300 text-xs md:text-sm space-y-1">
                     <li>• Desarrollo de materiales</li>
                     <li>• Nanotecnología</li>
                     <li>• Biomateriales</li>
@@ -395,9 +395,9 @@ const Carrera: React.FC = () => {
                 </div>
                 
                 <div className="bg-[#1a1a1a]/40 backdrop-blur-sm rounded-2xl p-6 border border-[#FFD700]/10 text-center group hover:border-[#FFD700]/30 transition-all duration-300">
-                  <div className="text-4xl mb-4">🎓</div>
-                  <h4 className="text-[#FFD700] font-bold ty-h4 mb-3">Docencia</h4>
-                  <ul className="text-gray-300 ty-body-sm space-y-1">
+                  <div className="text-xl md:text-2xl lg:text-3xl mb-4">🎓</div>
+                  <h4 className="text-[#FFD700] font-bold text-sm md:text-base lg:text-lg mb-3">Docencia</h4>
+                  <ul className="text-gray-300 text-xs md:text-sm space-y-1">
                     <li>• Universidades</li>
                     <li>• Institutos técnicos</li>
                     <li>• Capacitación empresarial</li>
@@ -409,8 +409,8 @@ const Carrera: React.FC = () => {
 
             {/* Empleadores Destacados */}
             <div className="bg-[#1a1a1a]/60 backdrop-blur-sm rounded-3xl p-8 border border-[#FFD700]/20">
-              <h3 className="ty-h2 font-bold text-[#FFD700] mb-6 flex items-center gap-3">
-                <span className="text-3xl">🏆</span> Principales Empleadores
+              <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#FFD700] mb-6 flex items-center gap-3">
+                <span className="text-xl md:text-2xl lg:text-3xl">🏆</span> Principales Empleadores
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
@@ -424,7 +424,7 @@ const Carrera: React.FC = () => {
                   'Aceros Arequipa'
                 ].map((empresa, index) => (
                   <div key={index} className="bg-[#1a1a1a]/40 rounded-xl p-4 border border-[#FFD700]/10 text-center">
-                    <span className="text-gray-200 font-medium ty-body-sm">{empresa}</span>
+                    <span className="text-gray-200 font-medium text-sm md:text-base lg:text-lg">{empresa}</span>
                   </div>
                 ))}
               </div>
@@ -432,21 +432,21 @@ const Carrera: React.FC = () => {
 
             {/* Oportunidades de Posgrado */}
             <div className="bg-gradient-to-r from-[#FFD700]/10 to-[#C9B037]/10 rounded-3xl p-8 border border-[#FFD700]/30">
-              <h3 className="ty-h2 font-bold text-[#FFD700] mb-6 flex items-center gap-3">
-                <span className="text-3xl">📚</span> Oportunidades de Posgrado
+              <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#FFD700] mb-6 flex items-center gap-3">
+                <span className="text-xl md:text-2xl lg:text-3xl">📚</span> Oportunidades de Posgrado
               </h3>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="font-semibold text-[#FFD700] ty-h4 mb-3">Maestrías Disponibles</h4>
-                  <ul className="space-y-2 text-gray-200 ty-body-sm">
+                  <h4 className="font-semibold text-[#FFD700] text-sm md:text-base lg:text-lg mb-3">Maestrías Disponibles</h4>
+                  <ul className="space-y-2 text-gray-200 text-xs md:text-sm">
                     <li>• Maestría en Metalurgia Extractiva</li>
                     <li>• Maestría en Ciencia e Ingeniería de Materiales</li>
                     <li>• Maestría en Gestión Minera</li>
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-[#FFD700] ty-h4 mb-3">Especializaciones</h4>
-                  <ul className="space-y-2 text-gray-200 ty-body-sm">
+                  <h4 className="font-semibold text-[#FFD700] text-sm md:text-base lg:text-lg mb-3">Especializaciones</h4>
+                  <ul className="space-y-2 text-gray-200 text-xs md:text-sm">
                     <li>• Soldadura Avanzada</li>
                     <li>• Metalurgia de Polvos</li>
                     <li>• Control de Calidad</li>
@@ -470,83 +470,91 @@ const Carrera: React.FC = () => {
         background: 'radial-gradient(ellipse at top, #1a1a1a 0%, #2a2a2a 30%, #0f0f0f 60%, #000000 100%)'
       }}
     >
-      {/* Efectos de fondo mejorados */}
+      {/* Efectos de fondo mejorados con partículas flotantes */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 via-transparent to-[#C9B037]/3"></div>
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#FFD700]/8 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[#C9B037]/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
         <div className="absolute top-3/4 left-1/2 w-64 h-64 bg-[#FFD700]/6 rounded-full blur-2xl animate-pulse delay-500"></div>
+        
+        {/* Partículas flotantes responsive */}
+        <div className="absolute top-16 md:top-20 left-6 md:left-10 w-2 md:w-3 h-2 md:h-3 bg-[#FFD700]/60 rounded-full animate-pulse delay-300"></div>
+        <div className="absolute top-32 md:top-40 right-12 md:right-20 w-1.5 md:w-2 h-1.5 md:h-2 bg-[#C9B037]/70 rounded-full animate-pulse delay-700"></div>
+        <div className="absolute bottom-24 md:bottom-32 left-12 md:left-20 w-3 md:w-4 h-3 md:h-4 bg-[#FFD700]/50 rounded-full animate-pulse delay-1000"></div>
+        <div className="absolute bottom-12 md:bottom-20 right-6 md:right-10 w-1.5 md:w-2 h-1.5 md:h-2 bg-[#B8860B]/80 rounded-full animate-pulse delay-500"></div>
+        <div className="absolute top-48 md:top-60 left-1/3 w-2 md:w-3 h-2 md:h-3 bg-[#C9B037]/60 rounded-full animate-pulse delay-1200"></div>
+        <div className="absolute bottom-48 md:bottom-60 right-1/3 w-1.5 md:w-2 h-1.5 md:h-2 bg-[#FFD700]/70 rounded-full animate-pulse delay-800"></div>
       </div>
 
       <div className="relative">
-        {/* Header Épico - Estilo similar a Representacion */}
-        <div className="text-center px-4 pt-10 pb-10 sm:pt-12 sm:pb-14 md:pt-14 md:pb-16">
-          <div className="inline-block mb-5 sm:mb-6">
-            <div className="bg-[#FFD700]/10 p-3 sm:p-4 rounded-full border border-[#FFD700]/30">
-              <span className="text-3xl sm:text-4xl">🎓</span>
+        {/* Header Épico - Responsive como Inicio.tsx */}
+        <div className="text-center px-4 py-8 md:py-16">
+          <div className="inline-block mb-6 md:mb-10">
+            <div className="bg-[#FFD700]/10 p-4 md:p-6 rounded-full border border-[#FFD700]/30 shadow-2xl hover:shadow-[#FFD700]/40 transition-all duration-500">
+              <span className="text-4xl md:text-5xl lg:text-6xl">🎓</span>
             </div>
           </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold bg-gradient-to-r from-[#FFD700] via-[#FFF8DC] to-[#C9B037] bg-clip-text text-transparent tracking-wide mb-3 sm:mb-4 md:mb-6">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold bg-gradient-to-r from-[#FFD700] via-[#FFF8DC] to-[#C9B037] bg-clip-text text-transparent tracking-wide mb-4 md:mb-6 leading-tight">
             <span className="block">Ingeniería</span>
             <span className="block">Metalúrgica</span>
           </h1>
-          <p className="text-base sm:text-lg md:text-xl text-[#C9B037] font-medium tracking-wide max-w-2xl mx-auto mb-6 md:mb-8">
+          <p className="text-sm md:text-lg lg:text-xl text-[#C9B037] font-medium tracking-wider max-w-3xl mx-auto mb-6 md:mb-10">
             Universidad Nacional de San Antonio Abad del Cusco • 50 Años de Excelencia
           </p>
 
-          {/* Stats rápidas adicionales épicas */}
-          <div className="flex justify-center gap-8 text-center mb-8">
+          {/* Stats rápidas épicas - Responsive */}
+          <div className="flex justify-center gap-4 md:gap-8 text-center mb-6 md:mb-10">
             <div className="group cursor-pointer hover:scale-110 transition-all duration-500">
-              <div className="text-2xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">50</div>
-              <div className="text-gray-400 text-sm group-hover:text-gray-200 transition-colors duration-300">Años</div>
+              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">50</div>
+              <div className="text-gray-400 text-xs md:text-sm group-hover:text-gray-200 transition-colors duration-300">Años</div>
             </div>
             <div className="group cursor-pointer hover:scale-110 transition-all duration-500">
-              <div className="text-2xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">320+</div>
-              <div className="text-gray-400 text-sm group-hover:text-gray-200 transition-colors duration-300">Estudiantes</div>
+              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">320+</div>
+              <div className="text-gray-400 text-xs md:text-sm group-hover:text-gray-200 transition-colors duration-300">Estudiantes</div>
             </div>
             <div className="group cursor-pointer hover:scale-110 transition-all duration-500">
-              <div className="text-2xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">10</div>
-              <div className="text-gray-400 text-sm group-hover:text-gray-200 transition-colors duration-300">Semestres</div>
+              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">10</div>
+              <div className="text-gray-400 text-xs md:text-sm group-hover:text-gray-200 transition-colors duration-300">Semestres</div>
             </div>
           </div>
 
-          {/* Estadísticas detalladas - Épicas con efectos mejorados */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 md:gap-4 max-w-4xl mx-auto mb-8 md:mb-12">
+          {/* Estadísticas detalladas épicas - Responsive mejorado */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 lg:gap-6 max-w-5xl mx-auto mb-8 md:mb-12">
             {estadisticas.map((stat, index) => (
-              <div key={index} className="group bg-[#1a1a1a]/60 backdrop-blur-sm rounded-lg sm:rounded-xl md:rounded-2xl p-2.5 sm:p-3 md:p-4 border border-[#FFD700]/20 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 hover:scale-105 hover:shadow-xl hover:shadow-[#FFD700]/20 transition-all duration-500 cursor-pointer">
-                <div className="text-lg sm:text-xl md:text-2xl mb-1 md:mb-2 text-[#FFD700] group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">{stat.icono}</div>
-                <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{stat.numero}</div>
-                <div className="text-xs sm:text-sm text-gray-400 group-hover:text-gray-200 transition-colors duration-300">{stat.texto}</div>
+              <div key={index} className="group bg-[#1a1a1a]/60 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-4 lg:p-6 border border-[#FFD700]/20 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 hover:scale-105 hover:shadow-xl hover:shadow-[#FFD700]/20 transition-all duration-500 cursor-pointer">
+                <div className="text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 text-[#FFD700] group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">{stat.icono}</div>
+                <div className="text-base md:text-xl lg:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{stat.numero}</div>
+                <div className="text-xs md:text-sm text-gray-400 group-hover:text-gray-200 transition-colors duration-300">{stat.texto}</div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Navegación por pestañas - Responsive */}
-        <div className="px-4 mb-6 md:mb-8">
+        {/* Navegación por pestañas - Responsive como Inicio.tsx */}
+        <div className="px-4 mb-6 md:mb-10">
           <div className="max-w-6xl mx-auto">
-            <div className="flex gap-2 md:gap-4 mb-6 md:mb-8 overflow-x-auto no-scrollbar pb-2 md:pb-0 snap-x snap-mandatory">
+            <div className="flex gap-2 md:gap-4 mb-8 md:mb-12 overflow-x-auto no-scrollbar pb-3 md:pb-0 snap-x snap-mandatory scrollbar-hide">
               {secciones.map((seccion) => (
                 <button
                   key={seccion.id}
                   onClick={() => setSeccionActiva(seccion.id as any)}
-                  className={`flex items-center gap-2 px-3 sm:px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-2xl font-medium transition-all duration-300 text-xs sm:text-sm md:text-base flex-shrink-0 snap-start ${
+                  className={`flex items-center gap-2 px-4 md:px-6 lg:px-8 py-2.5 md:py-3 lg:py-4 rounded-xl md:rounded-2xl font-medium transition-all duration-300 text-sm md:text-base lg:text-lg flex-shrink-0 snap-start hover:scale-105 transform ${
                     seccionActiva === seccion.id
-                      ? 'bg-[#FFD700] text-black shadow-lg shadow-[#FFD700]/25'
-                      : 'bg-[#1a1a1a]/60 text-gray-300 hover:bg-[#1a1a1a]/80 border border-[#FFD700]/20'
+                      ? 'bg-[#FFD700] text-black shadow-lg shadow-[#FFD700]/25 scale-105'
+                      : 'bg-[#1a1a1a]/60 text-gray-300 hover:bg-[#1a1a1a]/80 border border-[#FFD700]/20 hover:border-[#FFD700]/40'
                   }`}
                   aria-pressed={seccionActiva === seccion.id}
                 >
-                  <span className="text-sm sm:text-base md:text-lg">{seccion.icono}</span>
-                  <span className="hidden sm:inline whitespace-nowrap">{seccion.nombre}</span>
+                  <span className="text-base md:text-lg lg:text-xl">{seccion.icono}</span>
+                  <span className="whitespace-nowrap font-medium">{seccion.nombre}</span>
                 </button>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Contenido principal */}
-        <div className="px-4 pb-12 md:pb-16">
+        {/* Contenido principal - Responsive mejorado */}
+        <div className="px-4 pb-16 md:pb-20 lg:pb-24">
           <div className="max-w-6xl mx-auto">
             {renderContent()}
           </div>
