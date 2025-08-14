@@ -34,7 +34,7 @@ const Carrera: React.FC = () => {
   const estadisticas = [
     { numero: '50', texto: 'Años de Historia', icono: '🏛️' },
     { numero: '10', texto: 'Semestres', icono: '📅' },
-  { numero: '+300', texto: 'Estudiantes Activos', icono: '👥' },
+    { numero: '+320', texto: 'Estudiantes Activos', icono: '👥' },
     { numero: 'ICACIT', texto: 'Acreditación', icono: '🏆' }
   ];
 
@@ -470,36 +470,53 @@ const Carrera: React.FC = () => {
         background: 'radial-gradient(ellipse at top, #1a1a1a 0%, #2a2a2a 30%, #0f0f0f 60%, #000000 100%)'
       }}
     >
-      {/* Efectos de fondo */}
+      {/* Efectos de fondo mejorados */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 via-transparent to-[#C9B037]/3"></div>
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#FFD700]/8 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[#C9B037]/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-3/4 left-1/2 w-64 h-64 bg-[#FFD700]/6 rounded-full blur-2xl animate-pulse delay-500"></div>
       </div>
 
       <div className="relative">
-        {/* Header Responsive */}
+        {/* Header Épico - Estilo similar a Representacion */}
         <div className="text-center px-4 pt-10 pb-10 sm:pt-12 sm:pb-14 md:pt-14 md:pb-16">
           <div className="inline-block mb-5 sm:mb-6">
             <div className="bg-[#FFD700]/10 p-3 sm:p-4 rounded-full border border-[#FFD700]/30">
               <span className="text-3xl sm:text-4xl">🎓</span>
             </div>
           </div>
-          <h1 className="ty-display bg-gradient-to-r from-[#FFD700] via-[#FFF8DC] to-[#C9B037] bg-clip-text text-transparent tracking-wide mb-3 sm:mb-4 md:mb-6">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold bg-gradient-to-r from-[#FFD700] via-[#FFF8DC] to-[#C9B037] bg-clip-text text-transparent tracking-wide mb-3 sm:mb-4 md:mb-6">
             <span className="block">Ingeniería</span>
             <span className="block">Metalúrgica</span>
           </h1>
-          <p className="ty-body text-[#C9B037] font-medium tracking-wide max-w-2xl mx-auto mb-6 md:mb-8">
-            Universidad Nacional de San Antonio Abad del Cusco
+          <p className="text-base sm:text-lg md:text-xl text-[#C9B037] font-medium tracking-wide max-w-2xl mx-auto mb-6 md:mb-8">
+            Universidad Nacional de San Antonio Abad del Cusco • 50 Años de Excelencia
           </p>
 
-          {/* Estadísticas - Responsive */}
+          {/* Stats rápidas adicionales épicas */}
+          <div className="flex justify-center gap-8 text-center mb-8">
+            <div className="group cursor-pointer hover:scale-110 transition-all duration-500">
+              <div className="text-2xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">50</div>
+              <div className="text-gray-400 text-sm group-hover:text-gray-200 transition-colors duration-300">Años</div>
+            </div>
+            <div className="group cursor-pointer hover:scale-110 transition-all duration-500">
+              <div className="text-2xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">320+</div>
+              <div className="text-gray-400 text-sm group-hover:text-gray-200 transition-colors duration-300">Estudiantes</div>
+            </div>
+            <div className="group cursor-pointer hover:scale-110 transition-all duration-500">
+              <div className="text-2xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">10</div>
+              <div className="text-gray-400 text-sm group-hover:text-gray-200 transition-colors duration-300">Semestres</div>
+            </div>
+          </div>
+
+          {/* Estadísticas detalladas - Épicas con efectos mejorados */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 md:gap-4 max-w-4xl mx-auto mb-8 md:mb-12">
             {estadisticas.map((stat, index) => (
-              <div key={index} className="bg-[#1a1a1a]/60 backdrop-blur-sm rounded-lg sm:rounded-xl md:rounded-2xl p-2.5 sm:p-3 md:p-4 border border-[#FFD700]/20">
-                <div className="ty-h4 mb-1 md:mb-2 text-[#FFD700]">{stat.icono}</div>
-                <div className="ty-stat text-[#FFD700]">{stat.numero}</div>
-                <div className="ty-meta normal-case text-gray-400 tracking-normal">{stat.texto}</div>
+              <div key={index} className="group bg-[#1a1a1a]/60 backdrop-blur-sm rounded-lg sm:rounded-xl md:rounded-2xl p-2.5 sm:p-3 md:p-4 border border-[#FFD700]/20 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 hover:scale-105 hover:shadow-xl hover:shadow-[#FFD700]/20 transition-all duration-500 cursor-pointer">
+                <div className="text-lg sm:text-xl md:text-2xl mb-1 md:mb-2 text-[#FFD700] group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">{stat.icono}</div>
+                <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{stat.numero}</div>
+                <div className="text-xs sm:text-sm text-gray-400 group-hover:text-gray-200 transition-colors duration-300">{stat.texto}</div>
               </div>
             ))}
           </div>
