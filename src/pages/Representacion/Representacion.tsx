@@ -360,15 +360,15 @@ const Representacion: React.FC = () => {
                   <ul className="space-y-2 text-gray-200">
                     <li className="flex items-start gap-2">
                       <span className="text-[#FFD700] mt-1">📧</span>
-                      <span>presidente.cf.epimt@unsaac.edu.pe</span>
+                      <span>183172@unsaac.edu.pe</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-[#FFD700] mt-1">📞</span>
-                      <span>+51 984 123 456 (WhatsApp)</span>
+                      <span>+51 939 674 596 (WhatsApp)</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-[#FFD700] mt-1">📍</span>
-                      <span>Oficina EPIMT, 2do piso</span>
+                      <span>Pabellón EPIMT, 1er piso</span>
                     </li>
                   </ul>
                 </div>
@@ -377,15 +377,15 @@ const Representacion: React.FC = () => {
                   <ul className="space-y-2 text-gray-200">
                     <li className="flex items-start gap-2">
                       <span className="text-[#FFD700] mt-1">📘</span>
-                      <span>Facebook: CF EPIMT UNSAAC</span>
+                      <span>Facebook: Centro Federado de Ingeniería Metalúrgica - Unsaac-cusco</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-[#FFD700] mt-1">📷</span>
-                      <span>Instagram: @cf_epimt</span>
+                      <span>Instagram: Actualmente no se encuentra habilitado.</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-[#FFD700] mt-1">🐦</span>
-                      <span>Twitter: @CF_EPIMT</span>
+                      <span>Twitter: Actualmente no se encuentra habilitado.</span>
                     </li>
                   </ul>
                 </div>
