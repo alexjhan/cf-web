@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 function Inicio() {
   return (
     <div 
@@ -6,6 +7,14 @@ function Inicio() {
         background: 'radial-gradient(ellipse at top, #1a1a1a 0%, #2a2a2a 30%, #0f0f0f 60%, #000000 100%)'
       }}
     >
+      <Helmet>
+        <title>Centro Federado Ingeniería Metalúrgica - Inicio</title>
+        <meta name="description" content="Portal del Centro Federado de Ingeniería Metalúrgica: representación estudiantil, recursos académicos, noticias y oportunidades." />
+        <link rel="canonical" href="https://www.ejemplo-dominio-cfim.pe/inicio" />
+        <meta property="og:title" content="Centro Federado Ingeniería Metalúrgica - Inicio" />
+        <meta property="og:description" content="Representación estudiantil y recursos de Ingeniería Metalúrgica." />
+        <meta property="og:url" content="https://www.ejemplo-dominio-cfim.pe/inicio" />
+      </Helmet>
       {/* CSS Personalizado para borde animado */}
       <style dangerouslySetInnerHTML={{
         __html: `
