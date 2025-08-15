@@ -314,12 +314,12 @@ function Inicio() {
             <div className="flex-1 space-y-3 text-sm">
               <h4 className="text-[#FFD700] font-semibold mb-2">Contacto</h4>
               <div className="flex items-start gap-2">
-                <span className="text-[#C9B037]">📧</span>
-                <a href="mailto:centrofederado.metalurgia@unsaac.edu.pe" className="text-gray-400 hover:text-[#FFD700] break-all">centrofederado.metalurgia@unsaac.edu.pe</a>
+                <span className="text-[#C9B037]">📘</span>
+                <a href="https://web.facebook.com/profile.php?id=100068360975655" className="text-gray-400 hover:text-[#FFD700] break-all">Centro Federado de Ingeniería Metalúrgica - Unsaac-cusco</a>
               </div>
               <div className="flex items-start gap-2">
                 <span className="text-[#C9B037]">📞</span>
-                <span className="text-gray-400">(084) 000000</span>
+                <span className="text-gray-400"></span>
               </div>
               <div className="flex items-start gap-2">
                 <span className="text-[#C9B037]">📍</span>
