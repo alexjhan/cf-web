@@ -66,7 +66,7 @@ function Inicio() {
             </div>
             
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-black mt-6 md:mt-8 mb-2 bg-gradient-to-r from-[#FFD700] via-[#FFF8DC] to-[#C9B037] bg-clip-text text-transparent drop-shadow-2xl tracking-wide leading-tight">
-              <span className="block">CENTRO FEDERADO DE</span>
+              <span className="block">CENTRO FEDERADO</span>
               <span className="block">INGENIERÍA METALÚRGICA</span>
             </h1>
             <p className="text-base md:text-xl text-[#C9B037] font-medium tracking-wider">
