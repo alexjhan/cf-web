@@ -89,13 +89,17 @@ const ChatBot = () => {
       if (res.ok) {
         const data = await res.json();
         setMensajes(prev => [...prev, { autor: "ia", texto: data.respuesta }]);
-        setModoOffline(false);
+        if (data.online === false) {
+          setModoOffline(true);
+        } else {
+          setModoOffline(false);
+        }
       } else {
         throw new Error('bad status');
       }
     } catch (err) {
       // Fallback local
-      const base = buscarRespuestaLocal(pregunta);
+  const base = buscarRespuestaLocal(pregunta);
       const respuesta = construirRespuestaExtendida(base, pregunta);
       setMensajes(prev => [...prev, { autor: "ia", texto: respuesta }]);
       setModoOffline(true);
