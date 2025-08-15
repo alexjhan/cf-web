@@ -39,6 +39,14 @@ model = SentenceTransformer(MODEL_EMBED)
 from fastapi.responses import JSONResponse
 app = FastAPI()
 
+# ================= Configuración de seguridad y CORS dinámico =================
+ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "")  # Define este valor en Render
+_origins_env = os.getenv("FRONTEND_ORIGINS", "*")  # Coma separado. Ej: https://tu-frontend.netlify.app,https://otro
+if _origins_env.strip() == "*":
+    _allow_origins = ["*"]
+else:
+    _allow_origins = [o.strip() for o in _origins_env.split(",") if o.strip()]
+
 # Endpoint de salud para monitoreo
 @app.get("/health")
 async def health_check():
@@ -63,11 +71,24 @@ async def options_handler(rest_of_path: str):
 # Permitir CORS para el frontend local
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_allow_origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
+
+def _check_admin(request: Request):
+    """Valida token admin en headers para métodos mutadores.
+    Header soportado: X-Admin-Token o Authorization: Bearer <token>"""
+    if not ADMIN_TOKEN:
+        return  # Si no está configurado, no se aplica (modo desarrollo)
+    hdr = request.headers.get("x-admin-token") or request.headers.get("X-Admin-Token")
+    if not hdr:
+        auth = request.headers.get("authorization") or request.headers.get("Authorization")
+        if auth and auth.lower().startswith("bearer "):
+            hdr = auth.split(None, 1)[1].strip()
+    if hdr != ADMIN_TOKEN:
+        raise HTTPException(status_code=401, detail="Token admin inválido")
 
 class Query(BaseModel):
     question: str
@@ -156,7 +177,8 @@ def get_one_news(nid: str):
     return n
 
 @app.post('/news')
-def create_news(item: NewsIn):
+def create_news(item: NewsIn, request: Request):
+    _check_admin(request)
     try:
         stored = news_store.upsert_news(item.dict())
         return stored
@@ -164,7 +186,8 @@ def create_news(item: NewsIn):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.put('/news/{nid}')
-def update_news(nid: str, item: NewsIn):
+def update_news(nid: str, item: NewsIn, request: Request):
+    _check_admin(request)
     existing = news_store.get_news(nid)
     if not existing:
         raise HTTPException(status_code=404, detail='Noticia no encontrada')
@@ -175,7 +198,8 @@ def update_news(nid: str, item: NewsIn):
     return stored
 
 @app.delete('/news/{nid}')
-def remove_news(nid: str):
+def remove_news(nid: str, request: Request):
+    _check_admin(request)
     ok = news_store.delete_news(nid)
     if not ok:
         raise HTTPException(status_code=404, detail='Noticia no encontrada')

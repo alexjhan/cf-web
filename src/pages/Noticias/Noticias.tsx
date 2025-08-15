@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import EmptyOverlay from '../../components/Shared/EmptyOverlay';
 import { useAuth } from '../../hooks/useAuth';
 import noticiasBase from '../../data/noticias.json';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -155,6 +156,31 @@ const Noticias: React.FC = () => {
     const palabras = texto.split(' ').length;
     return Math.ceil(palabras / 200); // Asumiendo 200 palabras por minuto
   };
+
+  // Cortina cuando no hay noticias (después de cargar)
+  if (!loading && mergedNoticias.length === 0) {
+    return (
+      <div className="min-h-screen relative" style={{ background: 'radial-gradient(ellipse at top, #1a1a1a 0%, #2a2a2a 30%, #0f0f0f 60%, #000000 100%)' }}>
+        <div className="fixed inset-0 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 via-transparent to-[#C9B037]/3"></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#FFD700]/8 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[#C9B037]/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-3/4 left-1/2 w-64 h-64 bg-[#FFD700]/6 rounded-full blur-2xl animate-pulse delay-500"></div>
+          <div className="absolute top-16 md:top-20 left-6 md:left-10 w-2 md:w-3 h-2 md:h-3 bg-[#FFD700]/60 rounded-full animate-pulse delay-300"></div>
+          <div className="absolute top-32 md:top-40 right-12 md:right-20 w-1.5 md:w-2 h-1.5 md:h-2 bg-[#C9B037]/70 rounded-full animate-pulse delay-700"></div>
+          <div className="absolute bottom-24 md:bottom-32 left-12 md:left-20 w-3 md:w-4 h-3 md:h-4 bg-[#FFD700]/50 rounded-full animate-pulse delay-1000"></div>
+          <div className="absolute bottom-12 md:bottom-20 right-6 md:right-10 w-1.5 md:w-2 h-1.5 md:h-2 bg-[#B8860B]/80 rounded-full animate-pulse delay-500"></div>
+          <div className="absolute top-48 md:top-60 left-1/3 w-2 md:w-3 h-2 md:h-3 bg-[#C9B037]/60 rounded-full animate-pulse delay-1200"></div>
+          <div className="absolute bottom-48 md:bottom-60 right-1/3 w-1.5 md:w-2 h-1.5 md:h-2 bg-[#FFD700]/70 rounded-full animate-pulse delay-800"></div>
+        </div>
+        <EmptyOverlay
+          title="Noticias en construcción"
+          message="Estamos preparando el primer lote de publicaciones. Regresa pronto para mantenerte informado."
+          icon="📰"
+        />
+      </div>
+    );
+  }
 
   return (
     <div 

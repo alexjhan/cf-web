@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import EmptyOverlay from '../../components/Shared/EmptyOverlay';
 import ProtectedRoute from '../../components/ProtectedRoute/ProtectedRoute';
 
 interface Noticia {
@@ -34,6 +35,7 @@ const AdminNoticiasContent = () => {
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const apiBase = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8000';
+  const adminToken = (import.meta as any).env?.VITE_ADMIN_TOKEN || localStorage.getItem('adminToken') || '';
   useEffect(() => {
     let active = true;
     (async () => {
@@ -79,7 +81,7 @@ const AdminNoticiasContent = () => {
     if (!form.fecha || !form.titulo || !form.descripcionCorta || !form.descripcionLarga || !form.autor || form.categoria.length === 0) return;
     try {
       const payload = { ...form, id: form.id || undefined } as any;
-      const res = await fetch(apiBase + '/news', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const res = await fetch(apiBase + '/news', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(adminToken? { 'X-Admin-Token': adminToken }: {}) }, body: JSON.stringify(payload) });
       if (!res.ok) throw new Error('create');
       const created = await res.json();
       setNoticias(prev => [...prev, created]);
@@ -102,7 +104,7 @@ const AdminNoticiasContent = () => {
     e.preventDefault();
     if (editIdx === null) return;
     try {
-      const res = await fetch(apiBase + '/news/' + noticias[editIdx].id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) });
+      const res = await fetch(apiBase + '/news/' + noticias[editIdx].id, { method: 'PUT', headers: { 'Content-Type': 'application/json', ...(adminToken? { 'X-Admin-Token': adminToken }: {}) }, body: JSON.stringify(form) });
       if (!res.ok) throw new Error('update');
       const updatedItem = await res.json();
       setNoticias(prev => prev.map(n => n.id === updatedItem.id ? updatedItem : n));
@@ -121,7 +123,7 @@ const AdminNoticiasContent = () => {
     if (!window.confirm('¿Eliminar esta noticia?')) return;
     const target = noticias[idx];
     try {
-      const res = await fetch(apiBase + '/news/' + target.id, { method: 'DELETE' });
+      const res = await fetch(apiBase + '/news/' + target.id, { method: 'DELETE', headers: { ...(adminToken? { 'X-Admin-Token': adminToken }: {}) } });
       if (!res.ok) throw new Error('delete');
       setNoticias(prev => prev.filter(n => n.id !== target.id));
       setDeletedIds(prev => prev.includes(target.id)? prev : [...prev, target.id]);
@@ -268,7 +270,18 @@ const AdminNoticiasContent = () => {
       </div>
       <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-8">
         {noticias.length === 0 ? (
-          <div className="col-span-2 text-center text-gray-400 text-lg">No hay noticias.</div>
+          <>
+            <EmptyOverlay
+              title="Aún no hay noticias"
+              message="Publica tu primera noticia usando el formulario superior. Aquí aparecerán listadas para administración y edición."
+              icon="📰"
+              actionLabel="Crear ahora"
+              onAction={() => {
+                const el = document.querySelector('form input[name="titulo"]') as HTMLInputElement | null;
+                el?.focus();
+              }}
+            />
+          </>
         ) : (
           noticias.map((noticia, idx) => (
             <div key={idx} className="bg-[#23232a] rounded-2xl border border-gray-700 shadow-lg p-6 flex flex-col relative">
