@@ -33,7 +33,7 @@ const Representacion: React.FC = () => {
   const estadisticas = [
     { numero: '15', texto: 'Integrantes', icono: '👥' },
     { numero: '2025-2', texto: 'Periodo', icono: '📅' },
-    { numero: '+320', texto: 'Estudiantes', icono: '🎓' },
+    { numero: '+300', texto: 'Estudiantes', icono: '🎓' },
     { numero: '15 Ago', texto: 'Juramentación', icono: '🏆' }
   ];
 

@@ -34,7 +34,7 @@ const Carrera: React.FC = () => {
   const estadisticas = [
     { numero: '50', texto: 'Años de Historia', icono: '🏛️' },
     { numero: '10', texto: 'Semestres', icono: '📅' },
-    { numero: '+320', texto: 'Estudiantes Activos', icono: '👥' },
+    { numero: '+300', texto: 'Estudiantes Activos', icono: '👥' },
     { numero: 'ICACIT', texto: 'Acreditación', icono: '🏆' }
   ];
 
