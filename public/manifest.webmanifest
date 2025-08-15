@@ -1,0 +1,23 @@
+{
+  "name": "Centro Federado Ingeniería Metalúrgica - UNSAAC",
+  "short_name": "CF Metalúrgica",
+  "lang": "es-PE",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#18181b",
+  "description": "Portal del Centro Federado de Ingeniería Metalúrgica: noticias, representación estudiantil y recursos académicos.",
+  "icons": [
+    {
+      "src": "/assets/logo-metalurgia.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/assets/logo-metalurgia.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
