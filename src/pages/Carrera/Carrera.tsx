@@ -488,9 +488,9 @@ const Carrera: React.FC = () => {
 
       <div className="relative">
         {/* Header Épico - Responsive como Inicio.tsx */}
-        <div className="text-center px-4 py-8 md:py-16">
+  <div className="text-center px-4 py-6 md:py-16">
           <div className="inline-block mb-6 md:mb-10">
-            <div className="bg-[#FFD700]/10 p-4 md:p-6 rounded-full border border-[#FFD700]/30 shadow-2xl hover:shadow-[#FFD700]/40 transition-all duration-500">
+            <div className="bg-[#FFD700]/10 p-3 md:p-6 rounded-full border border-[#FFD700]/30 shadow-2xl md:hover:shadow-[#FFD700]/40 transition-all duration-500">
               <span className="text-4xl md:text-5xl lg:text-6xl">🎓</span>
             </div>
           </div>
@@ -503,16 +503,16 @@ const Carrera: React.FC = () => {
           </p>
 
           {/* Stats rápidas épicas - Responsive */}
-          <div className="flex justify-center gap-4 md:gap-8 text-center mb-6 md:mb-10">
-            <div className="group cursor-pointer hover:scale-110 transition-all duration-500">
+          <div className="flex justify-center gap-3 md:gap-8 text-center mb-6 md:mb-10">
+            <div className="group cursor-pointer md:hover:scale-110 transition-all duration-500">
               <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">50</div>
               <div className="text-gray-400 text-xs md:text-sm group-hover:text-gray-200 transition-colors duration-300">Años</div>
             </div>
-            <div className="group cursor-pointer hover:scale-110 transition-all duration-500">
+            <div className="group cursor-pointer md:hover:scale-110 transition-all duration-500">
               <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">320+</div>
               <div className="text-gray-400 text-xs md:text-sm group-hover:text-gray-200 transition-colors duration-300">Estudiantes</div>
             </div>
-            <div className="group cursor-pointer hover:scale-110 transition-all duration-500">
+            <div className="group cursor-pointer md:hover:scale-110 transition-all duration-500">
               <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">10</div>
               <div className="text-gray-400 text-xs md:text-sm group-hover:text-gray-200 transition-colors duration-300">Semestres</div>
             </div>
@@ -521,7 +521,7 @@ const Carrera: React.FC = () => {
           {/* Estadísticas detalladas épicas - Responsive mejorado */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 lg:gap-6 max-w-5xl mx-auto mb-8 md:mb-12">
             {estadisticas.map((stat, index) => (
-              <div key={index} className="group bg-[#1a1a1a]/60 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-4 lg:p-6 border border-[#FFD700]/20 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 hover:scale-105 hover:shadow-xl hover:shadow-[#FFD700]/20 transition-all duration-500 cursor-pointer">
+              <div key={index} className="group bg-[#1a1a1a]/60 backdrop-blur-sm rounded-xl md:rounded-2xl p-2.5 md:p-4 lg:p-6 border border-[#FFD700]/20 md:hover:border-[#FFD700]/50 md:hover:bg-[#FFD700]/5 md:hover:scale-105 md:hover:shadow-xl md:hover:shadow-[#FFD700]/20 transition-all duration-500 cursor-pointer">
                 <div className="text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 text-[#FFD700] group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">{stat.icono}</div>
                 <div className="text-base md:text-xl lg:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{stat.numero}</div>
                 <div className="text-xs md:text-sm text-gray-400 group-hover:text-gray-200 transition-colors duration-300">{stat.texto}</div>
@@ -533,20 +533,23 @@ const Carrera: React.FC = () => {
         {/* Navegación por pestañas - Responsive como Inicio.tsx */}
         <div className="px-4 mb-6 md:mb-10">
           <div className="max-w-6xl mx-auto">
-            <div className="flex gap-2 md:gap-4 mb-8 md:mb-12 overflow-x-auto no-scrollbar pb-3 md:pb-0 snap-x snap-mandatory scrollbar-hide">
+            <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-6 md:mb-12 pb-2 md:pb-0">
               {secciones.map((seccion) => (
                 <button
                   key={seccion.id}
                   onClick={() => setSeccionActiva(seccion.id as any)}
-                  className={`flex items-center gap-2 px-4 md:px-6 lg:px-8 py-2.5 md:py-3 lg:py-4 rounded-xl md:rounded-2xl font-medium transition-all duration-300 text-sm md:text-base lg:text-lg flex-shrink-0 snap-start hover:scale-105 transform ${
+                  className={`group relative flex items-center gap-2 px-3.5 md:px-6 lg:px-8 py-2 md:py-3 lg:py-4 rounded-xl md:rounded-2xl font-medium transition-all duration-300 text-sm md:text-base lg:text-lg flex-shrink-0 md:hover:scale-105 transform overflow-hidden ${
                     seccionActiva === seccion.id
-                      ? 'bg-[#FFD700] text-black shadow-lg shadow-[#FFD700]/25 scale-105'
-                      : 'bg-[#1a1a1a]/60 text-gray-300 hover:bg-[#1a1a1a]/80 border border-[#FFD700]/20 hover:border-[#FFD700]/40'
+                      ? 'bg-gradient-to-r from-[#FFD700] to-[#C9B037] text-black shadow-lg shadow-[#FFD700]/25 scale-105 border border-[#FFD700]/60'
+                      : 'bg-[#1a1a1a]/50 backdrop-blur-sm text-gray-300 border border-[#FFD700]/20 hover:border-[#FFD700]/50 hover:bg-[#1a1a1a]/70'
                   }`}
                   aria-pressed={seccionActiva === seccion.id}
                 >
-                  <span className="text-base md:text-lg lg:text-xl">{seccion.icono}</span>
-                  <span className="whitespace-nowrap font-medium">{seccion.nombre}</span>
+                  {seccionActiva !== seccion.id && (
+                    <span className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-[#FFD700]/10 to-transparent" />
+                  )}
+                  <span className={`text-sm md:text-lg lg:text-xl ${seccionActiva === seccion.id ? 'drop-shadow-sm' : 'group-hover:text-[#FFD700] transition-colors duration-300'}`}>{seccion.icono}</span>
+                  <span className={`whitespace-nowrap font-semibold tracking-tight text-xs md:text-base ${seccionActiva === seccion.id ? 'text-black' : 'group-hover:text-[#FFD700] transition-colors duration-300'}`}>{seccion.nombre}</span>
                 </button>
               ))}
             </div>

@@ -1,69 +1,32 @@
-# React + TypeScript + Vite
+# CF Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web del Centro Federado (EPIMT) construida con React, TypeScript, Vite y TailwindCSS.
 
-Currently, two official plugins are available:
+## Tecnologías principales
+- React 19 + TypeScript
+- Vite 7
+- TailwindCSS 4
+- React Router DOM 7
+- @xyflow/react (mapa curricular interactivo)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Scripts
+- `pnpm dev` / `npm run dev` Inicia entorno de desarrollo
+- `pnpm build` Compila la aplicación para producción
+- `pnpm preview` Sirve el build localmente
+- `pnpm lint` Linter de código
 
-## Expanding the ESLint configuration
+## Estructura destacada
+- `src/pages` Páginas principales (Carrera, Cursos, Documentos, Representacion, Noticias, Oportunidades, etc.)
+- `src/components` Componentes UI reutilizables
+- `src/services` Servicios (ej. chatbot)
+- `backend/asistente-rag` Pipelines y API RAG para asistente
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Desarrollo
+Instalar dependencias y levantar el entorno:
+```bash
+pnpm install # o npm install
+pnpm dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Licencia
+Uso interno académico del Centro Federado.

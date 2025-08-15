@@ -596,7 +596,7 @@ const Cursos: React.FC = () => {
           <div className="flex flex-col gap-6">
             
             {/* Área principal con ReactFlow */}
-            <div className="flex-1 min-h-[600px] overflow-auto rounded-2xl relative group">
+            <div className="flex-1 min-h-[600px] overflow-hidden rounded-2xl relative group">
               {/* Gradientes de indicación de scroll en pantallas pequeñas */}
               <div className="pointer-events-none absolute top-0 left-0 h-full w-6 bg-gradient-to-r from-[#0a0a0a] to-transparent opacity-70 md:hidden" />
               <div className="pointer-events-none absolute top-0 right-0 h-full w-6 bg-gradient-to-l from-[#0a0a0a] to-transparent opacity-70 md:hidden" />
