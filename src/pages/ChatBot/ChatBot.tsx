@@ -275,12 +275,7 @@ const ChatBot = () => {
                     <div className="absolute -inset-1 bg-gradient-to-r from-[#FFD700]/30 to-[#C9B037]/30 rounded-3xl blur-md -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   )}
                   
-                  <div className={`flex items-start ${msg.autor === "user" ? "justify-end" : "gap-3"}`}>
-                      {msg.autor !== "user" && (
-                        <div className="w-10 h-10 rounded-2xl flex items-center justify-center text-lg flex-shrink-0 shadow-lg bg-gradient-to-br from-[#FFD700] to-[#C9B037] text-black">
-                          🤖
-                        </div>
-                      )}
+                  <div className={`flex items-start ${msg.autor === "user" ? "justify-end" : ""}`}>
                     <div className={msg.autor === "user" ? "w-full" : "flex-1"}>
                       {msg.autor === "ia" ? (
                         <div className="prose prose-lg prose-invert max-w-none">
@@ -310,9 +305,6 @@ const ChatBot = () => {
               <div className="flex justify-start">
                 <div className="bg-[#1a1a1a]/60 backdrop-blur-md border border-[#FFD700]/20 rounded-3xl rounded-bl-lg px-6 py-4 shadow-xl">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-[#FFD700] to-[#C9B037] rounded-2xl flex items-center justify-center text-lg">
-                      🤖
-                    </div>
                     <div className="flex items-center gap-3">
                       <div className="flex space-x-2">
                         <div className="w-3 h-3 bg-[#FFD700] rounded-full animate-pulse"></div>
