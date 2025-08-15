@@ -158,7 +158,8 @@ const Noticias: React.FC = () => {
   };
 
   // Cortina cuando no hay noticias (después de cargar)
-  if (!loading && mergedNoticias.length === 0) {
+  // Mostrar cortina si aún no hay datos reales del backend (noticias[] vacío)
+  if (!loading && noticias.length === 0) {
     return (
       <div className="min-h-screen relative" style={{ background: 'radial-gradient(ellipse at top, #1a1a1a 0%, #2a2a2a 30%, #0f0f0f 60%, #000000 100%)' }}>
         <div className="fixed inset-0 pointer-events-none">
@@ -175,7 +176,7 @@ const Noticias: React.FC = () => {
         </div>
         <EmptyOverlay
           title="Noticias en construcción"
-          message="Estamos preparando el primer lote de publicaciones. Regresa pronto para mantenerte informado."
+          message="Mostrando vista preliminar. El contenido oficial aparecerá aquí cuando se publiquen las primeras noticias reales."
           icon="📰"
         />
       </div>
