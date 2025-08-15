@@ -12,6 +12,7 @@ import requests
 # from busca_web_duckduckgo import buscar_web_duckduckgo  # Ajusta el import según nueva estructura
 from typing import List
 from . import news_store, storage_store, oportunidades_store
+from .routers import news as news_router
 from duckduckgo_search import DDGS
 import random
 
@@ -111,31 +112,14 @@ model = SentenceTransformer(MODEL_EMBED)
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
+app = FastAPI()
+app.include_router(news_router.router)
+
 class Query(BaseModel):
     question: str
-app = FastAPI()
 
-# Endpoint de salud para monitoreo
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy", "fragments_loaded": len(fragments)}
-
-# CORS / seguridad (ya modificado anteriormente)
-# (Se reutiliza configuración previa si existe variables de entorno)
+# Admin token check (reinserted after refactor)
 ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "")
-_origins_env = os.getenv("FRONTEND_ORIGINS", "*")
-if _origins_env.strip() == "*":
-    _allow_origins = ["*"]
-else:
-    _allow_origins = [o.strip() for o in _origins_env.split(",") if o.strip()]
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=_allow_origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"]
-)
-
 def _check_admin(request: Request):
     if not ADMIN_TOKEN:
         return
@@ -153,14 +137,11 @@ def ask(query: Query, response: Response):
         msg = random.choice(PLACEHOLDER_RESPUESTAS)
         return {"respuesta": msg, "fragmentos": [], "online": False, "reason": "placeholder_mode", "maintenance": True}
     if not GROQ_API_KEY:
-        # No intentamos Groq; devolvemos indicador de modo offline
         return {"respuesta": "Servicio IA no configurado (falta GROQ_API_KEY).", "fragmentos": [], "online": False, "reason": "missing_api_key"}
-    # 1. Embedding pregunta
     try:
         q_emb = model.encode(query.question)
     except Exception:
         q_emb = np.zeros((384,), dtype=float)
-    # 2. Similaridad
     if embeddings.size == 0:
         idxs: list[int] = []
         context = ""
@@ -168,7 +149,6 @@ def ask(query: Query, response: Response):
         sims = embeddings @ q_emb / (np.linalg.norm(embeddings, axis=1) * (np.linalg.norm(q_emb) + 1e-8) + 1e-8)
         idxs = np.argsort(sims)[-TOP_K:][::-1]
         context = "\n\n".join([fragments[i]["texto"] for i in idxs])
-    # 3. Web context (rápido, errores silenciados)
     web_context = ""
     try:
         with DDGS() as ddgs:
@@ -182,7 +162,6 @@ def ask(query: Query, response: Response):
             web_context = "\n".join(lines)
     except Exception:
         web_context = ""
-    # 4. Prompt
     prompt = (
         "Eres un asistente administrativo experto en la Escuela Profesional de Ingeniería Metalúrgica de Cusco. "
         "Responde solo sobre temas administrativos, trámites, normativas, documentos oficiales y procesos internos. "
@@ -192,7 +171,6 @@ def ask(query: Query, response: Response):
         f"Contexto web (resumen):\n{web_context if web_context else '- (sin resultados web)'}\n\n"
         f"Pregunta: {query.question}\nRespuesta:"
     )
-    # 5. Llamada Groq con reintentos
     headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
     payload = {
         "model": GROQ_MODEL,
@@ -213,7 +191,6 @@ def ask(query: Query, response: Response):
                 answer = resp.json()["choices"][0]["message"]["content"]
                 used_groq = True
                 break
-            # Retry solo en 429/5xx
             if resp.status_code in (429, 500, 502, 503, 504):
                 last_error = resp.text
                 time.sleep(1 + attempt)
@@ -229,73 +206,6 @@ def ask(query: Query, response: Response):
     return {"respuesta": answer, "fragmentos": [fragments[i] for i in idxs] if idxs else [], "online": used_groq, "reason": (None if used_groq else (last_error or "groq_error"))}
 
 # ===================== Noticias (CRUD simple) =====================
-class NewsIn(BaseModel):
-    id: str | None = None
-    fecha: str
-    titulo: str
-    descripcionCorta: str
-    descripcionLarga: str
-    autor: str
-    categoria: List[str]
-    imagen: str | None = None
-    destacada: bool | None = False
-    vistas: int | None = 0
-
-@app.get('/news')
-def list_all_news(q: str | None = None, categoria: str | None = None, destacada: bool | None = None,
-                  page: int = 1, page_size: int = 10):
-    """Lista noticias. Si se pasan parámetros de filtro/paginación se usa búsqueda avanzada."""
-    if any([q, categoria, destacada is not None, page != 1, page_size != 10]):
-        try:
-            return news_store.search_news(q=q or None, categoria=categoria or None, destacada=destacada,
-                                          page=page, page_size=page_size)
-        except ValueError as e:
-            raise HTTPException(status_code=400, detail=str(e))
-    return news_store.list_news()
-
-@app.get('/news/{nid}')
-def get_one_news(nid: str):
-    # Incrementar vistas al acceder
-    n = news_store.increment_views(nid)
-    if not n:
-        raise HTTPException(status_code=404, detail='Noticia no encontrada')
-    return n
-
-@app.post('/news')
-def create_news(item: NewsIn, request: Request):
-    _check_admin(request)
-    try:
-        stored = news_store.upsert_news(item.dict())
-        return stored
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@app.put('/news/{nid}')
-def update_news(nid: str, item: NewsIn, request: Request):
-    _check_admin(request)
-    existing = news_store.get_news(nid)
-    if not existing:
-        raise HTTPException(status_code=404, detail='Noticia no encontrada')
-    data = item.dict()
-    if not data.get('id'):
-        data['id'] = nid
-    stored = news_store.upsert_news(data)
-    return stored
-
-@app.delete('/news/{nid}')
-def remove_news(nid: str, request: Request):
-    _check_admin(request)
-    ok = news_store.delete_news(nid)
-    if not ok:
-        raise HTTPException(status_code=404, detail='Noticia no encontrada')
-    return {"status": "deleted", "id": nid}
-
-@app.post('/news/{nid}/views')
-def add_view(nid: str):
-    n = news_store.increment_views(nid)
-    if not n:
-        raise HTTPException(status_code=404, detail='Noticia no encontrada')
-    return {"status": "ok", "vistas": n['vistas']}
 
 # =============== Ingesta de mensajes (genérico) ===============
 class IngestMessage(BaseModel):
