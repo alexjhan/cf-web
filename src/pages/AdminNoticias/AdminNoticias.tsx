@@ -2,49 +2,61 @@ import React, { useEffect, useState } from "react";
 import ProtectedRoute from '../../components/ProtectedRoute/ProtectedRoute';
 
 interface Noticia {
+  id: string; // slug estable
   fecha: string; // formato YYYY-MM-DD
   titulo: string;
   descripcionCorta: string;
   descripcionLarga: string;
   autor: string;
   categoria: string[];
-  imagen?: string; // url local o remota
+  imagen?: string; // url local o remota (dataURL o externa)
+  destacada?: boolean;
+  vistas?: number;
 }
 
-const defaultNoticias: Noticia[] = [
-  {
-    fecha: "2025-07-31",
-    titulo: "Nuevo Laboratorio Metalúrgico Inaugurado",
-    descripcionCorta: "Inauguración de laboratorio con equipos de última generación.",
-    descripcionLarga: "Se inauguró el nuevo laboratorio con equipos de última generación para prácticas y proyectos de investigación. Este espacio permitirá a los estudiantes y docentes realizar investigaciones avanzadas, experimentos y trabajos colaborativos en el área de metalurgia. La ceremonia contó con la presencia de autoridades y especialistas del sector.",
-    autor: "Admin",
-    categoria: ["Evento"],
-    imagen: "", // sin imagen por defecto
-  },
-  {
-    fecha: "2025-07-15",
-    titulo: "Conferencia Internacional de Materiales",
-    descripcionCorta: "Participación destacada en conferencia internacional.",
-    descripcionLarga: "Docentes y estudiantes participaron en la conferencia internacional, presentando investigaciones innovadoras sobre nuevos materiales y procesos metalúrgicos. El evento reunió a expertos de todo el mundo y permitió el intercambio de conocimientos y experiencias en el campo de la ciencia de materiales.",
-    autor: "Admin",
-    categoria: ["Conferencias"],
-    imagen: "",
-  },
+const slug = (t: string) => t.toLowerCase().normalize('NFD').replace(/[^\w\s-]/g,'').replace(/\s+/g,'-');
+
+const seedNoticias: Omit<Noticia,'id'>[] = [
+  { fecha: "2025-07-31", titulo: "Nuevo Laboratorio Metalúrgico Inaugurado", descripcionCorta: "Inauguración de laboratorio con equipos de última generación.", descripcionLarga: "Se inauguró el nuevo laboratorio con equipos de última generación para prácticas y proyectos de investigación. Este espacio permitirá a los estudiantes y docentes realizar investigaciones avanzadas, experimentos y trabajos colaborativos en el área de metalurgia. La ceremonia contó con la presencia de autoridades y especialistas del sector.", autor: "Admin", categoria: ["Evento"], imagen: "" },
+  { fecha: "2025-07-15", titulo: "Conferencia Internacional de Materiales", descripcionCorta: "Participación destacada en conferencia internacional.", descripcionLarga: "Docentes y estudiantes participaron en la conferencia internacional, presentando investigaciones innovadoras sobre nuevos materiales y procesos metalúrgicos. El evento reunió a expertos de todo el mundo y permitió el intercambio de conocimientos y experiencias en el campo de la ciencia de materiales.", autor: "Admin", categoria: ["Conferencias"], imagen: "" },
 ];
+
+const defaultNoticias: Noticia[] = seedNoticias.map((n,i)=> ({
+  ...n,
+  id: `${n.fecha}-${slug(n.titulo)}-${i}`,
+  vistas: 0,
+  destacada: false,
+}));
 
 const AdminNoticiasContent = () => {
   // Cargar desde localStorage si existe; si no, usar las de defecto
+  const [deletedIds, setDeletedIds] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('noticias_deleted')||'[]'); } catch { return []; }
+  });
   const [noticias, setNoticias] = useState<Noticia[]>(() => {
     try {
       const saved = localStorage.getItem("noticias");
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed as Noticia[];
+        if (Array.isArray(parsed)) {
+          return (parsed as any[]).map((n, idx) => ({
+            id: n.id || `${n.fecha || '0000-00-00'}-${slug(n.titulo || 'noticia')}-ls${idx}`,
+            fecha: n.fecha || '',
+            titulo: n.titulo || 'Sin título',
+            descripcionCorta: n.descripcionCorta || '',
+            descripcionLarga: n.descripcionLarga || '',
+            autor: n.autor || 'Desconocido',
+            categoria: Array.isArray(n.categoria)? n.categoria : [],
+            imagen: n.imagen || '',
+            vistas: n.vistas ?? 0,
+            destacada: n.destacada ?? false,
+          })) as Noticia[];
+        }
       }
     } catch {}
     return defaultNoticias;
   });
-  const [form, setForm] = useState<Noticia>({ fecha: "", titulo: "", descripcionCorta: "", descripcionLarga: "", autor: "", categoria: [], imagen: "" });
+  const [form, setForm] = useState<Noticia>({ id: '', fecha: "", titulo: "", descripcionCorta: "", descripcionLarga: "", autor: "", categoria: [], imagen: "", vistas:0, destacada:false });
   const [preview, setPreview] = useState<string>("");
   const [editIdx, setEditIdx] = useState<number | null>(null);
 
@@ -71,13 +83,14 @@ const AdminNoticiasContent = () => {
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
   if (!form.fecha || !form.titulo || !form.descripcionCorta || !form.descripcionLarga || !form.autor || (Array.isArray(form.categoria) && form.categoria.length === 0)) return;
-    setNoticias([...noticias, form]);
-    setForm({ fecha: "", titulo: "", descripcionCorta: "", descripcionLarga: "", autor: "", categoria: [], imagen: "" });
+  const id = form.id && form.id.length>0 ? form.id : `${form.fecha}-${slug(form.titulo)}-${Date.now()}`;
+  setNoticias([...noticias, { ...form, id }]);
+  setForm({ id:'', fecha: "", titulo: "", descripcionCorta: "", descripcionLarga: "", autor: "", categoria: [], imagen: "", vistas:0, destacada:false });
     setPreview("");
   };
   const handleEdit = (idx: number) => {
     setEditIdx(idx);
-    setForm(noticias[idx]);
+  setForm(noticias[idx]);
     setPreview(noticias[idx].imagen || "");
   };
 
@@ -86,24 +99,29 @@ const AdminNoticiasContent = () => {
     if (editIdx === null) return;
     const updated = [...noticias];
     updated[editIdx] = form;
-    setNoticias(updated);
-    setEditIdx(null);
-    setForm({ fecha: "", titulo: "", descripcionCorta: "", descripcionLarga: "", autor: "", categoria: [], imagen: "" });
+  setNoticias(updated);
+  setEditIdx(null);
+  setForm({ id:'', fecha: "", titulo: "", descripcionCorta: "", descripcionLarga: "", autor: "", categoria: [], imagen: "", vistas:0, destacada:false });
     setPreview("");
   };
 
   const handleDelete = (idx: number) => {
-    if (window.confirm("¿Eliminar esta noticia?")) {
+    if (window.confirm("¿Eliminar esta noticia? (Se ocultará también del sitio público)")) {
+      const target = noticias[idx];
       setNoticias(noticias.filter((_, i) => i !== idx));
+      setDeletedIds(prev => prev.includes(target.id) ? prev : [...prev, target.id]);
     }
   };
 
   // Persistir automáticamente en localStorage cuando cambie la lista
   useEffect(() => {
-    try {
-      localStorage.setItem("noticias", JSON.stringify(noticias));
-    } catch {}
+    try { localStorage.setItem("noticias", JSON.stringify(noticias)); } catch {}
+  try { localStorage.setItem('noticias_initialized','1'); } catch {}
   }, [noticias]);
+
+  useEffect(() => {
+    try { localStorage.setItem('noticias_deleted', JSON.stringify(deletedIds)); } catch {}
+  }, [deletedIds]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#3a3a4a] to-[#18181b] py-16 px-4 flex flex-col items-center">
@@ -213,7 +231,7 @@ const AdminNoticiasContent = () => {
               {editIdx === null ? "Agregar Noticia" : "Guardar Cambios"}
             </button>
             {editIdx !== null && (
-              <button type="button" className="py-2 px-4 rounded bg-gray-700 text-white font-bold" onClick={() => { setEditIdx(null); setForm({ fecha: "", titulo: "", descripcionCorta: "", descripcionLarga: "", autor: "", categoria: [], imagen: "" }); setPreview(""); }}>
+              <button type="button" className="py-2 px-4 rounded bg-gray-700 text-white font-bold" onClick={() => { setEditIdx(null); setForm({ id:'', fecha: "", titulo: "", descripcionCorta: "", descripcionLarga: "", autor: "", categoria: [], imagen: "", vistas:0, destacada:false }); setPreview(""); }}>
                 Cancelar
               </button>
             )}
@@ -226,6 +244,7 @@ const AdminNoticiasContent = () => {
         ) : (
           noticias.map((noticia, idx) => (
             <div key={idx} className="bg-[#23232a] rounded-2xl border border-gray-700 shadow-lg p-6 flex flex-col relative">
+              <span className="absolute top-2 left-4 text-[10px] text-gray-500">ID: {noticia.id}</span>
               {noticia.imagen && (
                 <img src={preview && editIdx === idx ? preview : noticia.imagen} alt="Imagen noticia" className="mb-3 max-h-40 rounded border border-gray-700 object-cover" />
               )}

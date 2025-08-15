@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useAuth } from '../../hooks/useAuth';
+import noticiasBase from '../../data/noticias.json';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 // Interfaz simplificada para las noticias
 interface Noticia {
@@ -6,44 +9,119 @@ interface Noticia {
   titulo: string;
   descripcionCorta: string;
   descripcionLarga: string;
-  imagen: string;
+  imagen?: string;
   categoria: string[];
-  fecha: string;
+  fecha: string; // ISO YYYY-MM-DD
   autor: string;
   vistas: number;
   destacada: boolean;
 }
 
 const Noticias: React.FC = () => {
-  const [noticias, setNoticias] = useState<Noticia[]>([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated } = useAuth();
+  const [noticias] = useState<Noticia[]>(() => {
+    try {
+      const stored = localStorage.getItem('noticias');
+      if (stored) return JSON.parse(stored);
+    } catch {}
+    return [];
+  });
+  const initialized = typeof window !== 'undefined' && localStorage.getItem('noticias_initialized') === '1';
+  const anyDeleted = (()=>{ try { return JSON.parse(localStorage.getItem('noticias_deleted')||'[]').length>0 } catch { return false }})();
   const [selectedIdx, setSelectedIdx] = useState<number>(0);
+  const [shareMsg, setShareMsg] = useState<string | null>(null);
 
-  // Cargar noticias desde localStorage o archivo JSON
-  useEffect(() => {
-    const cargarNoticias = async () => {
-      try {
-        // Intentar cargar desde localStorage primero
-        const noticiasGuardadas = localStorage.getItem('noticias');
-        if (noticiasGuardadas) {
-          const noticiasData = JSON.parse(noticiasGuardadas);
-          setNoticias(noticiasData);
-        } else {
-          // Si no hay en localStorage, cargar desde archivo JSON
-          const response = await fetch('/src/data/noticias.json');
-          const noticiasData = await response.json();
-          setNoticias(noticiasData);
-        }
-      } catch (error) {
-        console.error('Error al cargar noticias:', error);
-        setNoticias([]);
-      }
-    };
+  const handleShare = (n: Noticia) => {
+    const url = `${window.location.origin}/noticias?id=${encodeURIComponent(n.id)}`;
+    const title = n.titulo;
+    const text = n.descripcionCorta || n.titulo;
+    // Web Share API
+    if (navigator.share) {
+      navigator.share({ title, text, url }).then(() => {
+        setShareMsg('Compartido');
+        setTimeout(() => setShareMsg(null), 2500);
+      }).catch(() => {
+        try { navigator.clipboard.writeText(url); } catch {}
+        setShareMsg('Enlace copiado');
+        setTimeout(() => setShareMsg(null), 2500);
+      });
+    } else {
+      // Fallback copiar portapapeles
+      try { navigator.clipboard.writeText(url); }
+      catch {}
+      setShareMsg('Enlace copiado');
+      setTimeout(() => setShareMsg(null), 2500);
+    }
+  };
 
-    cargarNoticias();
+  // Normalizar base (importada) añadiendo id, vistas, destacada si faltan
+  const baseNormalizada: Noticia[] = useMemo(() => {
+    // Si el usuario ya inició (entró al panel admin) o eliminó algo, no mostrar seed/base
+    if (initialized || anyDeleted) return [];
+    const toSlug = (t: string) => t.toLowerCase().normalize('NFD').replace(/[^\w\s-]/g,'').replace(/\s+/g,'-');
+    return (noticiasBase as any[]).map((n, i) => ({
+      id: `${n.fecha || '0000-00-00'}-${toSlug(n.titulo || 'noticia')}-${i}`,
+      titulo: n.titulo || 'Sin título',
+      descripcionCorta: n.descripcionCorta || '',
+      descripcionLarga: n.descripcionLarga || '',
+      imagen: n.imagen,
+      categoria: Array.isArray(n.categoria) ? n.categoria : [],
+      fecha: n.fecha || new Date().toISOString().slice(0,10),
+      autor: n.autor || 'Desconocido',
+      vistas: (n as any).vistas ?? 0,
+      destacada: (n as any).destacada ?? false,
+    }));
   }, []);
 
+  // Merge base con localStorage (store sobrescribe por id)
+  const mergedNoticias: Noticia[] = useMemo(() => {
+  if (noticias.length === 0) return baseNormalizada; // si no hay user data y no inicializado se muestran base
+    const toSlug = (t: string) => t.toLowerCase().normalize('NFD').replace(/[^\w\s-]/g,'').replace(/\s+/g,'-');
+    const sanitized = (noticias as any[]).map((n, idx) => {
+      const id = n.id && typeof n.id === 'string' && n.id.trim().length > 4
+        ? n.id
+        : `${n.fecha || '0000-00-00'}-${toSlug(n.titulo || 'noticia')}-ls${idx}`;
+      return {
+        id,
+        titulo: n.titulo || 'Sin título',
+        descripcionCorta: n.descripcionCorta || '',
+        descripcionLarga: n.descripcionLarga || '',
+        imagen: n.imagen,
+        categoria: Array.isArray(n.categoria) ? n.categoria : [],
+        fecha: n.fecha || new Date().toISOString().slice(0,10),
+        autor: n.autor || 'Desconocido',
+        vistas: n.vistas ?? 0,
+        destacada: n.destacada ?? false,
+      } as Noticia;
+    });
+    const map = new Map<string, Noticia>();
+    baseNormalizada.forEach(n => map.set(n.id, n));
+    sanitized.forEach(n => map.set(n.id, { ...map.get(n.id), ...n } as Noticia));
+  // Filtrar las eliminadas
+  let deleted: string[] = [];
+  try { deleted = JSON.parse(localStorage.getItem('noticias_deleted') || '[]'); } catch {}
+  return Array.from(map.values()).filter(n => !deleted.includes(n.id));
+  }, [noticias, baseNormalizada]);
+
+  // Persistir cuando cambien (solo los que no vienen de base) -> guardamos todos por simplicidad
+  useEffect(() => {
+    try { localStorage.setItem('noticias', JSON.stringify(mergedNoticias)); } catch {}
+  }, [mergedNoticias]);
+
+  // Deep link ?id=xxx
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    if (id) {
+      const idx = mergedNoticias.findIndex(n => n.id === id);
+      if (idx >= 0) setSelectedIdx(idx);
+    }
+  }, [location.search, mergedNoticias]);
+
   // Ordenar noticias por fecha (más recientes primero)
-  const noticiasOrdenadas = [...noticias].sort((a, b) => {
+  const noticiasOrdenadas = [...mergedNoticias].sort((a, b) => {
     return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
   });
 
@@ -87,6 +165,11 @@ const Noticias: React.FC = () => {
 
       {/* Header épico responsivo */}
       <header className="relative py-8 md:py-16 px-4">
+        {shareMsg && (
+          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[110] px-5 py-3 rounded-xl bg-black/70 backdrop-blur border border-[#FFD700]/40 text-sm md:text-base text-[#FFD700] shadow-lg animate-fade-in" aria-live="polite">
+            {shareMsg}
+          </div>
+        )}
         <div className="relative max-w-6xl mx-auto">
           
           {/* Logo con recuadro */}
@@ -108,15 +191,15 @@ const Noticias: React.FC = () => {
           {/* Stats rápidas épicas - Responsive */}
           <div className="flex justify-center gap-4 md:gap-8 text-center mb-6 md:mb-10">
             <div className="group cursor-pointer hover:scale-110 transition-all duration-500">
-              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">{noticias.length}</div>
+              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">{mergedNoticias.length}</div>
               <div className="text-gray-400 text-xs md:text-sm group-hover:text-gray-200 transition-colors duration-300">Noticias</div>
             </div>
             <div className="group cursor-pointer hover:scale-110 transition-all duration-500">
-              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">{noticias.filter(n => n.destacada).length}</div>
+              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">{mergedNoticias.filter(n => n.destacada).length}</div>
               <div className="text-gray-400 text-xs md:text-sm group-hover:text-gray-200 transition-colors duration-300">Destacadas</div>
             </div>
             <div className="group cursor-pointer hover:scale-110 transition-all duration-500">
-              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">{noticias.reduce((sum, n) => sum + n.vistas, 0)}</div>
+              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">{mergedNoticias.reduce((sum, n) => sum + n.vistas, 0)}</div>
               <div className="text-gray-400 text-xs md:text-sm group-hover:text-gray-200 transition-colors duration-300">Vistas</div>
             </div>
           </div>
@@ -125,22 +208,22 @@ const Noticias: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 lg:gap-6 max-w-5xl mx-auto mb-8 md:mb-12">
             <div className="group bg-[#1a1a1a]/60 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-4 lg:p-6 border border-[#FFD700]/20 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 hover:scale-105 hover:shadow-xl hover:shadow-[#FFD700]/20 transition-all duration-500 cursor-pointer">
               <div className="text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 text-[#FFD700] group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">🔥</div>
-              <div className="text-base md:text-xl lg:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{noticias.filter(n => n.destacada).length}</div>
+              <div className="text-base md:text-xl lg:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{mergedNoticias.filter(n => n.destacada).length}</div>
               <div className="text-xs md:text-sm text-gray-400 group-hover:text-gray-200 transition-colors duration-300">Destacadas</div>
             </div>
             <div className="group bg-[#1a1a1a]/60 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-4 lg:p-6 border border-[#FFD700]/20 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 hover:scale-105 hover:shadow-xl hover:shadow-[#FFD700]/20 transition-all duration-500 cursor-pointer">
               <div className="text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 text-[#FFD700] group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">📊</div>
-              <div className="text-base md:text-xl lg:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{Math.round(noticias.reduce((sum, n) => sum + n.vistas, 0) / noticias.length) || 0}</div>
+              <div className="text-base md:text-xl lg:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{Math.round(mergedNoticias.reduce((sum, n) => sum + n.vistas, 0) / (mergedNoticias.length || 1))}</div>
               <div className="text-xs md:text-sm text-gray-400 group-hover:text-gray-200 transition-colors duration-300">Promedio</div>
             </div>
             <div className="group bg-[#1a1a1a]/60 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-4 lg:p-6 border border-[#FFD700]/20 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 hover:scale-105 hover:shadow-xl hover:shadow-[#FFD700]/20 transition-all duration-500 cursor-pointer">
               <div className="text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 text-[#FFD700] group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">📅</div>
-              <div className="text-base md:text-xl lg:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{noticias.filter(n => new Date(n.fecha).getMonth() === new Date().getMonth()).length}</div>
+              <div className="text-base md:text-xl lg:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{mergedNoticias.filter(n => new Date(n.fecha).getMonth() === new Date().getMonth()).length}</div>
               <div className="text-xs md:text-sm text-gray-400 group-hover:text-gray-200 transition-colors duration-300">Este Mes</div>
             </div>
             <div className="group bg-[#1a1a1a]/60 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-4 lg:p-6 border border-[#FFD700]/20 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 hover:scale-105 hover:shadow-xl hover:shadow-[#FFD700]/20 transition-all duration-500 cursor-pointer">
               <div className="text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 text-[#FFD700] group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">🌟</div>
-              <div className="text-base md:text-xl lg:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{Math.max(...noticias.map(n => n.vistas))}</div>
+              <div className="text-base md:text-xl lg:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{mergedNoticias.length ? Math.max(...mergedNoticias.map(n => n.vistas)) : 0}</div>
               <div className="text-xs md:text-sm text-gray-400 group-hover:text-gray-200 transition-colors duration-300">Más Vista</div>
             </div>
           </div>
@@ -251,12 +334,19 @@ const Noticias: React.FC = () => {
                                 Última actualización: {formatearFecha(principal.fecha)}
                               </span>
                               <div className="flex gap-2 sm:gap-3">
-                                <button className="px-3 sm:px-4 py-2 bg-[#1a1a1a]/60 backdrop-blur-sm text-[#FFD700] rounded-lg sm:rounded-xl hover:bg-[#FFD700]/20 transition-all duration-300 border border-[#FFD700]/30 text-sm md:text-base lg:text-lg">
+                                <button className="px-3 sm:px-4 py-2 bg-[#1a1a1a]/60 backdrop-blur-sm text-[#FFD700] rounded-lg sm:rounded-xl hover:bg-[#FFD700]/20 transition-all duration-300 border border-[#FFD700]/30 text-sm md:text-base lg:text-lg" onClick={() => handleShare(principal)}>
                                   📤 Compartir
                                 </button>
-                                <button className="px-3 sm:px-4 py-2 bg-[#1a1a1a]/60 backdrop-blur-sm text-[#FFD700] rounded-lg sm:rounded-xl hover:bg-[#FFD700]/20 transition-all duration-300 border border-[#FFD700]/30 text-sm md:text-base lg:text-lg">
-                                  🔖 Guardar
-                                </button>
+                                {isAuthenticated && (
+                                  <>
+                                    <button className="px-3 sm:px-4 py-2 bg-[#1a1a1a]/60 backdrop-blur-sm text-[#FFD700] rounded-lg sm:rounded-xl hover:bg-[#FFD700]/20 transition-all duration-300 border border-[#FFD700]/30 text-sm md:text-base lg:text-lg" onClick={() => navigate('/admin-noticias?edit=' + principal.id)}>
+                                      ✏️ Editar
+                                    </button>
+                                    <button className="px-3 sm:px-4 py-2 bg-[#1a1a1a]/60 backdrop-blur-sm text-[#FFD700] rounded-lg sm:rounded-xl hover:bg-[#FFD700]/20 transition-all duration-300 border border-[#FFD700]/30 text-sm md:text-base lg:text-lg">
+                                      🔖 Guardar
+                                    </button>
+                                  </>
+                                )}
                               </div>
                             </div>
                           </div>
