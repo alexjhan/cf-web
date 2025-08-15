@@ -31,6 +31,51 @@ TOP_K = 4  # Número de fragmentos a enviar al LLM
 try:
     with open(EMBEDDINGS_PATH, "r", encoding="utf-8") as f:
         fragments = json.load(f)
+except FileNotFoundError:
+    fragments = []
+
+embeddings = np.array([frag.get("embedding") for frag in fragments if "embedding" in frag] , dtype=float) if fragments else np.zeros((0,384), dtype=float)
+model = SentenceTransformer(MODEL_EMBED)
+
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+
+class Query(BaseModel):
+    question: str
+app = FastAPI()
+
+# Endpoint de salud para monitoreo
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "fragments_loaded": len(fragments)}
+
+# CORS / seguridad (ya modificado anteriormente)
+# (Se reutiliza configuración previa si existe variables de entorno)
+ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "")
+_origins_env = os.getenv("FRONTEND_ORIGINS", "*")
+if _origins_env.strip() == "*":
+    _allow_origins = ["*"]
+else:
+    _allow_origins = [o.strip() for o in _origins_env.split(",") if o.strip()]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=_allow_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
+def _check_admin(request: Request):
+    if not ADMIN_TOKEN:
+        return
+    token = request.headers.get("x-admin-token") or request.headers.get("X-Admin-Token")
+    if not token:
+        auth = request.headers.get("authorization") or ""
+        if auth.lower().startswith("bearer "):
+            token = auth.split(None,1)[1]
+    if token != ADMIN_TOKEN:
+        raise HTTPException(status_code=401, detail="Token admin inválido")
+
 @app.post("/ask")
 def ask(query: Query, response: Response):
     if not GROQ_API_KEY:
@@ -103,67 +148,6 @@ def ask(query: Query, response: Response):
             time.sleep(0.5)
     if not answer:
         answer = f"No se pudo obtener respuesta de Groq. Detalle: {last_error}" if last_error else "No se pudo obtener respuesta de Groq."
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    return {"respuesta": answer, "fragmentos": [fragments[i] for i in idxs] if idxs else []}
-        idxs = []
-        context = ""
-    else:
-        sims = embeddings @ q_emb / (np.linalg.norm(embeddings, axis=1) * np.linalg.norm(q_emb) + 1e-8)
-        idxs = np.argsort(sims)[-TOP_K:][::-1]
-        context = "\n\n".join([fragments[i]["texto"] for i in idxs])
-    # Buscar en la web (DuckDuckGo)
-    web_context = ""
-    try:
-        with DDGS() as ddgs:
-            web_hits = ddgs.text(query.question, max_results=3)
-            lines = []
-            for h in web_hits:
-                title = h.get('title') or ''
-                body = h.get('body') or ''
-                url = h.get('href') or ''
-                lines.append(f"{title}: {body} ({url})")
-            web_context = "\n".join(lines)
-    except Exception:
-        web_context = ""
-    # 3. Prompt para el LLM
-    prompt = f"""Eres un asistente administrativo experto en la Escuela Profesional de Ingeniería Metalúrgica de Cusco. Responde únicamente sobre temas administrativos, trámites, normativas, documentos oficiales, procesos internos y consultas relacionadas con la gestión de la escuela profesional. Utiliza solo la información de los documentos oficiales proporcionados y, si es relevante, complementa con información web confiable.
-
-Tu respuesta debe ser precisa, específica y directamente relacionada con la pregunta. Si la pregunta es ambigua o falta información, solicita detalles adicionales de manera formal y clara. Si no sabes la respuesta, di 'No tengo información suficiente'.
-
-IMPORTANTE: Si la respuesta incluye requisitos, pasos, documentos, procesos o listas, debes presentarlos OBLIGATORIAMENTE usando listas con viñetas o numeradas, y NUNCA en párrafos largos. No incluyas texto en bloque para estos casos. Ejemplo:
-
-- Requisito 1
-- Requisito 2
-- Requisito 3
-
-Contexto de documentos oficiales:
-{context}
-
-Contexto web relevante:
-{web_context}
-
-Pregunta: {query.question}
-Respuesta:"""
-    # 4. Llama a Groq Cloud
-    headers = {
-        "Authorization": f"Bearer {GROQ_API_KEY}",
-        "Content-Type": "application/json"
-    }
-    data = {
-        "model": GROQ_MODEL,
-        "messages": [
-            {"role": "system", "content": "Eres un asistente experto en la carrera de Ingeniería Metalúrgica."},
-            {"role": "user", "content": prompt}
-        ],
-        "max_tokens": 512,
-        "temperature": 0.2
-    }
-    resp = requests.post(GROQ_URL, headers=headers, json=data)
-    if resp.status_code == 200:
-        answer = resp.json()["choices"][0]["message"]["content"]
-    else:
-        answer = f"Error al consultar Groq: {resp.text}"
-    # Forzar header CORS en la respuesta (debug)
     response.headers["Access-Control-Allow-Origin"] = "*"
     return {"respuesta": answer, "fragmentos": [fragments[i] for i in idxs] if idxs else []}
 
