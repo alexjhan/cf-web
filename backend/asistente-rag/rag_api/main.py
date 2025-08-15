@@ -12,6 +12,7 @@ import requests
 # from busca_web_duckduckgo import buscar_web_duckduckgo  # Ajusta el import según nueva estructura
 from typing import List
 from . import news_store
+from duckduckgo_search import DDGS
 
 # Configuración
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # backend/asistente-rag
@@ -30,75 +31,80 @@ TOP_K = 4  # Número de fragmentos a enviar al LLM
 try:
     with open(EMBEDDINGS_PATH, "r", encoding="utf-8") as f:
         fragments = json.load(f)
-except FileNotFoundError:
-    fragments = []
-
-embeddings = np.array([frag["embedding"] for frag in fragments]) if fragments else np.zeros((0, 384), dtype=float)
-model = SentenceTransformer(MODEL_EMBED)
-
-from fastapi.responses import JSONResponse
-app = FastAPI()
-
-# ================= Configuración de seguridad y CORS dinámico =================
-ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "")  # Define este valor en Render
-_origins_env = os.getenv("FRONTEND_ORIGINS", "*")  # Coma separado. Ej: https://tu-frontend.netlify.app,https://otro
-if _origins_env.strip() == "*":
-    _allow_origins = ["*"]
-else:
-    _allow_origins = [o.strip() for o in _origins_env.split(",") if o.strip()]
-
-# Endpoint de salud para monitoreo
-@app.get("/health")
-async def health_check():
-    """Endpoint de salud para verificar que el API está funcionando"""
-    return {
-        "status": "healthy",
-        "timestamp": time.time(),
-        "service": "RAG API Metalurgia",
-        "fragments_loaded": len(fragments),
-        "embeddings_shape": embeddings.shape if embeddings.size > 0 else [0, 0]
-    }
-
-# Endpoint global para OPTIONS (preflight CORS)
-@app.options("/{rest_of_path:path}")
-async def options_handler(rest_of_path: str):
-    return JSONResponse(content={}, headers={
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "*",
-        "Access-Control-Allow-Headers": "*"
-    })
-
-# Permitir CORS para el frontend local
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=_allow_origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-def _check_admin(request: Request):
-    """Valida token admin en headers para métodos mutadores.
-    Header soportado: X-Admin-Token o Authorization: Bearer <token>"""
-    if not ADMIN_TOKEN:
-        return  # Si no está configurado, no se aplica (modo desarrollo)
-    hdr = request.headers.get("x-admin-token") or request.headers.get("X-Admin-Token")
-    if not hdr:
-        auth = request.headers.get("authorization") or request.headers.get("Authorization")
-        if auth and auth.lower().startswith("bearer "):
-            hdr = auth.split(None, 1)[1].strip()
-    if hdr != ADMIN_TOKEN:
-        raise HTTPException(status_code=401, detail="Token admin inválido")
-
-class Query(BaseModel):
-    question: str
-
 @app.post("/ask")
 def ask(query: Query, response: Response):
-    # 1. Embedding de la pregunta
-    q_emb = model.encode(query.question)
-    # 2. Similaridad coseno (manejar vacío)
+    if not GROQ_API_KEY:
+        return {"respuesta": "Servicio IA no configurado (falta GROQ_API_KEY).", "fragmentos": []}
+    # 1. Embedding pregunta
+    try:
+        q_emb = model.encode(query.question)
+    except Exception:
+        q_emb = np.zeros((384,), dtype=float)
+    # 2. Similaridad
     if embeddings.size == 0:
+        idxs: list[int] = []
+        context = ""
+    else:
+        sims = embeddings @ q_emb / (np.linalg.norm(embeddings, axis=1) * (np.linalg.norm(q_emb) + 1e-8) + 1e-8)
+        idxs = np.argsort(sims)[-TOP_K:][::-1]
+        context = "\n\n".join([fragments[i]["texto"] for i in idxs])
+    # 3. Web context (rápido, errores silenciados)
+    web_context = ""
+    try:
+        with DDGS() as ddgs:
+            for_hit = ddgs.text(query.question, max_results=3)
+            lines = []
+            for h in for_hit:
+                title = (h.get('title') or '')[:80]
+                body = (h.get('body') or '')[:160]
+                url = h.get('href') or ''
+                lines.append(f"- {title}: {body} ({url})")
+            web_context = "\n".join(lines)
+    except Exception:
+        web_context = ""
+    # 4. Prompt
+    prompt = (
+        "Eres un asistente administrativo experto en la Escuela Profesional de Ingeniería Metalúrgica de Cusco. "
+        "Responde solo sobre temas administrativos, trámites, normativas, documentos oficiales y procesos internos. "
+        "Si no hay información suficiente responde: 'No tengo información suficiente'.\n\n"
+        "FORMATO: usa siempre listas con viñetas para requisitos/pasos.\n\n"
+        f"Contexto documental:\n{context if context else '- (sin fragmentos locales)'}\n\n"
+        f"Contexto web (resumen):\n{web_context if web_context else '- (sin resultados web)'}\n\n"
+        f"Pregunta: {query.question}\nRespuesta:"
+    )
+    # 5. Llamada Groq con reintentos
+    headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
+    payload = {
+        "model": GROQ_MODEL,
+        "messages": [
+            {"role": "system", "content": "Eres un asistente experto en la carrera de Ingeniería Metalúrgica."},
+            {"role": "user", "content": prompt},
+        ],
+        "max_tokens": 512,
+        "temperature": 0.2,
+    }
+    answer = None
+    last_error = None
+    for attempt in range(3):
+        try:
+            resp = requests.post(GROQ_URL, headers=headers, json=payload, timeout=25)
+            if resp.status_code == 200:
+                answer = resp.json()["choices"][0]["message"]["content"]
+                break
+            # Retry solo en 429/5xx
+            if resp.status_code in (429, 500, 502, 503, 504):
+                last_error = resp.text
+                time.sleep(1 + attempt)
+                continue
+            last_error = resp.text
+            break
+        except Exception as e:
+            last_error = str(e)
+            time.sleep(0.5)
+    if not answer:
+        answer = f"No se pudo obtener respuesta de Groq. Detalle: {last_error}" if last_error else "No se pudo obtener respuesta de Groq."
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    return {"respuesta": answer, "fragmentos": [fragments[i] for i in idxs] if idxs else []}
         idxs = []
         context = ""
     else:
@@ -106,9 +112,19 @@ def ask(query: Query, response: Response):
         idxs = np.argsort(sims)[-TOP_K:][::-1]
         context = "\n\n".join([fragments[i]["texto"] for i in idxs])
     # Buscar en la web (DuckDuckGo)
-    # web_results = buscar_web_duckduckgo(query.question)
-    # web_context = "\n\n".join([f"{r['titulo']}: {r['snippet']} ({r['url']})" for r in web_results])
-    web_context = ""  # Quitar o adaptar según nueva estructura
+    web_context = ""
+    try:
+        with DDGS() as ddgs:
+            web_hits = ddgs.text(query.question, max_results=3)
+            lines = []
+            for h in web_hits:
+                title = h.get('title') or ''
+                body = h.get('body') or ''
+                url = h.get('href') or ''
+                lines.append(f"{title}: {body} ({url})")
+            web_context = "\n".join(lines)
+    except Exception:
+        web_context = ""
     # 3. Prompt para el LLM
     prompt = f"""Eres un asistente administrativo experto en la Escuela Profesional de Ingeniería Metalúrgica de Cusco. Responde únicamente sobre temas administrativos, trámites, normativas, documentos oficiales, procesos internos y consultas relacionadas con la gestión de la escuela profesional. Utiliza solo la información de los documentos oficiales proporcionados y, si es relevante, complementa con información web confiable.
 

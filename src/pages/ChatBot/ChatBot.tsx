@@ -60,6 +60,7 @@ const ChatBot = () => {
   const [input, setInput] = useState("");
   const [cargando, setCargando] = useState(false);
   const [primeraConsulta, setPrimeraConsulta] = useState(false);
+  const [modoOffline, setModoOffline] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -88,6 +89,7 @@ const ChatBot = () => {
       if (res.ok) {
         const data = await res.json();
         setMensajes(prev => [...prev, { autor: "ia", texto: data.respuesta }]);
+        setModoOffline(false);
       } else {
         throw new Error('bad status');
       }
@@ -96,6 +98,7 @@ const ChatBot = () => {
       const base = buscarRespuestaLocal(pregunta);
       const respuesta = construirRespuestaExtendida(base, pregunta);
       setMensajes(prev => [...prev, { autor: "ia", texto: respuesta }]);
+      setModoOffline(true);
     }
     setCargando(false);
   };
@@ -123,7 +126,7 @@ const ChatBot = () => {
       </div>
       
       {/* Header Compacto */}
-      <div className="relative py-4 px-4 flex-shrink-0">
+  <div className="relative py-4 px-4 flex-shrink-0">
         <div className="relative max-w-4xl mx-auto">
           
           {/* Badge Minimalista */}
@@ -140,9 +143,14 @@ const ChatBot = () => {
                   Centro Federado de Ing. Metalúrgica
                 </p>
               </div>
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <div className={`w-2 h-2 rounded-full animate-pulse ${modoOffline ? 'bg-yellow-400' : 'bg-green-400'}`}></div>
             </div>
           </div>
+          {modoOffline && (
+            <div className="mt-3 flex justify-center">
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#FFD700]/20 text-[#FFD700] border border-[#FFD700]/40 backdrop-blur-sm">Modo offline (FAQ + info local)</span>
+            </div>
+          )}
         </div>
       </div>
 
