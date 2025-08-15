@@ -29,33 +29,27 @@ const defaultNoticias: Noticia[] = seedNoticias.map((n,i)=> ({
 }));
 
 const AdminNoticiasContent = () => {
-  // Cargar desde localStorage si existe; si no, usar las de defecto
-  const [deletedIds, setDeletedIds] = useState<string[]>(() => {
-    try { return JSON.parse(localStorage.getItem('noticias_deleted')||'[]'); } catch { return []; }
-  });
-  const [noticias, setNoticias] = useState<Noticia[]>(() => {
-    try {
-      const saved = localStorage.getItem("noticias");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          return (parsed as any[]).map((n, idx) => ({
-            id: n.id || `${n.fecha || '0000-00-00'}-${slug(n.titulo || 'noticia')}-ls${idx}`,
-            fecha: n.fecha || '',
-            titulo: n.titulo || 'Sin título',
-            descripcionCorta: n.descripcionCorta || '',
-            descripcionLarga: n.descripcionLarga || '',
-            autor: n.autor || 'Desconocido',
-            categoria: Array.isArray(n.categoria)? n.categoria : [],
-            imagen: n.imagen || '',
-            vistas: n.vistas ?? 0,
-            destacada: n.destacada ?? false,
-          })) as Noticia[];
+  const [deletedIds, setDeletedIds] = useState<string[]>([]);
+  const [noticias, setNoticias] = useState<Noticia[]>(defaultNoticias);
+  const [statusMsg, setStatusMsg] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const apiBase = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8000';
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(apiBase + '/news');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length && active) setNoticias(data);
         }
-      }
-    } catch {}
-    return defaultNoticias;
-  });
+      } catch { /* offline fallback localStorage */
+        try { const saved = localStorage.getItem('noticias'); if (saved) { const parsed = JSON.parse(saved); if(Array.isArray(parsed)) setNoticias(parsed); } } catch {}
+      } finally { if (active) setLoading(false); }
+    })();
+    return () => { active = false; };
+  }, []);
   const [form, setForm] = useState<Noticia>({ id: '', fecha: "", titulo: "", descripcionCorta: "", descripcionLarga: "", autor: "", categoria: [], imagen: "", vistas:0, destacada:false });
   const [preview, setPreview] = useState<string>("");
   const [editIdx, setEditIdx] = useState<number | null>(null);
@@ -80,13 +74,23 @@ const AdminNoticiasContent = () => {
       setForm((prev) => ({ ...prev, [name]: value }));
     }
   };
-  const handleAdd = (e: React.FormEvent) => {
+  const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
-  if (!form.fecha || !form.titulo || !form.descripcionCorta || !form.descripcionLarga || !form.autor || (Array.isArray(form.categoria) && form.categoria.length === 0)) return;
-  const id = form.id && form.id.length>0 ? form.id : `${form.fecha}-${slug(form.titulo)}-${Date.now()}`;
-  setNoticias([...noticias, { ...form, id }]);
-  setForm({ id:'', fecha: "", titulo: "", descripcionCorta: "", descripcionLarga: "", autor: "", categoria: [], imagen: "", vistas:0, destacada:false });
-    setPreview("");
+    if (!form.fecha || !form.titulo || !form.descripcionCorta || !form.descripcionLarga || !form.autor || form.categoria.length === 0) return;
+    try {
+      const payload = { ...form, id: form.id || undefined } as any;
+      const res = await fetch(apiBase + '/news', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (!res.ok) throw new Error('create');
+      const created = await res.json();
+      setNoticias(prev => [...prev, created]);
+      setStatusMsg('Noticia creada');
+      setTimeout(()=>setStatusMsg(null), 2500);
+      setForm({ id:'', fecha: '', titulo:'', descripcionCorta:'', descripcionLarga:'', autor:'', categoria:[], imagen:'', vistas:0, destacada:false });
+      setPreview('');
+    } catch {
+      setStatusMsg('Error creando (offline?)');
+      setTimeout(()=>setStatusMsg(null), 3000);
+    }
   };
   const handleEdit = (idx: number) => {
     setEditIdx(idx);
@@ -94,29 +98,45 @@ const AdminNoticiasContent = () => {
     setPreview(noticias[idx].imagen || "");
   };
 
-  const handleUpdate = (e: React.FormEvent) => {
+  const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (editIdx === null) return;
-    const updated = [...noticias];
-    updated[editIdx] = form;
-  setNoticias(updated);
-  setEditIdx(null);
-  setForm({ id:'', fecha: "", titulo: "", descripcionCorta: "", descripcionLarga: "", autor: "", categoria: [], imagen: "", vistas:0, destacada:false });
-    setPreview("");
+    try {
+      const res = await fetch(apiBase + '/news/' + noticias[editIdx].id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) });
+      if (!res.ok) throw new Error('update');
+      const updatedItem = await res.json();
+      setNoticias(prev => prev.map(n => n.id === updatedItem.id ? updatedItem : n));
+      setStatusMsg('Cambios guardados');
+      setTimeout(()=>setStatusMsg(null), 2500);
+    } catch {
+      setStatusMsg('Error al guardar');
+      setTimeout(()=>setStatusMsg(null), 3000);
+    }
+    setEditIdx(null);
+    setForm({ id:'', fecha: '', titulo:'', descripcionCorta:'', descripcionLarga:'', autor:'', categoria:[], imagen:'', vistas:0, destacada:false });
+    setPreview('');
   };
 
-  const handleDelete = (idx: number) => {
-    if (window.confirm("¿Eliminar esta noticia? (Se ocultará también del sitio público)")) {
-      const target = noticias[idx];
-      setNoticias(noticias.filter((_, i) => i !== idx));
-      setDeletedIds(prev => prev.includes(target.id) ? prev : [...prev, target.id]);
+  const handleDelete = async (idx: number) => {
+    if (!window.confirm('¿Eliminar esta noticia?')) return;
+    const target = noticias[idx];
+    try {
+      const res = await fetch(apiBase + '/news/' + target.id, { method: 'DELETE' });
+      if (!res.ok) throw new Error('delete');
+      setNoticias(prev => prev.filter(n => n.id !== target.id));
+      setDeletedIds(prev => prev.includes(target.id)? prev : [...prev, target.id]);
+      setStatusMsg('Noticia eliminada');
+      setTimeout(()=>setStatusMsg(null), 2000);
+    } catch {
+      setStatusMsg('Error al eliminar');
+      setTimeout(()=>setStatusMsg(null), 3000);
     }
   };
 
   // Persistir automáticamente en localStorage cuando cambie la lista
   useEffect(() => {
-    try { localStorage.setItem("noticias", JSON.stringify(noticias)); } catch {}
-  try { localStorage.setItem('noticias_initialized','1'); } catch {}
+    try { localStorage.setItem('noticias', JSON.stringify(noticias)); } catch {}
+    try { localStorage.setItem('noticias_initialized','1'); } catch {}
   }, [noticias]);
 
   useEffect(() => {
@@ -125,6 +145,14 @@ const AdminNoticiasContent = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#3a3a4a] to-[#18181b] py-16 px-4 flex flex-col items-center">
+      {statusMsg && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-black/70 text-[#FFD700] px-4 py-2 rounded-xl border border-[#FFD700]/40 text-sm z-50">{statusMsg}</div>
+      )}
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-40">
+          <div className="px-6 py-3 bg-[#1a1a1a] border border-[#FFD700]/40 rounded-xl text-[#FFD700] animate-pulse text-sm">Cargando...</div>
+        </div>
+      )}
       <h1 className="text-4xl md:text-5xl font-extrabold mb-8 text-center" style={{ color: "#C9B037", textShadow: "0 2px 8px #000" }}>
         Panel de Noticias (Admin)
       </h1>

@@ -21,15 +21,9 @@ const Noticias: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated } = useAuth();
-  const [noticias] = useState<Noticia[]>(() => {
-    try {
-      const stored = localStorage.getItem('noticias');
-      if (stored) return JSON.parse(stored);
-    } catch {}
-    return [];
-  });
-  const initialized = typeof window !== 'undefined' && localStorage.getItem('noticias_initialized') === '1';
-  const anyDeleted = (()=>{ try { return JSON.parse(localStorage.getItem('noticias_deleted')||'[]').length>0 } catch { return false }})();
+  const [noticias, setNoticias] = useState<Noticia[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedIdx, setSelectedIdx] = useState<number>(0);
   const [shareMsg, setShareMsg] = useState<string | null>(null);
 
@@ -58,8 +52,7 @@ const Noticias: React.FC = () => {
 
   // Normalizar base (importada) añadiendo id, vistas, destacada si faltan
   const baseNormalizada: Noticia[] = useMemo(() => {
-    // Si el usuario ya inició (entró al panel admin) o eliminó algo, no mostrar seed/base
-    if (initialized || anyDeleted) return [];
+    if (noticias.length > 0) return [];
     const toSlug = (t: string) => t.toLowerCase().normalize('NFD').replace(/[^\w\s-]/g,'').replace(/\s+/g,'-');
     return (noticiasBase as any[]).map((n, i) => ({
       id: `${n.fecha || '0000-00-00'}-${toSlug(n.titulo || 'noticia')}-${i}`,
@@ -73,42 +66,32 @@ const Noticias: React.FC = () => {
       vistas: (n as any).vistas ?? 0,
       destacada: (n as any).destacada ?? false,
     }));
-  }, []);
+  }, [noticias.length]);
 
   // Merge base con localStorage (store sobrescribe por id)
   const mergedNoticias: Noticia[] = useMemo(() => {
-  if (noticias.length === 0) return baseNormalizada; // si no hay user data y no inicializado se muestran base
-    const toSlug = (t: string) => t.toLowerCase().normalize('NFD').replace(/[^\w\s-]/g,'').replace(/\s+/g,'-');
-    const sanitized = (noticias as any[]).map((n, idx) => {
-      const id = n.id && typeof n.id === 'string' && n.id.trim().length > 4
-        ? n.id
-        : `${n.fecha || '0000-00-00'}-${toSlug(n.titulo || 'noticia')}-ls${idx}`;
-      return {
-        id,
-        titulo: n.titulo || 'Sin título',
-        descripcionCorta: n.descripcionCorta || '',
-        descripcionLarga: n.descripcionLarga || '',
-        imagen: n.imagen,
-        categoria: Array.isArray(n.categoria) ? n.categoria : [],
-        fecha: n.fecha || new Date().toISOString().slice(0,10),
-        autor: n.autor || 'Desconocido',
-        vistas: n.vistas ?? 0,
-        destacada: n.destacada ?? false,
-      } as Noticia;
-    });
-    const map = new Map<string, Noticia>();
-    baseNormalizada.forEach(n => map.set(n.id, n));
-    sanitized.forEach(n => map.set(n.id, { ...map.get(n.id), ...n } as Noticia));
-  // Filtrar las eliminadas
-  let deleted: string[] = [];
-  try { deleted = JSON.parse(localStorage.getItem('noticias_deleted') || '[]'); } catch {}
-  return Array.from(map.values()).filter(n => !deleted.includes(n.id));
+    return noticias.length ? noticias : baseNormalizada;
   }, [noticias, baseNormalizada]);
 
-  // Persistir cuando cambien (solo los que no vienen de base) -> guardamos todos por simplicidad
+  // Cargar desde backend
   useEffect(() => {
-    try { localStorage.setItem('noticias', JSON.stringify(mergedNoticias)); } catch {}
-  }, [mergedNoticias]);
+    const controller = new AbortController();
+    const apiBase = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8000';
+    (async () => {
+      setLoading(true); setError(null);
+      try {
+        const res = await fetch(apiBase + '/news', { signal: controller.signal });
+        if (!res.ok) throw new Error('status ' + res.status);
+        const data = await res.json();
+        if (Array.isArray(data)) setNoticias(data);
+      } catch (e:any) {
+        setError('Sin conexión al servidor (modo demo)');
+      } finally {
+        setLoading(false);
+      }
+    })();
+    return () => controller.abort();
+  }, []);
 
   // Deep link ?id=xxx
   useEffect(() => {
@@ -148,6 +131,16 @@ const Noticias: React.FC = () => {
       className="min-h-screen text-white overflow-hidden relative"
       style={{ background: 'radial-gradient(ellipse at top, #1a1a1a 0%, #2a2a2a 30%, #0f0f0f 60%, #000000 100%)' }}
     >
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+          <div className="px-6 py-4 bg-[#1a1a1a] border border-[#FFD700]/40 rounded-xl text-[#FFD700] animate-pulse">Cargando noticias...</div>
+        </div>
+      )}
+      {error && !loading && (
+        <div className="fixed top-4 right-4 bg-red-700/80 text-white px-4 py-2 rounded-lg text-sm border border-red-400 shadow-lg z-50">
+          {error}
+        </div>
+      )}
       {/* Fondo y partículas estilo Carrera */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 via-transparent to-[#C9B037]/3"></div>

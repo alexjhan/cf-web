@@ -4,13 +4,14 @@ import os
 import json
 import time
 import numpy as np
-from fastapi import FastAPI, Request, Response, Query as FastAPIQuery
+from fastapi import FastAPI, Request, Response, Query as FastAPIQuery, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer
 import requests
 # from busca_web_duckduckgo import buscar_web_duckduckgo  # Ajusta el import según nueva estructura
 from typing import List
+from . import news_store
 
 # Configuración
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # backend/asistente-rag
@@ -128,6 +129,56 @@ Respuesta:"""
     # Forzar header CORS en la respuesta (debug)
     response.headers["Access-Control-Allow-Origin"] = "*"
     return {"respuesta": answer, "fragmentos": [fragments[i] for i in idxs] if idxs else []}
+
+# ===================== Noticias (CRUD simple) =====================
+class NewsIn(BaseModel):
+    id: str | None = None
+    fecha: str
+    titulo: str
+    descripcionCorta: str
+    descripcionLarga: str
+    autor: str
+    categoria: List[str]
+    imagen: str | None = None
+    destacada: bool | None = False
+    vistas: int | None = 0
+
+@app.get('/news')
+def list_all_news():
+    return news_store.list_news()
+
+@app.get('/news/{nid}')
+def get_one_news(nid: str):
+    n = news_store.get_news(nid)
+    if not n:
+        raise HTTPException(status_code=404, detail='Noticia no encontrada')
+    return n
+
+@app.post('/news')
+def create_news(item: NewsIn):
+    try:
+        stored = news_store.upsert_news(item.dict())
+        return stored
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.put('/news/{nid}')
+def update_news(nid: str, item: NewsIn):
+    existing = news_store.get_news(nid)
+    if not existing:
+        raise HTTPException(status_code=404, detail='Noticia no encontrada')
+    data = item.dict()
+    if not data.get('id'):
+        data['id'] = nid
+    stored = news_store.upsert_news(data)
+    return stored
+
+@app.delete('/news/{nid}')
+def remove_news(nid: str):
+    ok = news_store.delete_news(nid)
+    if not ok:
+        raise HTTPException(status_code=404, detail='Noticia no encontrada')
+    return {"status": "deleted", "id": nid}
 
 # =============== Ingesta de mensajes (genérico) ===============
 class IngestMessage(BaseModel):
