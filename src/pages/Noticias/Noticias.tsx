@@ -26,6 +26,7 @@ const Noticias: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedIdx, setSelectedIdx] = useState<number>(0);
   const [shareMsg, setShareMsg] = useState<string | null>(null);
+  const apiBase = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8000';
 
   const handleShare = (n: Noticia) => {
     const url = `${window.location.origin}/noticias?id=${encodeURIComponent(n.id)}`;
@@ -76,8 +77,7 @@ const Noticias: React.FC = () => {
   // Cargar desde backend
   useEffect(() => {
     const controller = new AbortController();
-    const apiBase = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8000';
-    (async () => {
+    const load = async () => {
       setLoading(true); setError(null);
       try {
         const res = await fetch(apiBase + '/news', { signal: controller.signal });
@@ -86,12 +86,42 @@ const Noticias: React.FC = () => {
         if (Array.isArray(data)) setNoticias(data);
       } catch (e:any) {
         setError('Sin conexión al servidor (modo demo)');
-      } finally {
-        setLoading(false);
-      }
-    })();
+      } finally { setLoading(false); }
+    };
+    load();
+    // Poll cada 30s para captar ediciones
+    const idPoll = setInterval(() => { load(); }, 30000);
+    // Refrescar al volver foco / visibilidad
+    const onFocus = () => load();
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
     return () => controller.abort();
+    return () => { clearInterval(idPoll); window.removeEventListener('focus', onFocus); };
   }, []);
+
+  // Al cambiar noticia seleccionada, pedir versión actualizada individual (incrementa vistas)
+  useEffect(() => {
+    if (!mergedNoticias.length) return;
+    const current = mergedNoticias[selectedIdx];
+    if (!current) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(apiBase + '/news/' + encodeURIComponent(current.id));
+        if (!res.ok) return; // si falla dejamos la que tenemos
+        const fresh = await res.json();
+        if (cancelled) return;
+        setNoticias(prev => {
+          const idx = prev.findIndex(n => n.id === fresh.id);
+          if (idx === -1) return prev; // listado se actualizará en próximo poll
+          const clone = [...prev];
+            clone[idx] = { ...clone[idx], ...fresh };
+          return clone;
+        });
+      } catch {}
+    })();
+    return () => { cancelled = true; };
+  }, [selectedIdx, mergedNoticias.map(n => n.id).join('|')]);
 
   // Deep link ?id=xxx
   useEffect(() => {
