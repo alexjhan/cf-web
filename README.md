@@ -30,3 +30,42 @@ pnpm dev
 
 ## Licencia
 Uso interno académico del Centro Federado.
+
+## SEO / Aparición en Google
+Para que "Centro Federado Ingeniería Metalúrgica" aparezca en búsquedas:
+1. Dominio y HTTPS: despliega el build en un dominio estable (ej: `cfim-metalurgia.pe`) con certificado SSL.
+2. Meta tags: el archivo `index.html` ya incluye meta `description`, `keywords`, OpenGraph y JSON-LD básico.
+3. Sitemap: genera un `sitemap.xml` con rutas principales (`/inicio`, `/carrera`, `/noticias`, etc.) y súbelo a la raíz.
+4. robots.txt: crea un `robots.txt` permitiendo indexación y referencia al sitemap.
+5. Search Console: verifica propiedad del dominio en Google Search Console (etiqueta HTML o DNS TXT) y envía sitemap.
+6. Performance: asegura tiempos de carga óptimos (usa build de producción `npm run build`).
+7. Contenido único: redacta descripciones ricas en la palabra clave "Ingeniería Metalúrgica" en páginas clave.
+8. Favicon y OpenGraph: ya configurados; opcional añadir imágenes específicas por página.
+9. Enlaces externos: consigue enlaces desde la página oficial de la Facultad / Universidad para autoridad.
+10. Actualizaciones: publica noticias periódicas para que Google detecte frescura del sitio.
+
+Archivos sugeridos a agregar en la raíz de producción:
+```
+robots.txt
+User-agent: *
+Allow: /
+Sitemap: https://www.ejemplo-dominio-cfim.pe/sitemap.xml
+```
+
+Ejemplo mínimo de `sitemap.xml`:
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+	<url><loc>https://www.ejemplo-dominio-cfim.pe/</loc></url>
+	<url><loc>https://www.ejemplo-dominio-cfim.pe/inicio</loc></url>
+	<url><loc>https://www.ejemplo-dominio-cfim.pe/carrera</loc></url>
+	<url><loc>https://www.ejemplo-dominio-cfim.pe/noticias</loc></url>
+	<url><loc>https://www.ejemplo-dominio-cfim.pe/cursos</loc></url>
+	<url><loc>https://www.ejemplo-dominio-cfim.pe/oportunidades</loc></url>
+	<url><loc>https://www.ejemplo-dominio-cfim.pe/documentos</loc></url>
+	<url><loc>https://www.ejemplo-dominio-cfim.pe/especialidades</loc></url>
+	<url><loc>https://www.ejemplo-dominio-cfim.pe/representacion</loc></url>
+</urlset>
+```
+
+Puedes automatizar el sitemap generándolo desde el router o un script Node si las rutas crecen.

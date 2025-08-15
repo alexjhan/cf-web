@@ -14,6 +14,7 @@ import AdminEspecialidades from "./pages/AdminEspecialidades/AdminEspecialidades
 import AdminOportunidades from "./pages/AdminOportunidades/AdminOportunidades";
 import Especialidades from "./pages/Especialidades/Especialidades";
 import Representacion from "./pages/Representacion/Representacion";
+import ResponsivePreview from "./pages/ResponsivePreview/ResponsivePreview.tsx";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path="/chatbot" element={<ChatBot />} />
         <Route path="/especialidades" element={<Especialidades />} />
   <Route path="/representacion" element={<Representacion />} />
+  <Route path="/responsive" element={<ResponsivePreview />} />
         <Route path="/admin" element={<AdminSelector />} />
         <Route path="/admin-selector" element={<AdminSelector />} />
         <Route path="/admin-especialidades" element={<AdminEspecialidades />} />
