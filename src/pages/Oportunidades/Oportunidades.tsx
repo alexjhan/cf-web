@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import EmptyOverlay from '../../components/Shared/EmptyOverlay';
 
 // Interfaces para los datos
 interface Oportunidad {
@@ -204,6 +205,8 @@ const Oportunidades: React.FC = () => {
 
   const oportunidadesFiltradas = oportunidades.filter(op => op.tipo === categoriaActiva && op.activa);
 
+  const DATA_REAL = false; // bandera temporal
+
   return (
     <div 
       className="min-h-screen text-white overflow-hidden relative"
@@ -225,6 +228,13 @@ const Oportunidades: React.FC = () => {
       </div>
 
       {/* Header épico responsivo */}
+      {!DATA_REAL && (
+        <EmptyOverlay
+          title="Oportunidades en construcción"
+          message="Estamos preparando el listado real de convocatorias, becas y posiciones. Muy pronto habrá contenido actualizado."
+          icon="🚧"
+        />
+      )}
       <header className="relative py-8 md:py-16 px-4">
         <div className="relative max-w-6xl mx-auto">
           

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import EmptyOverlay from '../../components/Shared/EmptyOverlay';
 
 const Documentos = () => {
   const [categoriaActiva, setCategoriaActiva] = useState('academicos');
@@ -214,9 +215,11 @@ const Documentos = () => {
     }
   };
 
+  const DATA_REAL = false; // bandera temporal para indicar si ya hay datos productivos
+
   return (
     <div 
-      className="min-h-screen text-white overflow-hidden"
+      className="min-h-screen text-white overflow-hidden relative"
       style={{
         background: 'radial-gradient(ellipse at top, #1a1a1a 0%, #2a2a2a 30%, #0f0f0f 60%, #000000 100%)'
       }}
@@ -238,6 +241,13 @@ const Documentos = () => {
       </div>
 
       <div className="relative">
+        {!DATA_REAL && (
+          <EmptyOverlay
+            title="Documentos en preparación"
+            message="Aún no se han cargado documentos oficiales. Este módulo se habilitará cuando el equipo termine la carga y validación de archivos."
+            icon="📂"
+          />
+        )}
         {/* Header Épico - Responsive como Inicio.tsx */}
   <div className="text-center px-4 py-6 md:py-16">
           <div className="inline-block mb-6 md:mb-10">

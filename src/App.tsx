@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Suspense, lazy } from "react";
 import Carrera from "./pages/Carrera/Carrera";
 import Noticias from "./pages/Noticias/Noticias";
-import Cursos from "./pages/Cursos/Cursos";
+// Carga diferida de Cursos para reducir el bundle inicial (lib @xyflow/react es pesada)
+const Cursos = lazy(() => import(/* webpackChunkName: "cursos" */ "./pages/Cursos/Cursos"));
 import Inicio from "./pages/Inicio/Inicio";
 import Oportunidades from "./pages/Oportunidades/Oportunidades";
 import Documentos from "./pages/Documentos/Documentos";
@@ -21,7 +23,11 @@ function App() {
         <Route path="/inicio" element={<Inicio />} />
         <Route path="/carrera" element={<Carrera />} />
         <Route path="/noticias" element={<Noticias />} />
-        <Route path="/cursos" element={<Cursos />} />
+        <Route path="/cursos" element={
+          <Suspense fallback={<div style={{minHeight:'60vh'}} className="flex items-center justify-center text-gray-300 animate-pulse">Cargando malla de cursos...</div>}>
+            <Cursos />
+          </Suspense>
+        } />
         <Route path="/oportunidades" element={<Oportunidades />} />
         <Route path="/documentos" element={<Documentos />} />
         <Route path="/admin-noticias" element={<AdminNoticias />} />
