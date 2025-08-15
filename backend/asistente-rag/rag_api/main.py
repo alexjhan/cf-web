@@ -79,7 +79,8 @@ def _check_admin(request: Request):
 @app.post("/ask")
 def ask(query: Query, response: Response):
     if not GROQ_API_KEY:
-        return {"respuesta": "Servicio IA no configurado (falta GROQ_API_KEY).", "fragmentos": []}
+        # No intentamos Groq; devolvemos indicador de modo offline
+        return {"respuesta": "Servicio IA no configurado (falta GROQ_API_KEY).", "fragmentos": [], "online": False, "reason": "missing_api_key"}
     # 1. Embedding pregunta
     try:
         q_emb = model.encode(query.question)
@@ -129,12 +130,14 @@ def ask(query: Query, response: Response):
         "temperature": 0.2,
     }
     answer = None
+    used_groq = False
     last_error = None
     for attempt in range(3):
         try:
             resp = requests.post(GROQ_URL, headers=headers, json=payload, timeout=25)
             if resp.status_code == 200:
                 answer = resp.json()["choices"][0]["message"]["content"]
+                used_groq = True
                 break
             # Retry solo en 429/5xx
             if resp.status_code in (429, 500, 502, 503, 504):
@@ -149,7 +152,7 @@ def ask(query: Query, response: Response):
     if not answer:
         answer = f"No se pudo obtener respuesta de Groq. Detalle: {last_error}" if last_error else "No se pudo obtener respuesta de Groq."
     response.headers["Access-Control-Allow-Origin"] = "*"
-    return {"respuesta": answer, "fragmentos": [fragments[i] for i in idxs] if idxs else []}
+    return {"respuesta": answer, "fragmentos": [fragments[i] for i in idxs] if idxs else [], "online": used_groq, "reason": (None if used_groq else (last_error or "groq_error"))}
 
 # ===================== Noticias (CRUD simple) =====================
 class NewsIn(BaseModel):
