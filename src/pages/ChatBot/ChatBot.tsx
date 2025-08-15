@@ -115,7 +115,25 @@ const ChatBot = () => {
       });
       if (res.ok) {
         const data = await res.json();
-        setMensajes(prev => [...prev, { autor: "ia", texto: data.respuesta }]);
+        // Lista local de placeholders por si el backend no ha sido actualizado
+        const localPlaceholders = [
+          "No tengo acceso a los datos ahora mismo, se están acomodando… ⛏️",
+          "Los datos están en huelga técnica. Intentemos luego. ✊",
+          "Archivo vacío por mantenimiento. 📂",
+          "Soy solo la carcasa, los datos aún no llegan. 📦",
+          "Me escondieron la base de datos. Envíen rescate. 🚁",
+          "Reindexando el vacío… 0% completado. 🔄",
+          "Los bits fueron a marchar, sigo solo aquí. 🚶",
+          "Sin acceso: puerta cerrada con doble candado. 🔐",
+          "Modo mantenimiento: sin tablas disponibles. 🧱",
+          "Cache frío, sin ingredientes. 🍽️"
+        ];
+        let textoRespuesta = data.respuesta;
+        if (data.reason === 'missing_api_key' && !data.maintenance) {
+          // Reemplazamos mensaje plano por uno aleatorio
+            textoRespuesta = localPlaceholders[Math.floor(Math.random() * localPlaceholders.length)];
+        }
+        setMensajes(prev => [...prev, { autor: "ia", texto: textoRespuesta }]);
         if (data.online === false) {
           setModoOffline(true);
           if (data.reason === 'placeholder_mode') {
