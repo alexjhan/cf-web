@@ -11,7 +11,7 @@ from sentence_transformers import SentenceTransformer
 import requests
 # from busca_web_duckduckgo import buscar_web_duckduckgo  # Ajusta el import según nueva estructura
 from typing import List
-from . import news_store
+from . import news_store, storage_store
 from duckduckgo_search import DDGS
 import random
 
@@ -242,7 +242,15 @@ class NewsIn(BaseModel):
     vistas: int | None = 0
 
 @app.get('/news')
-def list_all_news():
+def list_all_news(q: str | None = None, categoria: str | None = None, destacada: bool | None = None,
+                  page: int = 1, page_size: int = 10):
+    """Lista noticias. Si se pasan parámetros de filtro/paginación se usa búsqueda avanzada."""
+    if any([q, categoria, destacada is not None, page != 1, page_size != 10]):
+        try:
+            return news_store.search_news(q=q or None, categoria=categoria or None, destacada=destacada,
+                                          page=page, page_size=page_size)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e))
     return news_store.list_news()
 
 @app.get('/news/{nid}')
@@ -311,6 +319,47 @@ async def ingest_messages(msg: IngestMessage):
     with open(out_path, "a", encoding="utf-8") as f:
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
     return {"status": "ok"}
+
+# ===================== Almacenamiento genérico =====================
+from pydantic import BaseModel as _BM
+
+class GenericItemIn(_BM):
+    tipo: str
+    data: dict
+    id: str | None = None
+
+@app.post('/storage')
+def create_generic(item: GenericItemIn, request: Request):
+    _check_admin(request)
+    created = storage_store.create_item(item.tipo, item.data, item.id)
+    return created
+
+@app.get('/storage/{item_id}')
+def get_generic(item_id: str):
+    obj = storage_store.get_item(item_id)
+    if not obj:
+        raise HTTPException(status_code=404, detail='Item no encontrado')
+    return obj
+
+@app.put('/storage/{item_id}')
+def update_generic(item_id: str, item: GenericItemIn, request: Request):
+    _check_admin(request)
+    upd = storage_store.update_item(item_id, item.data)
+    if not upd:
+        raise HTTPException(status_code=404, detail='Item no encontrado')
+    return upd
+
+@app.delete('/storage/{item_id}')
+def delete_generic(item_id: str, request: Request):
+    _check_admin(request)
+    ok = storage_store.delete_item(item_id)
+    if not ok:
+        raise HTTPException(status_code=404, detail='Item no encontrado')
+    return {"status": "deleted", "id": item_id}
+
+@app.get('/storage')
+def search_generic(tipo: str | None = None, q: str | None = None, page: int = 1, page_size: int = 20):
+    return storage_store.search_items(tipo=tipo, q=q, page=page, page_size=page_size)
 
 # =============== Webhook de WhatsApp Cloud API (1:1) ===============
 # Nota: WhatsApp Business Cloud API NO soporta leer mensajes de grupos existentes.

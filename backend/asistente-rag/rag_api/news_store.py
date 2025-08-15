@@ -65,7 +65,12 @@ def init_db():
             )
             """
         )
-        # Seed if empty
+        # Índices auxiliares para búsquedas / orden (id ya es PK)
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_news_fecha ON news(fecha)")
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_news_destacada ON news(destacada)")
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_news_autor ON news(autor)")
+        # Texto: SQLite sin FTS aquí; se hará LIKE sobre titulo/descripcionCorta
+        # Seed si está vacío
         cur.execute("SELECT COUNT(*) FROM news")
         if cur.fetchone()[0] == 0:
             for n in SEED_NEWS:
@@ -107,6 +112,36 @@ def list_news() -> List[Dict[str, Any]]:
         cur = conn.cursor()
         cur.execute("SELECT * FROM news ORDER BY fecha DESC, created_at DESC")
         return [_row_to_dict(r) for r in cur.fetchall()]
+
+def search_news(q: Optional[str] = None, categoria: Optional[str] = None, destacada: Optional[bool] = None,
+                page: int = 1, page_size: int = 10) -> Dict[str, Any]:
+    """Búsqueda simple con filtros y paginación.
+    Retorna dict con items, total, page, page_size."""
+    if page < 1: page = 1
+    if page_size < 1: page_size = 10
+    if page_size > 100: page_size = 100
+    where = []
+    params: list[Any] = []
+    if q:
+        like = f"%{q.lower()}%"
+        where.append("(lower(titulo) LIKE ? OR lower(descripcionCorta) LIKE ? OR lower(descripcionLarga) LIKE ?)")
+        params.extend([like, like, like])
+    if categoria:
+        # categoria almacenada como JSON array string -> LIKE simple
+        where.append("categoria LIKE ?")
+        params.append(f"%{categoria}%")
+    if destacada is not None:
+        where.append("destacada = ?")
+        params.append(1 if destacada else 0)
+    clause = (" WHERE " + " AND ".join(where)) if where else ""
+    offset = (page - 1) * page_size
+    with _lock, get_conn() as conn:
+        cur = conn.cursor()
+        cur.execute(f"SELECT COUNT(*) FROM news{clause}", params)
+        total = cur.fetchone()[0]
+        cur.execute(f"SELECT * FROM news{clause} ORDER BY fecha DESC, created_at DESC LIMIT ? OFFSET ?", params + [page_size, offset])
+        items = [_row_to_dict(r) for r in cur.fetchall()]
+    return {"items": items, "total": total, "page": page, "page_size": page_size}
 
 def get_news(nid: str) -> Optional[Dict[str, Any]]:
     with _lock, get_conn() as conn:
