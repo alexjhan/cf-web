@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from 'react-router-dom';
 import EmptyOverlay from '../../components/Shared/EmptyOverlay';
 import ProtectedRoute from '../../components/ProtectedRoute/ProtectedRoute';
 
@@ -30,11 +31,14 @@ const defaultNoticias: Noticia[] = seedNoticias.map((n,i)=> ({
 }));
 
 const AdminNoticiasContent = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [deletedIds, setDeletedIds] = useState<string[]>([]);
   const [noticias, setNoticias] = useState<Noticia[]>(defaultNoticias);
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const apiBase = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8000';
+  const [pendingEditId, setPendingEditId] = useState<string | null>(null);
   const adminToken = (import.meta as any).env?.VITE_ADMIN_TOKEN || localStorage.getItem('adminToken') || '';
   useEffect(() => {
     let active = true;
@@ -44,7 +48,9 @@ const AdminNoticiasContent = () => {
         const res = await fetch(apiBase + '/news');
         if (res.ok) {
           const data = await res.json();
-          if (Array.isArray(data) && data.length && active) setNoticias(data);
+          if (Array.isArray(data) && data.length && active) {
+            setNoticias(data);
+          }
         }
       } catch { /* offline fallback localStorage */
         try { const saved = localStorage.getItem('noticias'); if (saved) { const parsed = JSON.parse(saved); if(Array.isArray(parsed)) setNoticias(parsed); } } catch {}
@@ -52,6 +58,30 @@ const AdminNoticiasContent = () => {
     })();
     return () => { active = false; };
   }, []);
+
+  // Leer query ?edit=
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const editId = params.get('edit');
+    if (editId) setPendingEditId(editId);
+  }, [location.search]);
+
+  // Cuando noticias se cargan, si hay pendingEditId activar edición
+  useEffect(() => {
+    if (pendingEditId && noticias.length) {
+      const idx = noticias.findIndex(n => n.id === pendingEditId);
+      if (idx >= 0) {
+        setEditIdx(idx);
+        setForm(noticias[idx]);
+        setPreview(noticias[idx].imagen || '');
+        setPendingEditId(null);
+        // Limpiar parámetro de la URL para evitar re-entrar
+        const params = new URLSearchParams(location.search);
+        params.delete('edit');
+        navigate({ pathname: location.pathname, search: params.toString() }, { replace: true });
+      }
+    }
+  }, [pendingEditId, noticias]);
   const [form, setForm] = useState<Noticia>({ id: '', fecha: "", titulo: "", descripcionCorta: "", descripcionLarga: "", autor: "", categoria: [], imagen: "", vistas:0, destacada:false });
   const [preview, setPreview] = useState<string>("");
   const [editIdx, setEditIdx] = useState<number | null>(null);
@@ -84,7 +114,8 @@ const AdminNoticiasContent = () => {
       const res = await fetch(apiBase + '/news', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(adminToken? { 'X-Admin-Token': adminToken }: {}) }, body: JSON.stringify(payload) });
       if (!res.ok) throw new Error('create');
       const created = await res.json();
-      setNoticias(prev => [...prev, created]);
+  setNoticias(prev => [...prev, created]);
+  window.dispatchEvent(new Event('news-changed'));
       setStatusMsg('Noticia creada');
       setTimeout(()=>setStatusMsg(null), 2500);
       setForm({ id:'', fecha: '', titulo:'', descripcionCorta:'', descripcionLarga:'', autor:'', categoria:[], imagen:'', vistas:0, destacada:false });
@@ -107,7 +138,8 @@ const AdminNoticiasContent = () => {
       const res = await fetch(apiBase + '/news/' + noticias[editIdx].id, { method: 'PUT', headers: { 'Content-Type': 'application/json', ...(adminToken? { 'X-Admin-Token': adminToken }: {}) }, body: JSON.stringify(form) });
       if (!res.ok) throw new Error('update');
       const updatedItem = await res.json();
-      setNoticias(prev => prev.map(n => n.id === updatedItem.id ? updatedItem : n));
+  setNoticias(prev => prev.map(n => n.id === updatedItem.id ? updatedItem : n));
+  window.dispatchEvent(new Event('news-changed'));
       setStatusMsg('Cambios guardados');
       setTimeout(()=>setStatusMsg(null), 2500);
     } catch {
@@ -125,8 +157,9 @@ const AdminNoticiasContent = () => {
     try {
       const res = await fetch(apiBase + '/news/' + target.id, { method: 'DELETE', headers: { ...(adminToken? { 'X-Admin-Token': adminToken }: {}) } });
       if (!res.ok) throw new Error('delete');
-      setNoticias(prev => prev.filter(n => n.id !== target.id));
+  setNoticias(prev => prev.filter(n => n.id !== target.id));
       setDeletedIds(prev => prev.includes(target.id)? prev : [...prev, target.id]);
+  window.dispatchEvent(new Event('news-changed'));
       setStatusMsg('Noticia eliminada');
       setTimeout(()=>setStatusMsg(null), 2000);
     } catch {

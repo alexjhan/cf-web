@@ -96,6 +96,8 @@ const Noticias: React.FC = () => {
     const onFocus = () => load();
     window.addEventListener('focus', onFocus);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
+  const onNewsChanged = () => load();
+  window.addEventListener('news-changed', onNewsChanged);
     return () => controller.abort();
     return () => { clearInterval(idPoll); window.removeEventListener('focus', onFocus); };
   }, []);
