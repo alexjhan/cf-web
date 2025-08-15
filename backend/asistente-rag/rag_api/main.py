@@ -149,7 +149,8 @@ def list_all_news():
 
 @app.get('/news/{nid}')
 def get_one_news(nid: str):
-    n = news_store.get_news(nid)
+    # Incrementar vistas al acceder
+    n = news_store.increment_views(nid)
     if not n:
         raise HTTPException(status_code=404, detail='Noticia no encontrada')
     return n
@@ -179,6 +180,13 @@ def remove_news(nid: str):
     if not ok:
         raise HTTPException(status_code=404, detail='Noticia no encontrada')
     return {"status": "deleted", "id": nid}
+
+@app.post('/news/{nid}/views')
+def add_view(nid: str):
+    n = news_store.increment_views(nid)
+    if not n:
+        raise HTTPException(status_code=404, detail='Noticia no encontrada')
+    return {"status": "ok", "vistas": n['vistas']}
 
 # =============== Ingesta de mensajes (genérico) ===============
 class IngestMessage(BaseModel):
