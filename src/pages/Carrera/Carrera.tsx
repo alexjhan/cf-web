@@ -75,9 +75,9 @@ const Carrera: React.FC = () => {
                   <span className="text-xl md:text-2xl lg:text-3xl">🌟</span> Visión
                 </h3>
                 <p className="text-gray-200 leading-relaxed text-sm md:text-base lg:text-lg">
-                  Formar ciudadanos que valoran su cultura, conocen sus derechos y responsabilidades, 
-                  desarrollan sus talentos y participan de manera innovadora, competitiva y comprometida 
-                  en las dinámicas sociales, contribuyendo al desarrollo de sus comunidades y del país.
+                  Los peruanos acceden a una educación que les permite desarrollar su potencial desde la primera infancia y convertirse en ciudadanos que valoran su cultura, 
+                  conocen sus derechos y responsabilidades, desarrollan sus talentos y participan de manera innovadora, 
+                  competitiva y comprometida en las dinámicas sociales, contribuyendo al desarrollo de sus comunidades y del país en su conjunto
                 </p>
               </div>
             </div>
@@ -94,14 +94,15 @@ const Carrera: React.FC = () => {
                   con el propósito de fomentar el desarrollo en la región Sur-Este del Perú.
                 </p>
                 <p>
-                  En el <strong className="text-[#FFD700]">2025 cumplirá sus bodas de oro (50 años)</strong>, consolidándose como una 
+                  En el <strong className="text-[#FFD700]">2025 cumplio sus bodas de oro (50 años)</strong>, consolidándose como una 
                   unidad académica acreditada por <strong className="text-[#FFD700]">ICACIT</strong> a nivel nacional e internacional, 
                   líder en la formación profesional, investigación y extensión universitaria.
                 </p>
                 <p>
-                  Nuestra misión es formar profesionales integrales para transformar recursos minerales en metales, 
-                  aleaciones y otros materiales de ingeniería para el desarrollo de la industria automotriz, naval, 
-                  aeronáutica, metal mecánico y metal eléctrico con desarrollo sostenible.
+                  La Dirección del Departamento Académico de Metalurgia, 
+                  cuenta con docentes de nivel académico y de acuerdo a la Ley Universitaria 30220, 
+                  acorde a las exigencias de la sociedad y del Ministerio de Educación (SUNEDU), 
+                  con grados de doctor, magister, ingeniero y estudios de doctorado como maestría concluidos.
                 </p>
               </div>
             </div>
@@ -170,9 +171,8 @@ const Carrera: React.FC = () => {
                 <span className="text-xl md:text-2xl lg:text-3xl">🎯</span> Perfil del Egresado
               </h3>
               <p className="text-gray-200 mb-4 md:mb-6 text-sm md:text-base lg:text-lg">
-                El Ingeniero Metalúrgico egresado está preparado para transformar y optimizar materiales metálicos 
-                con una sólida base científica y tecnológica, desarrollando procesos eficientes y sostenibles 
-                en la industria minera y metalúrgica.
+                El egresado de la Escuela Profesional de Ingeniería Metalúrgica está dotado de conocimientos, actitudes y habilidades,
+                 coherente con las expectativas de los grupos de interés y al entorno socio-económico. El perfil está agrupado en las siguientes competencias.
               </p>
               
               <div className="grid gap-4 md:gap-6 md:grid-cols-3">
@@ -296,8 +296,8 @@ const Carrera: React.FC = () => {
                     <div className="text-gray-400 text-xs md:text-sm normal-case">
                       {index < 2 && 'Formación Básica'}
                       {index >= 2 && index < 6 && 'Formación Específica'}
-                      {index >= 6 && index < 8 && 'Especialización'}
-                      {index >= 8 && 'Práctica Profesional'}
+                      {index >= 6 && index < 9 && 'Especialización'}
+                      {index >= 9 && 'Práctica Profesional'}
                     </div>
                   </div>
                 ))}
