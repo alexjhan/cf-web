@@ -61,6 +61,8 @@ const ChatBot = () => {
   const [cargando, setCargando] = useState(false);
   const [primeraConsulta, setPrimeraConsulta] = useState(false);
   const [modoOffline, setModoOffline] = useState(false);
+  const [mostrarCortina, setMostrarCortina] = useState(true); // Cortina de notificación inicial
+  const [diagnostico, setDiagnostico] = useState<string | null>(null);
   const chatRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -68,6 +70,31 @@ const ChatBot = () => {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
   }, [mensajes]);
+
+  // Intento de ping inicial (health o detectar backend) para decidir cortina
+  useEffect(() => {
+    let cancelado = false;
+    const base = API_URL.replace(/\/ask$/, "");
+    (async () => {
+      try {
+        const r = await fetch(`${base}/health`, { method: 'GET' });
+        if (!r.ok) throw new Error('estado no ok');
+  await r.json();
+  // Si health responde, asumimos backend vivo. Ocultamos cortina.
+        if (!cancelado) {
+          setMostrarCortina(false);
+          setDiagnostico(null);
+        }
+      } catch (e:any) {
+        if (!cancelado) {
+          setDiagnostico('No se pudo conectar con el servicio de IA. Se usará modo offline (FAQs locales).');
+          setModoOffline(true);
+          // Cortina permanece hasta que usuario decida continuar
+        }
+      }
+    })();
+    return () => { cancelado = true; };
+  }, []);
 
   const handleEnviar = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,8 +118,18 @@ const ChatBot = () => {
         setMensajes(prev => [...prev, { autor: "ia", texto: data.respuesta }]);
         if (data.online === false) {
           setModoOffline(true);
+          if (data.reason === 'placeholder_mode') {
+            // Modo mantenimiento: no forzar cortina cada vez
+            if (!diagnostico) setDiagnostico('Modo mantenimiento activo (respuestas temporales).');
+            // No reabrir cortina si el usuario ya la cerró
+          } else {
+            setDiagnostico('El servicio de IA remoto no está configurado (falta API Key). Operando en modo offline.');
+            setMostrarCortina(true);
+          }
         } else {
           setModoOffline(false);
+      setMostrarCortina(false);
+      setDiagnostico(null);
         }
       } else {
         throw new Error('bad status');
@@ -103,6 +140,8 @@ const ChatBot = () => {
       const respuesta = construirRespuestaExtendida(base, pregunta);
       setMensajes(prev => [...prev, { autor: "ia", texto: respuesta }]);
       setModoOffline(true);
+    if (!diagnostico) setDiagnostico('Conectividad con IA fallida. Estás en modo offline.');
+    setMostrarCortina(true);
     }
     setCargando(false);
   };
@@ -114,6 +153,36 @@ const ChatBot = () => {
 
   return (
     <div className="h-screen text-white overflow-hidden flex flex-col" style={{ background: 'radial-gradient(ellipse at top, #1a1a1a 0%, #2a2a2a 30%, #0f0f0f 60%, #000000 100%)' }}>
+
+      {mostrarCortina && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-md">
+          <div className="relative max-w-xl w-full bg-[#1a1a1a]/70 border border-[#FFD700]/30 rounded-3xl p-8 shadow-2xl">
+            <div className="absolute -top-8 -left-8 w-32 h-32 bg-[#FFD700]/10 rounded-full blur-2xl" />
+            <div className="absolute -bottom-6 -right-6 w-40 h-40 bg-[#C9B037]/10 rounded-full blur-3xl" />
+            <div className="relative">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#FFD700] to-[#C9B037] flex items-center justify-center text-2xl shadow-lg">🤖</div>
+                <h2 className="text-2xl font-bold text-[#FFD700] tracking-wide">Asistente en Modo Limitado</h2>
+              </div>
+              <p className="text-gray-300 leading-relaxed mb-4 text-sm">
+                {diagnostico || 'El servicio de IA remoto aún no responde. Puedes seguir usando respuestas basadas en FAQs e información local mientras se habilita la integración.'}
+              </p>
+              <ul className="text-gray-300 text-sm space-y-2 mb-6 list-disc pl-5">
+                <li>Sin conexión a modelo Groq (API Key faltante o backend caído).</li>
+                <li>Disponible: búsquedas simples en FAQs y datos locales de la carrera.</li>
+                <li>Cuando se configure la clave, las respuestas serán más completas.</li>
+              </ul>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button onClick={() => setMostrarCortina(false)} className="flex-1 px-5 py-3 rounded-xl bg-gradient-to-r from-[#FFD700] via-[#FFF8DC] to-[#C9B037] text-black font-semibold shadow-lg hover:opacity-90 transition">Usar modo offline</button>
+                <button onClick={() => { window.location.reload(); }} className="px-5 py-3 rounded-xl bg-[#242424] border border-[#FFD700]/30 text-[#FFD700] font-medium hover:bg-[#2f2f2f] transition">Reintentar conexión</button>
+              </div>
+              {modoOffline && (
+                <div className="mt-4 text-xs text-gray-400 text-center">Operando sin motor IA remoto</div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Efectos de fondo avanzados */}
       <div className="fixed inset-0 pointer-events-none">

@@ -13,6 +13,7 @@ import requests
 from typing import List
 from . import news_store
 from duckduckgo_search import DDGS
+import random
 
 # Configuración
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # backend/asistente-rag
@@ -26,6 +27,20 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")  # Usar variable de entorno
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 GROQ_MODEL = "llama3-8b-8192"
 TOP_K = 4  # Número de fragmentos a enviar al LLM
+PLACEHOLDER_MODE = os.getenv("CHATBOT_PLACEHOLDER", "1")  # "1" para responder siempre con mensajes fijos
+
+PLACEHOLDER_RESPUESTAS = [
+    "No tengo acceso a los datos en este momento, se están ordenando en la mina de conocimiento… ⛏️",
+    "Los datos están en fila tomando desayuno. Intenta más tarde 🍽️",
+    "Ahora mismo estoy reorganizando papeles imaginarios. Vuelve en un rato 📂",
+    "Estoy calibrando el horno de datos. Por ahora no puedo responder 🔥",
+    "Modo mantenimiento: no puedo ver la información todavía, pero sigo aquí vigilando 👀",
+    "Los duendes de la data siguen limpiando todo. Dame tiempo 🧹",
+    "Sin acceso a la base por ahora. Estoy tomando un cafecito ☕",
+    "Reindexando neuronas… respuesta real disponible más adelante 🤖",
+    "Los bits salieron a marchar, regresan luego 🚶",
+    "Archivo en tránsito por la banda transportadora virtual. Intenta luego 🛠️"
+]
 
 """Carga segura de fragments y embeddings si existen; si no, inicia vacíos"""
 try:
@@ -78,6 +93,9 @@ def _check_admin(request: Request):
 
 @app.post("/ask")
 def ask(query: Query, response: Response):
+    if PLACEHOLDER_MODE == "1":
+        msg = random.choice(PLACEHOLDER_RESPUESTAS)
+        return {"respuesta": msg, "fragmentos": [], "online": False, "reason": "placeholder_mode", "maintenance": True}
     if not GROQ_API_KEY:
         # No intentamos Groq; devolvemos indicador de modo offline
         return {"respuesta": "Servicio IA no configurado (falta GROQ_API_KEY).", "fragmentos": [], "online": False, "reason": "missing_api_key"}
