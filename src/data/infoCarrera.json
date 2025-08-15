@@ -1,0 +1,25 @@
+{
+	"nombre": "Ingeniería Metalúrgica",
+	"duracion_anios": 5,
+	"grados": ["Bachiller en Ingeniería Metalúrgica", "Título Profesional de Ingeniero Metalurgista"],
+	"lineas_formacion": [
+		"Procesamiento de Minerales",
+		"Hidrometalurgia",
+		"Pirometalurgia",
+		"Metalurgia Física y de Materiales",
+		"Gestión y Sostenibilidad"
+	],
+	"competencias_clave": [
+		"Diseño y optimización de operaciones",
+		"Control de calidad y caracterización",
+		"Gestión ambiental y seguridad",
+		"Investigación e innovación tecnológica"
+	],
+	"salidas_profesionales": [
+		"Procesos metalúrgicos en plantas concentradoras",
+		"Fundiciones y refinerías",
+		"Empresas de materiales avanzados",
+		"Consultoría técnica",
+		"Investigación aplicada"
+	]
+}

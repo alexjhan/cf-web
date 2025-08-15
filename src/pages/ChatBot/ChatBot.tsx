@@ -3,6 +3,8 @@ const formateaMarkdown = (texto: string) =>
   texto.replace(/\s*-\s+/g, '\n- ');
 
 import React, { useState, useRef, useEffect } from "react";
+import faqsRaw from '../../data/faqChatbot.json';
+import infoCarrera from '../../data/infoCarrera.json';
 import ReactMarkdown from "react-markdown";
 
 const mensajesIniciales = [
@@ -19,7 +21,39 @@ const sugerencias = [
   "¿Cuáles son los requisitos de ingreso?"
 ];
 
-const API_URL = "https://xdtmvxsb-8000.brs.devtunnels.ms/ask";
+const API_URL = (import.meta as any).env?.VITE_API_URL ? `${(import.meta as any).env.VITE_API_URL}/ask` : "http://localhost:8000/ask";
+
+interface FAQItem { pregunta: string; respuesta: string }
+const faqs: FAQItem[] = Array.isArray(faqsRaw) ? faqsRaw as FAQItem[] : [];
+
+// Búsqueda muy simple por puntuación (conteo de palabras clave)
+function buscarRespuestaLocal(pregunta: string): string | null {
+  if (!faqs.length) return null;
+  const q = pregunta.toLowerCase();
+  let best: { score: number; ans: string } = { score: 0, ans: '' };
+  for (const f of faqs) {
+    const tokens = f.pregunta.toLowerCase().split(/\s+/);
+    let score = 0;
+    tokens.forEach(t => { if (q.includes(t)) score++; });
+    if (score > best.score) best = { score, ans: f.respuesta };
+  }
+  if (best.score === 0) return null;
+  return best.ans;
+}
+
+function construirRespuestaExtendida(base: string | null, pregunta: string): string {
+  if (base) return base;
+  // Intentar enriquecer con infoCarrera
+  const partes: string[] = [];
+  if (pregunta.toLowerCase().includes('linea') || pregunta.toLowerCase().includes('formación') || pregunta.toLowerCase().includes('formacion')) {
+    if ((infoCarrera as any).lineas_formacion) partes.push('Líneas de formación: ' + (infoCarrera as any).lineas_formacion.join('; '));
+  }
+  if (pregunta.toLowerCase().includes('trabaj') || pregunta.toLowerCase().includes('salida')) {
+    if ((infoCarrera as any).salidas_profesionales) partes.push('Salidas profesionales: ' + (infoCarrera as any).salidas_profesionales.join('; '));
+  }
+  if (!partes.length) return 'No tengo información suficiente en este modo offline. Reformula tu pregunta o consulta a un representante.';
+  return partes.join('\n');
+}
 
 const ChatBot = () => {
   const [mensajes, setMensajes] = useState(mensajesIniciales);
@@ -51,11 +85,17 @@ const ChatBot = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: pregunta })
       });
-      if (!res.ok) throw new Error("Error en la respuesta del servidor");
-      const data = await res.json();
-      setMensajes(prev => [...prev, { autor: "ia", texto: data.respuesta }]);
+      if (res.ok) {
+        const data = await res.json();
+        setMensajes(prev => [...prev, { autor: "ia", texto: data.respuesta }]);
+      } else {
+        throw new Error('bad status');
+      }
     } catch (err) {
-      setMensajes(prev => [...prev, { autor: "ia", texto: "Ocurrió un error al consultar la IA." }]);
+      // Fallback local
+      const base = buscarRespuestaLocal(pregunta);
+      const respuesta = construirRespuestaExtendida(base, pregunta);
+      setMensajes(prev => [...prev, { autor: "ia", texto: respuesta }]);
     }
     setCargando(false);
   };

@@ -1,0 +1,34 @@
+[
+	{
+		"pregunta": "¿Cuánto dura la carrera?",
+		"respuesta": "La carrera dura 5 años (10 semestres académicos) incluyendo cursos de formación básica, especialidad y un proyecto final / tesis." 
+	},
+	{
+		"pregunta": "¿Cuál es el perfil del egresado?",
+		"respuesta": "El egresado es capaz de diseñar, optimizar y supervisar procesos metalúrgicos (conminución, flotación, hidrometalurgia, pirometalurgia), aplicar criterios de sostenibilidad y seguridad, gestionar proyectos y liderar equipos multidisciplinarios." 
+	},
+		{
+		"pregunta": "¿Dónde puede trabajar un ingeniero metalúrgico?",
+		"respuesta": "En operaciones minero-metalúrgicas, fundiciones, refinerías, plantas de procesamiento de minerales, laboratorios de control de calidad, empresas de materiales, consultoría, investigación y docencia." 
+	},
+	{
+		"pregunta": "¿Qué cursos llevan al inicio?",
+		"respuesta": "En los primeros ciclos se llevan matemáticas, física, química, dibujo, programación básica y fundamentos de ingeniería; luego se avanza a operaciones de concentración, mineralogía y termodinámica aplicada." 
+	},
+	{
+		"pregunta": "¿Qué es hidrometalurgia?",
+		"respuesta": "La hidrometalurgia es el conjunto de procesos que emplean soluciones acuosas para extraer y purificar metales (lixiviación, extracción por solventes, cementación, electro-obtención)." 
+	},
+	{
+		"pregunta": "¿Qué habilidades blandas se requieren?",
+		"respuesta": "Trabajo en equipo, comunicación efectiva, pensamiento crítico, ética profesional, adaptabilidad y gestión del tiempo." 
+	},
+	{
+		"pregunta": "¿Hay laboratorio en la escuela?",
+		"respuesta": "Sí, se cuenta con laboratorios para conminución, flotación, hidrometalurgia, análisis de materiales y caracterización metalográfica (microscopía, dureza, etc.)." 
+	},
+	{
+		"pregunta": "¿Qué software se utiliza?",
+		"respuesta": "Dependiendo del curso: simulación de procesos (ej. METSIM), hojas de cálculo avanzadas, herramientas estadísticas, software CAD y ocasionalmente programación (Python)." 
+	}
+]
