@@ -332,7 +332,7 @@ function Inicio() {
           <div className="mt-10 pt-6 border-t border-[#FFD700]/10 text-center md:text-left flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4">
             <div className="space-y-1">
               <p className="text-gray-500 text-xs">© 2025 Centro Federado de Ingeniería Metalúrgica - UNSAAC</p>
-              <p className="text-gray-600 text-[11px]">Desarrollado por <span className="text-[#FFD700] font-medium">Alex Jhan</span></p>
+              <p className="text-gray-600 text-[11px]">Desarrollado por <span className="text-[#FFD700] font-medium">Alex J. Geri</span></p>
             </div>
             <div className="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2 text-xs text-gray-500">
               <a href="/politica-privacidad" className="hover:text-[#FFD700]">Privacidad</a>
