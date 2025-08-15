@@ -32,6 +32,8 @@ function App() {
         <Route path="/admin-selector" element={<AdminSelector />} />
         <Route path="/admin-especialidades" element={<AdminEspecialidades />} />
         <Route path="/admin-oportunidades" element={<AdminOportunidades />} />
+    {/* Fallback para cualquier ruta no definida dentro del SPA */}
+    <Route path="*" element={<Navigate to="/inicio" replace />} />
       </Routes>
     </BrowserRouter>
   );

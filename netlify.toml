@@ -1,0 +1,32 @@
+# Netlify configuration for Vite + React SPA
+[build]
+  command = "npm run build"
+  publish = "dist"
+  # If you use environment variables (e.g., VITE_API_URL) set them in the Netlify UI
+
+# Ensure client-side routing works (React Router / SPA)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Long‑term cache for hashed static assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Shorter cache for index.html so deploy invalidates quickly
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# (Optional) Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "accelerometer=(), geolocation=(), microphone=()"
