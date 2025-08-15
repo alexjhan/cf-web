@@ -362,13 +362,13 @@ const Carrera: React.FC = () => {
                 </div>
                 
                 <div className="bg-[#1a1a1a]/40 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-6 border border-[#FFD700]/10 text-center group hover:border-[#FFD700]/30 transition-all duration-300">
-                  <div className="text-xl md:text-2xl lg:text-3xl mb-3 md:mb-4">🚗</div>
-                  <h4 className="text-[#FFD700] font-bold text-sm md:text-base lg:text-lg mb-2 md:mb-3">Industria Automotriz</h4>
+                  <div className="text-xl md:text-2xl lg:text-3xl mb-3 md:mb-4">🏗️</div>
+                  <h4 className="text-[#FFD700] font-bold text-sm md:text-base lg:text-lg mb-2 md:mb-3">Industria Metalmecanica</h4>
                   <ul className="text-gray-300 text-xs md:text-sm space-y-1">
-                    <li>• Componentes metálicos</li>
+                    <li>• Estructuras metálicas</li>
                     <li>• Tratamientos térmicos</li>
                     <li>• Soldadura especializada</li>
-                    <li>• Materiales ligeros</li>
+                    <li>• Mecanización</li>
                   </ul>
                 </div>
                 
@@ -387,10 +387,10 @@ const Carrera: React.FC = () => {
                   <div className="text-xl md:text-2xl lg:text-3xl mb-4">🔬</div>
                   <h4 className="text-[#FFD700] font-bold text-sm md:text-base lg:text-lg mb-3">Investigación</h4>
                   <ul className="text-gray-300 text-xs md:text-sm space-y-1">
-                    <li>• Desarrollo de materiales</li>
-                    <li>• Nanotecnología</li>
-                    <li>• Biomateriales</li>
-                    <li>• Materiales inteligentes</li>
+                    <li>• Desarrollo y mejora de materiales metálicos y aleaciones</li>
+                    <li>• Procesos de extracción, refinación y reciclaje de metales</li>
+                    <li>• Fabricación, conformado y tratamiento de materiales</li>
+                    <li>• Evaluación de propiedades, corrosión y durabilidad</li>
                   </ul>
                 </div>
                 
@@ -421,7 +421,12 @@ const Carrera: React.FC = () => {
                   'Buenaventura',
                   'Volcan Compañía',
                   'SIDERPERÚ',
-                  'Aceros Arequipa'
+                  'Aceros Arequipa',
+                  'Metalúrgica Peruana (MEPSA)',
+                  'Fundición Ferrosa',
+                  'Corporación Aceros del Perú',
+                  'TECSUP',
+                  'Cormin'
                 ].map((empresa, index) => (
                   <div key={index} className="bg-[#1a1a1a]/40 rounded-xl p-4 border border-[#FFD700]/10 text-center">
                     <span className="text-gray-200 font-medium text-sm md:text-base lg:text-lg">{empresa}</span>
@@ -440,15 +445,16 @@ const Carrera: React.FC = () => {
                   <h4 className="font-semibold text-[#FFD700] text-sm md:text-base lg:text-lg mb-3">Maestrías Disponibles</h4>
                   <ul className="space-y-2 text-gray-200 text-xs md:text-sm">
                     <li>• Maestría en Metalurgia Extractiva</li>
-                    <li>• Maestría en Ciencia e Ingeniería de Materiales</li>
-                    <li>• Maestría en Gestión Minera</li>
+                    <li>• Maestría en Metalurgia Transformativa</li>
+                    <li>• Maestría en Gestión Minera y Ambiental</li>
                   </ul>
                 </div>
                 <div>
                   <h4 className="font-semibold text-[#FFD700] text-sm md:text-base lg:text-lg mb-3">Especializaciones</h4>
                   <ul className="space-y-2 text-gray-200 text-xs md:text-sm">
                     <li>• Soldadura Avanzada</li>
-                    <li>• Metalurgia de Polvos</li>
+                    <li>• Mantenimiento de Plantas</li>
+                    <li>• En Procesos Metalúrgicos</li>
                     <li>• Control de Calidad</li>
                     <li>• Hidrometalurgia y Biolixiviación</li>
                   </ul>
@@ -509,7 +515,7 @@ const Carrera: React.FC = () => {
               <div className="text-gray-400 text-xs md:text-sm group-hover:text-gray-200 transition-colors duration-300">Años</div>
             </div>
             <div className="group cursor-pointer md:hover:scale-110 transition-all duration-500">
-              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">320+</div>
+              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">300+</div>
               <div className="text-gray-400 text-xs md:text-sm group-hover:text-gray-200 transition-colors duration-300">Estudiantes</div>
             </div>
             <div className="group cursor-pointer md:hover:scale-110 transition-all duration-500">
