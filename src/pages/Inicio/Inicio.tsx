@@ -10,10 +10,10 @@ function Inicio() {
       <Helmet>
         <title>Centro Federado Ingeniería Metalúrgica - Inicio</title>
         <meta name="description" content="Portal del Centro Federado de Ingeniería Metalúrgica: representación estudiantil, recursos académicos, noticias y oportunidades." />
-        <link rel="canonical" href="https://www.ejemplo-dominio-cfim.pe/inicio" />
+        <link rel="canonical" href="https://centro-federado.netlify.app/inicio" />
         <meta property="og:title" content="Centro Federado Ingeniería Metalúrgica - Inicio" />
         <meta property="og:description" content="Representación estudiantil y recursos de Ingeniería Metalúrgica." />
-        <meta property="og:url" content="https://www.ejemplo-dominio-cfim.pe/inicio" />
+        <meta property="og:url" content="https://centro-federado.netlify.app/inicio" />
       </Helmet>
       {/* CSS Personalizado para borde animado */}
       <style dangerouslySetInnerHTML={{
