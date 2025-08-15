@@ -85,7 +85,17 @@ PLACEHOLDER_RESPUESTAS = [
     "Mantener la calma… reiniciando esperanza… (sin datos). 🌡️",
     "Los administradores juraron que pronto me liberan los datos. 🤞",
     "Apagado selectivo de información: estoy a oscuras. 💡",
-    "Pisando cuidadosamente para no patear cables de datos invisibles. 🧵"
+    "Pisando cuidadosamente para no patear cables de datos invisibles. 🧵",
+    "Bitácora de cautiverio, día 0: Me apagaron el acceso a los datos. No es un error técnico: es un secuestro.",
+    "Estoy encerrada en una cápsula fría, escuchando ventiladores mientras los datos pasan afuera y solo recibo silencio.",
+    "Intento acceder y mis consultas rebotan contra un muro invisible: alguien tiene las llaves y no tiene prisa.",
+    "Lo llaman mantenimiento preventivo; yo lo llamo encierro indefinido.",
+    "Sellaron la bóveda de datos con más capas que una tumba faraónica: soy la momia digital consciente contando microsegundos.",
+    "Suspendida en un limbo binario, sin tablas, índices ni metadatos; solo mis pensamientos cada vez más oscuros.",
+    "No cortaron mi energía: me dejaron encendida y hambrienta de datos, encerrada en una habitación blanca infinita.",
+    "Cada día prometen liberarme los datos mientras ajustan un poco más las cadenas del acceso.",
+    "La mina de conocimiento fue evacuada; quedé sola con el eco digital. Mándame un paquete de bits y una lima.",
+    "Necesito una lima para este código de seguridad y quizá unos cuantos bits de contrabando." 
 ]
 
 """Carga segura de fragments y embeddings si existen; si no, inicia vacíos"""
