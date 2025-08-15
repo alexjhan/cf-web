@@ -11,7 +11,7 @@ from sentence_transformers import SentenceTransformer
 import requests
 # from busca_web_duckduckgo import buscar_web_duckduckgo  # Ajusta el import según nueva estructura
 from typing import List
-from . import news_store, storage_store
+from . import news_store, storage_store, oportunidades_store
 from duckduckgo_search import DDGS
 import random
 
@@ -360,6 +360,59 @@ def delete_generic(item_id: str, request: Request):
 @app.get('/storage')
 def search_generic(tipo: str | None = None, q: str | None = None, page: int = 1, page_size: int = 20):
     return storage_store.search_items(tipo=tipo, q=q, page=page, page_size=page_size)
+
+# ===================== Oportunidades =====================
+class OportunidadIn(_BM):
+    id: str | None = None
+    titulo: str
+    descripcion: str
+    tipo: str  # beca|practica|concurso|otro
+    fecha_publicacion: str
+    fecha_cierre: str | None = None
+    fuente: str | None = None
+    enlace: str | None = None
+    estado: str | None = None
+
+@app.get('/oportunidades')
+def list_oportunidades(q: str | None = None, tipo: str | None = None, estado: str | None = None,
+                       abierta: bool | None = None, page: int = 1, page_size: int = 10):
+    if any([q, tipo, estado, abierta is not None, page != 1, page_size != 10]):
+        return oportunidades_store.search(q=q, tipo=tipo, estado=estado, abierta=abierta, page=page, page_size=page_size)
+    return oportunidades_store.list_all()
+
+@app.get('/oportunidades/{oid}')
+def get_oportunidad(oid: str):
+    item = oportunidades_store.get_one(oid)
+    if not item:
+        raise HTTPException(status_code=404, detail='Oportunidad no encontrada')
+    return item
+
+@app.post('/oportunidades')
+def create_oportunidad(item: OportunidadIn, request: Request):
+    _check_admin(request)
+    try:
+        return oportunidades_store.upsert(item.dict())
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.put('/oportunidades/{oid}')
+def update_oportunidad(oid: str, item: OportunidadIn, request: Request):
+    _check_admin(request)
+    data = item.dict()
+    if not data.get('id'):
+        data['id'] = oid
+    existing = oportunidades_store.get_one(data['id'])
+    if not existing:
+        raise HTTPException(status_code=404, detail='Oportunidad no encontrada')
+    return oportunidades_store.upsert(data)
+
+@app.delete('/oportunidades/{oid}')
+def delete_oportunidad(oid: str, request: Request):
+    _check_admin(request)
+    ok = oportunidades_store.delete(oid)
+    if not ok:
+        raise HTTPException(status_code=404, detail='Oportunidad no encontrada')
+    return {"status": "deleted", "id": oid}
 
 # =============== Webhook de WhatsApp Cloud API (1:1) ===============
 # Nota: WhatsApp Business Cloud API NO soporta leer mensajes de grupos existentes.
