@@ -1,0 +1,11 @@
+# Dependencias para el sistema de ingesta y embeddings de WhatsApp
+sentence-transformers>=2.2.2
+numpy>=1.24.0
+schedule>=1.2.0
+fastapi>=0.104.0
+uvicorn>=0.24.0
+requests>=2.31.0
+duckduckgo-search>=5.3.0
+psycopg[binary]>=3.1.18
+SQLAlchemy>=2.0.30
+python-dotenv>=1.0.0
