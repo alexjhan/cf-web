@@ -10,8 +10,11 @@ import { requestLogger } from '../middlewares/requestLogger';
 export function buildServer() {
   // Crea app
   const app = express();
-  // Habilita CORS por defecto (se puede restringir luego)
-  app.use(cors());
+  // Habilita CORS solo para el frontend de Netlify
+  app.use(cors({
+    origin: 'https://centro-federado.netlify.app/',
+    credentials: true
+  }));
   // Parser JSON
   app.use(express.json());
   // Logger sencillo de cada request
