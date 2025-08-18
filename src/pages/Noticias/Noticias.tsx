@@ -161,7 +161,7 @@ const Noticias: React.FC = () => {
 
   // Cortina cuando no hay noticias (después de cargar)
   // Mostrar cortina si aún no hay datos reales del backend (noticias[] vacío)
-  if (!loading && noticias.length === 0) {
+ /* if (!loading && noticias.length === 0) {
     const retryFetch = async () => {
       try {
         setLoading(true);
@@ -196,7 +196,7 @@ const Noticias: React.FC = () => {
         />
       </div>
     );
-  }
+  }*/
 
   return (
     <div 

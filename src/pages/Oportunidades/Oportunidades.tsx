@@ -228,13 +228,13 @@ const Oportunidades: React.FC = () => {
       </div>
 
       {/* Header épico responsivo */}
-      {!DATA_REAL && (
+      {/*!DATA_REAL && (
         <EmptyOverlay
           title="Oportunidades en construcción"
           message="Estamos preparando el listado real de convocatorias, becas y posiciones. Muy pronto habrá contenido actualizado."
           icon="🚧"
         />
-      )}
+      )*/}
       <header className="relative py-8 md:py-16 px-4">
         <div className="relative max-w-6xl mx-auto">
           

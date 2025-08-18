@@ -241,13 +241,13 @@ const Documentos = () => {
       </div>
 
       <div className="relative">
-        {!DATA_REAL && (
+        {/*!DATA_REAL && (
           <EmptyOverlay
             title="Documentos en preparación"
             message="Aún no se han cargado documentos oficiales. Este módulo se habilitará cuando el equipo termine la carga y validación de archivos."
             icon="📂"
           />
-        )}
+        )*/}
         {/* Header Épico - Responsive como Inicio.tsx */}
   <div className="text-center px-4 py-6 md:py-16">
           <div className="inline-block mb-6 md:mb-10">

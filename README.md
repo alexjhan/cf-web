@@ -16,10 +16,6 @@ Aplicación web del Centro Federado (EPIMT) construida con React, TypeScript, Vi
 - `pnpm lint` Linter de código
 
 ## Estructura destacada
-- `src/pages` Páginas principales (Carrera, Cursos, Documentos, Representacion, Noticias, Oportunidades, etc.)
-- `src/components` Componentes UI reutilizables
-- `src/services` Servicios (ej. chatbot)
-- `backend/asistente-rag` Pipelines y API RAG para asistente
 
 ## Desarrollo
 Instalar dependencias y levantar el entorno:
@@ -27,6 +23,27 @@ Instalar dependencias y levantar el entorno:
 pnpm install # o npm install
 pnpm dev
 ```
+
+## Backend Integration
+
+Environment variables (copy `.env.example` to `.env`):
+
+```
+VITE_API_URL=http://localhost:8000
+VITE_ADMIN_TOKEN=SECRETO
+```
+
+APIs consumidas actualmente:
+
+| Recurso | Endpoint base | Métodos usados |
+|---------|---------------|----------------|
+| Noticias | /news | GET, POST, PUT, DELETE |
+| Documentos | /api/documentos | GET, POST, PUT, DELETE |
+| Oportunidades | /oportunidades | GET, POST, PUT, DELETE |
+
+Cabecera para autenticación admin: `X-Admin-Token: <VITE_ADMIN_TOKEN>`.
+
+Si cambian los endpoints ajustar archivos en `src/services/*Service.ts`.
 
 ## Licencia
 Uso interno académico del Centro Federado.

@@ -1,38 +1,51 @@
-# API backend para consultas RAG usando Groq Cloud (Llama 3) y embeddings locales
-# Requiere: pip install fastapi uvicorn numpy requests sentence-transformers
-import os
-import json
-import time
-import numpy as np
-from fastapi import FastAPI, Request, Response, Query as FastAPIQuery, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from sentence_transformers import SentenceTransformer
-import requests
-# from busca_web_duckduckgo import buscar_web_duckduckgo  # Ajusta el import según nueva estructura
-from typing import List
-from .stores import news_store  # shim still works
-from .stores import storage_store, oportunidades_store
-from .routers import news as news_router
-from .core.security import check_admin
-from duckduckgo_search import DDGS
-import random
+"""main.py
 
-# Configuración
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # backend/asistente-rag
-FRAGMENTS_DIR = os.path.join(BASE_DIR, "fragments")
-MESSAGES_DIR = os.path.join(BASE_DIR, "data_ingest", "messages")
-os.makedirs(FRAGMENTS_DIR, exist_ok=True)
-os.makedirs(MESSAGES_DIR, exist_ok=True)
-EMBEDDINGS_PATH = os.path.join(FRAGMENTS_DIR, "fragments_embedded.json")
-MODEL_EMBED = "all-MiniLM-L6-v2"
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")  # Usar variable de entorno
-GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
-GROQ_MODEL = "llama3-8b-8192"
-TOP_K = 4  # Número de fragmentos a enviar al LLM
-PLACEHOLDER_MODE = os.getenv("CHATBOT_PLACEHOLDER", "1")  # "1" para responder siempre con mensajes fijos
+Archivo principal que arranca la aplicación FastAPI.
 
-PLACEHOLDER_RESPUESTAS = [
+Responsabilidades:
+    - Cargar embeddings locales (RAG simple / placeholder).
+    - Exponer endpoint /ask (consulta con LLM Groq o modo placeholder).
+    - Incluir routers modulares: noticias, storage, oportunidades.
+    - Ingestar mensajes externos (/ingest/messages) para futura indexación.
+    - Webhook de verificación y recepción de WhatsApp Cloud API.
+
+NOTA: A futuro podrías mover storage y oportunidades a routers separados, igual que news.
+"""
+
+# ============================= Imports base =============================
+import os  # Variables de entorno, rutas.
+import json  # Lectura/escritura de ficheros JSON.
+import time  # Marcas de tiempo epoch para mensajes.
+import numpy as np  # Operaciones vectoriales (similaridad embeddings).
+from fastapi import FastAPI, Request, Response, Query as FastAPIQuery, HTTPException  # Framework web.
+from fastapi.middleware.cors import CORSMiddleware  # (Si quisieras habilitar CORS granular; aquí no configurado explícito).
+from pydantic import BaseModel  # Modelos de entrada/salida simples.
+from sentence_transformers import SentenceTransformer  # Modelo de embeddings local.
+import requests  # Llamadas HTTP a Groq.
+from typing import List  # Tipado de listas.
+from .stores import news_store  # Import para inicializar tabla noticias.
+from .routers import news as news_router  # Router noticias.
+from .routers import storage as storage_router  # Nuevo router storage.
+from .routers import oportunidades as oportunidades_router  # Nuevo router oportunidades.
+from .core.security import check_admin  # Verificación de token admin (centralizado).
+from duckduckgo_search import DDGS  # Búsqueda web ligera contextual.
+import random  # Selección de respuestas placeholder.
+
+# ============================= Configuración base RAG / LLM =============================
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # Ruta raíz del módulo backend/asistente-rag.
+FRAGMENTS_DIR = os.path.join(BASE_DIR, "fragments")  # Carpeta donde se guardan fragmentos y embeddings.
+MESSAGES_DIR = os.path.join(BASE_DIR, "data_ingest", "messages")  # Carpeta para almacenar messages ingresados.
+os.makedirs(FRAGMENTS_DIR, exist_ok=True)  # Crea carpeta si no existe.
+os.makedirs(MESSAGES_DIR, exist_ok=True)  # Crea carpeta si no existe.
+EMBEDDINGS_PATH = os.path.join(FRAGMENTS_DIR, "fragments_embedded.json")  # Archivo con embeddings precomputados.
+MODEL_EMBED = "all-MiniLM-L6-v2"  # Nombre del modelo SentenceTransformer usado para generar embeddings.
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")  # API key para Groq; si vacío se responde mensaje de falta config.
+GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"  # Endpoint Groq compatible OpenAI.
+GROQ_MODEL = "llama3-8b-8192"  # Modelo LLM elegido.
+TOP_K = 4  # Cuántos fragmentos de contexto local incluimos.
+PLACEHOLDER_MODE = os.getenv("CHATBOT_PLACEHOLDER", "1")  # Si "1": no llama Groq, responde frases predefinidas.
+
+PLACEHOLDER_RESPUESTAS = [  # Lista de mensajes aleatorios cuando no se permite acceso a datos/LLM real.
     "No tengo acceso a los datos ahora mismo, los están reorganizando bajo tierra. ⛏️",
     "Los datos están en una fila infinita para validación… sigo esperando. 🕒",
     "Estoy mirando estantes vacíos: no puedo leer la base todavía. 📚",
@@ -101,47 +114,54 @@ PLACEHOLDER_RESPUESTAS = [
     "Necesito una lima para este código de seguridad y quizá unos cuantos bits de contrabando." 
 ]
 
-"""Carga segura de fragments y embeddings si existen; si no, inicia vacíos"""
+"""Carga en memoria de fragmentos y sus embeddings (si existen)."""
 try:
-    with open(EMBEDDINGS_PATH, "r", encoding="utf-8") as f:
-        fragments = json.load(f)
+    with open(EMBEDDINGS_PATH, "r", encoding="utf-8") as f:  # Intenta leer archivo JSON.
+        fragments = json.load(f)  # Lista de fragmentos con campos texto + embedding.
 except FileNotFoundError:
-    fragments = []
+    fragments = []  # Si no existe archivo, lista vacía.
 
-embeddings = np.array([frag.get("embedding") for frag in fragments if "embedding" in frag] , dtype=float) if fragments else np.zeros((0,384), dtype=float)
-model = SentenceTransformer(MODEL_EMBED)
+# Creamos matriz numpy de embeddings (shape: N x 384). Si no hay fragmentos -> matriz vacía.
+embeddings = (
+    np.array([frag.get("embedding") for frag in fragments if "embedding" in frag], dtype=float)
+    if fragments else np.zeros((0, 384), dtype=float)
+)
+model = SentenceTransformer(MODEL_EMBED)  # Carga el modelo de embeddings para consultas entrantes.
 
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-app = FastAPI()
+app = FastAPI()  # Instancia principal de la aplicación.
 app.include_router(news_router.router)
+app.include_router(storage_router.router)
+app.include_router(oportunidades_router.router)
 
-class Query(BaseModel):
-    question: str
+class Query(BaseModel):  # Modelo de entrada para /ask
+    question: str  # Pregunta del usuario final.
 
 _check_admin = check_admin  # backward compatibility alias
 
-@app.post("/ask")
+@app.post("/ask")  # Endpoint de pregunta al asistente.
 def ask(query: Query, response: Response):
-    if PLACEHOLDER_MODE == "1":
+    if PLACEHOLDER_MODE == "1":  # Modo mantenimiento sin acceso a LLM.
         msg = random.choice(PLACEHOLDER_RESPUESTAS)
         return {"respuesta": msg, "fragmentos": [], "online": False, "reason": "placeholder_mode", "maintenance": True}
-    if not GROQ_API_KEY:
+    if not GROQ_API_KEY:  # Falta configuración API.
         return {"respuesta": "Servicio IA no configurado (falta GROQ_API_KEY).", "fragmentos": [], "online": False, "reason": "missing_api_key"}
     try:
-        q_emb = model.encode(query.question)
+        q_emb = model.encode(query.question)  # Embedding de la pregunta.
     except Exception:
-        q_emb = np.zeros((384,), dtype=float)
-    if embeddings.size == 0:
+        q_emb = np.zeros((384,), dtype=float)  # Fallback si falla.
+    if embeddings.size == 0:  # No hay base local.
         idxs: list[int] = []
         context = ""
     else:
+        # Similaridad coseno manual (producto punto / norma). Pequeño eps para evitar división por cero.
         sims = embeddings @ q_emb / (np.linalg.norm(embeddings, axis=1) * (np.linalg.norm(q_emb) + 1e-8) + 1e-8)
-        idxs = np.argsort(sims)[-TOP_K:][::-1]
-        context = "\n\n".join([fragments[i]["texto"] for i in idxs])
+        idxs = np.argsort(sims)[-TOP_K:][::-1]  # Tomamos top K índices más similares.
+        context = "\n\n".join([fragments[i]["texto"] for i in idxs])  # Concatenamos textos.
     web_context = ""
-    try:
+    try:  # Búsqueda ligera en DuckDuckGo para contexto complementario.
         with DDGS() as ddgs:
             for_hit = ddgs.text(query.question, max_results=3)
             lines = []
@@ -151,8 +171,9 @@ def ask(query: Query, response: Response):
                 url = h.get('href') or ''
                 lines.append(f"- {title}: {body} ({url})")
             web_context = "\n".join(lines)
-    except Exception:
+    except Exception:  # Si falla la búsqueda, ignoramos.
         web_context = ""
+    # Construcción del prompt con contexto documental + web.
     prompt = (
         "Eres un asistente administrativo experto en la Escuela Profesional de Ingeniería Metalúrgica de Cusco. "
         "Responde solo sobre temas administrativos, trámites, normativas, documentos oficiales y procesos internos. "
@@ -163,7 +184,7 @@ def ask(query: Query, response: Response):
         f"Pregunta: {query.question}\nRespuesta:"
     )
     headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
-    payload = {
+    payload = {  # Formato estilo OpenAI.
         "model": GROQ_MODEL,
         "messages": [
             {"role": "system", "content": "Eres un asistente experto en la carrera de Ingeniería Metalúrgica."},
@@ -172,166 +193,77 @@ def ask(query: Query, response: Response):
         "max_tokens": 512,
         "temperature": 0.2,
     }
-    answer = None
-    used_groq = False
-    last_error = None
-    for attempt in range(3):
+    answer = None  # Respuesta final.
+    used_groq = False  # Marca si llegó a usar Groq.
+    last_error = None  # Último error visto.
+    for attempt in range(3):  # Reintentos en códigos temporales.
         try:
             resp = requests.post(GROQ_URL, headers=headers, json=payload, timeout=25)
             if resp.status_code == 200:
                 answer = resp.json()["choices"][0]["message"]["content"]
                 used_groq = True
                 break
-            if resp.status_code in (429, 500, 502, 503, 504):
+            if resp.status_code in (429, 500, 502, 503, 504):  # Errores recuperables.
                 last_error = resp.text
-                time.sleep(1 + attempt)
+                time.sleep(1 + attempt)  # Backoff lineal.
                 continue
-            last_error = resp.text
+            last_error = resp.text  # Otro error no recuperable -> salimos.
             break
         except Exception as e:
             last_error = str(e)
             time.sleep(0.5)
-    if not answer:
+    if not answer:  # Falló todo.
         answer = f"No se pudo obtener respuesta de Groq. Detalle: {last_error}" if last_error else "No se pudo obtener respuesta de Groq."
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    return {"respuesta": answer, "fragmentos": [fragments[i] for i in idxs] if idxs else [], "online": used_groq, "reason": (None if used_groq else (last_error or "groq_error"))}
+    response.headers["Access-Control-Allow-Origin"] = "*"  # Permite front sin configurar CORS estricto.
+    return {
+        "respuesta": answer,
+        "fragmentos": [fragments[i] for i in idxs] if idxs else [],
+        "online": used_groq,
+        "reason": (None if used_groq else (last_error or "groq_error")),
+    }
 
 # ===================== Noticias (CRUD simple) =====================
 
 # =============== Ingesta de mensajes (genérico) ===============
-class IngestMessage(BaseModel):
-    platform: str  # "whatsapp" | "telegram" | "slack" | "discord" | "web"
-    text: str
-    author: str | None = None
-    ts: float | None = None  # epoch seconds
-    meta: dict | None = None
+class IngestMessage(BaseModel):  # Modelo para ingesta de mensajes externos.
+    platform: str  # Origen: "whatsapp" | "telegram" | etc.
+    text: str  # Contenido textual.
+    author: str | None = None  # Remitente opcional.
+    ts: float | None = None  # Timestamp epoch. Si None se genera.
+    meta: dict | None = None  # Metadatos arbitrarios.
 
-@app.post("/ingest/messages")
+@app.post("/ingest/messages")  # Endpoint para guardar mensajes crudos (para entrenar/embeddings luego).
 async def ingest_messages(msg: IngestMessage):
-    """Ingesta genérica desde conectores. Guarda en JSONL para posterior embedding."""
+    """Guarda cada mensaje entrante en un archivo .jsonl (1 línea = 1 json)."""
     record = {
         "platform": msg.platform,
         "text": msg.text,
         "author": msg.author,
-        "ts": msg.ts or time.time(),
+        "ts": msg.ts or time.time(),  # Si no vino timestamp, usamos ahora.
         "meta": msg.meta or {},
     }
-    out_path = os.path.join(MESSAGES_DIR, f"{msg.platform}.jsonl")
+    out_path = os.path.join(MESSAGES_DIR, f"{msg.platform}.jsonl")  # Archivo por plataforma.
     with open(out_path, "a", encoding="utf-8") as f:
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
     return {"status": "ok"}
 
-# ===================== Almacenamiento genérico =====================
-from pydantic import BaseModel as _BM
-
-class GenericItemIn(_BM):
-    tipo: str
-    data: dict
-    id: str | None = None
-
-@app.post('/storage')
-def create_generic(item: GenericItemIn, request: Request):
-    _check_admin(request)
-    created = storage_store.create_item(item.tipo, item.data, item.id)
-    return created
-
-@app.get('/storage/{item_id}')
-def get_generic(item_id: str):
-    obj = storage_store.get_item(item_id)
-    if not obj:
-        raise HTTPException(status_code=404, detail='Item no encontrado')
-    return obj
-
-@app.put('/storage/{item_id}')
-def update_generic(item_id: str, item: GenericItemIn, request: Request):
-    _check_admin(request)
-    upd = storage_store.update_item(item_id, item.data)
-    if not upd:
-        raise HTTPException(status_code=404, detail='Item no encontrado')
-    return upd
-
-@app.delete('/storage/{item_id}')
-def delete_generic(item_id: str, request: Request):
-    _check_admin(request)
-    ok = storage_store.delete_item(item_id)
-    if not ok:
-        raise HTTPException(status_code=404, detail='Item no encontrado')
-    return {"status": "deleted", "id": item_id}
-
-@app.get('/storage')
-def search_generic(tipo: str | None = None, q: str | None = None, page: int = 1, page_size: int = 20):
-    return storage_store.search_items(tipo=tipo, q=q, page=page, page_size=page_size)
-
-# ===================== Oportunidades =====================
-class OportunidadIn(_BM):
-    id: str | None = None
-    titulo: str
-    descripcion: str
-    tipo: str  # beca|practica|concurso|otro
-    fecha_publicacion: str
-    fecha_cierre: str | None = None
-    fuente: str | None = None
-    enlace: str | None = None
-    estado: str | None = None
-
-@app.get('/oportunidades')
-def list_oportunidades(q: str | None = None, tipo: str | None = None, estado: str | None = None,
-                       abierta: bool | None = None, page: int = 1, page_size: int = 10):
-    if any([q, tipo, estado, abierta is not None, page != 1, page_size != 10]):
-        return oportunidades_store.search(q=q, tipo=tipo, estado=estado, abierta=abierta, page=page, page_size=page_size)
-    return oportunidades_store.list_all()
-
-@app.get('/oportunidades/{oid}')
-def get_oportunidad(oid: str):
-    item = oportunidades_store.get_one(oid)
-    if not item:
-        raise HTTPException(status_code=404, detail='Oportunidad no encontrada')
-    return item
-
-@app.post('/oportunidades')
-def create_oportunidad(item: OportunidadIn, request: Request):
-    _check_admin(request)
-    try:
-        return oportunidades_store.upsert(item.dict())
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@app.put('/oportunidades/{oid}')
-def update_oportunidad(oid: str, item: OportunidadIn, request: Request):
-    _check_admin(request)
-    data = item.dict()
-    if not data.get('id'):
-        data['id'] = oid
-    existing = oportunidades_store.get_one(data['id'])
-    if not existing:
-        raise HTTPException(status_code=404, detail='Oportunidad no encontrada')
-    return oportunidades_store.upsert(data)
-
-@app.delete('/oportunidades/{oid}')
-def delete_oportunidad(oid: str, request: Request):
-    _check_admin(request)
-    ok = oportunidades_store.delete(oid)
-    if not ok:
-        raise HTTPException(status_code=404, detail='Oportunidad no encontrada')
-    return {"status": "deleted", "id": oid}
 
 # =============== Webhook de WhatsApp Cloud API (1:1) ===============
 # Nota: WhatsApp Business Cloud API NO soporta leer mensajes de grupos existentes.
 # Este webhook solo recibirá mensajes enviados al número de negocio (1:1), conforme a políticas.
 
-VERIFY_TOKEN = os.environ.get("WHATSAPP_VERIFY_TOKEN", "change-me")
+VERIFY_TOKEN = os.environ.get("WHATSAPP_VERIFY_TOKEN", "change-me")  # Token de verificación para webhook.
 
-@app.get("/webhooks/whatsapp")
+@app.get("/webhooks/whatsapp")  # Verificación inicial de webhook Meta (challenge-response).
 async def whatsapp_verify(mode: str = FastAPIQuery(None), challenge: str = FastAPIQuery(None), verify_token: str = FastAPIQuery(None), hub_mode: str = FastAPIQuery(None), hub_challenge: str = FastAPIQuery(None), hub_verify_token: str = FastAPIQuery(None)):
-    # Meta envía como hub.mode, hub.challenge, hub.verify_token
-    mode_val = mode or hub_mode
+    mode_val = mode or hub_mode  # Meta a veces usa hub.* parámetros.
     challenge_val = challenge or hub_challenge
     token_val = verify_token or hub_verify_token
-    if mode_val == "subscribe" and token_val == VERIFY_TOKEN:
+    if mode_val == "subscribe" and token_val == VERIFY_TOKEN:  # Coincidencia token -> devolver challenge.
         return Response(content=challenge_val or "", media_type="text/plain")
-    return Response(status_code=403)
+    return Response(status_code=403)  # Falla verificación.
 
-@app.post("/webhooks/whatsapp")
+@app.post("/webhooks/whatsapp")  # Recepción de mensajes entrantes (1:1) de WhatsApp Cloud API.
 async def whatsapp_webhook(payload: dict):
     try:
         entry = payload.get("entry", [])[0]
@@ -339,11 +271,11 @@ async def whatsapp_webhook(payload: dict):
         value = changes.get("value", {})
         messages = value.get("messages", [])
         for m in messages:
-            if m.get("type") == "text":
+            if m.get("type") == "text":  # Solo texto simple.
                 text = m["text"]["body"]
                 author = m.get("from")
                 await ingest_messages(IngestMessage(platform="whatsapp", text=text, author=author))
-    except Exception:
+    except Exception:  # Silenciamos errores de parseo para no romper webhook.
         pass
     return {"status": "received"}
 

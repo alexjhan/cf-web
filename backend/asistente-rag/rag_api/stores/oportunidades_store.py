@@ -1,23 +1,27 @@
-"""Oportunidades store with SQLite/Postgres support."""
-from __future__ import annotations
-import threading
-from datetime import datetime
-from typing import Any, Dict, List, Optional
-from contextlib import contextmanager
-from ..core import db
-from .news_store import slug
+"""Store de oportunidades.
 
-_lock = threading.Lock()
+Encargado de CRUD para 'oportunidades' (becas, prácticas, concursos, etc.) en SQLite o Postgres.
+No maneja HTTP ni Pydantic; devuelve/recibe dicts.
+"""
+from __future__ import annotations  # Soporte de anotaciones futuras.
+import threading  # Lock para operaciones en SQLite.
+from datetime import datetime  # Timestamps ISO.
+from typing import Any, Dict, List, Optional  # Tipos.
+from contextlib import contextmanager  # Context manager para conexión.
+from ..core import db  # Abstracción de conexión DB.
+from .news_store import slug  # Reutilizamos función para generar IDs legibles.
 
-VALID_TIPOS = {"beca", "practica", "concurso", "otro"}
-VALID_ESTADOS = {"abierta", "cerrada", "archivada"}
+_lock = threading.Lock()  # Evita condiciones de carrera en SQLite.
 
-@contextmanager
+VALID_TIPOS = {"beca", "practica", "concurso", "otro"}  # Enumeración simple de tipos aceptados.
+VALID_ESTADOS = {"abierta", "cerrada", "archivada"}  # Estados de una oportunidad.
+
+@contextmanager  # Uso: with get_conn() as conn:
 def get_conn():
     with db.get_connection() as conn:  # type: ignore
-        yield conn
+        yield conn  # Entregamos la conexión.
 
-def init_db() -> None:
+def init_db() -> None:  # Crea tabla e índices si no existen.
     with get_conn() as conn:
         cur = conn.cursor()
         if db.is_postgres():
@@ -66,7 +70,7 @@ def init_db() -> None:
             cur.execute("CREATE INDEX IF NOT EXISTS idx_oportunidades_estado ON oportunidades(estado)")
         conn.commit()
 
-def _row_to_dict(r: Any) -> Dict[str, Any]:  # type: ignore
+def _row_to_dict(r: Any) -> Dict[str, Any]:  # Convierte fila DB -> dict estándar.
     return {
         "id": r["id"],
         "titulo": r["titulo"],
@@ -79,14 +83,14 @@ def _row_to_dict(r: Any) -> Dict[str, Any]:  # type: ignore
         "estado": r["estado"],
     }
 
-def list_all() -> List[Dict[str, Any]]:
+def list_all() -> List[Dict[str, Any]]:  # Lista completa (sin filtros) ordenada.
     with _lock, get_conn() as conn:
         cur = conn.cursor()
         cur.execute("SELECT * FROM oportunidades ORDER BY fecha_publicacion DESC, created_at DESC")
         return [_row_to_dict(r) for r in cur.fetchall()]
 
 def search(q: Optional[str] = None, tipo: Optional[str] = None, estado: Optional[str] = None,
-           abierta: Optional[bool] = None, page: int = 1, page_size: int = 10) -> Dict[str, Any]:
+           abierta: Optional[bool] = None, page: int = 1, page_size: int = 10) -> Dict[str, Any]:  # Filtros + paginación.
     if page < 1: page = 1
     if page_size < 1: page_size = 10
     if page_size > 100: page_size = 100
@@ -131,7 +135,7 @@ def search(q: Optional[str] = None, tipo: Optional[str] = None, estado: Optional
         items = [_row_to_dict(r) for r in cur.fetchall()]
     return {"items": items, "total": total, "page": page, "page_size": page_size}
 
-def get_one(oid: str) -> Optional[Dict[str, Any]]:
+def get_one(oid: str) -> Optional[Dict[str, Any]]:  # Obtiene una oportunidad por ID.
     with _lock, get_conn() as conn:
         cur = conn.cursor()
         if db.is_postgres():
@@ -141,7 +145,7 @@ def get_one(oid: str) -> Optional[Dict[str, Any]]:
         row = cur.fetchone()
         return _row_to_dict(row) if row else None
 
-def upsert(data: Dict[str, Any]) -> Dict[str, Any]:
+def upsert(data: Dict[str, Any]) -> Dict[str, Any]:  # Inserta o actualiza según existencia.
     required = ["titulo", "descripcion", "tipo", "fecha_publicacion"]
     for r in required:
         if r not in data:
@@ -199,7 +203,7 @@ def upsert(data: Dict[str, Any]) -> Dict[str, Any]:
         conn.commit()
     return get_one(data["id"])  # type: ignore
 
-def delete(oid: str) -> bool:
+def delete(oid: str) -> bool:  # Elimina por ID.
     with _lock, get_conn() as conn:
         cur = conn.cursor()
         if db.is_postgres():

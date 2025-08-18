@@ -153,3 +153,40 @@ Checklist rápida:
 [ ] Configurar .env backend
 [ ] Probar conexión
 [ ] Migrar funciones CRUD
+
+## Ampliación para modelo enriquecido (Frontend actual)
+
+Si ya migraste al esquema minimalista pero el frontend necesita campos extra (noticias: descripcion_corta, descripcion_larga, categorias[], imagen, destacada, vistas; oportunidades: requisitos[], beneficios[], activa, empresa, institucion, etc.) aplica:
+
+```sql
+-- Extensión noticias
+alter table public.noticias
+  add column if not exists fecha date,
+  add column if not exists descripcion_corta text,
+  add column if not exists descripcion_larga text,
+  add column if not exists autor text,
+  add column if not exists categorias text[] default '{}',
+  add column if not exists imagen text,
+  add column if not exists destacada boolean default false,
+  add column if not exists vistas integer default 0;
+
+-- Extensión oportunidades
+alter table public.oportunidades
+  add column if not exists categoria text,
+  add column if not exists fecha_publicacion date,
+  add column if not exists requisitos text[] default '{}',
+  add column if not exists beneficios text[] default '{}',
+  add column if not exists activa boolean default true,
+  add column if not exists empresa text,
+  add column if not exists texto text,
+  add column if not exists contacto text,
+  add column if not exists institucion text,
+  add column if not exists duracion text,
+  add column if not exists tipo_estudio text,
+  add column if not exists contenido text,
+  add column if not exists fecha date;
+
+create index if not exists idx_noticias_categorias on public.noticias using gin(categorias);
+```
+
+Verifica RLS/policies para nuevas columnas si RLS está activo.

@@ -1,19 +1,23 @@
-"""Unified generic storage (data_items) supporting SQLite & Postgres."""
-from __future__ import annotations
-import json, threading
-from datetime import datetime
-from typing import Any, Dict, List, Optional
-from contextlib import contextmanager
-from ..core import db
+"""Almacenamiento genérico (tabla data_items).
 
-_lock = threading.Lock()
+Uso: guardar objetos ligeros con un tipo (tipo) y un JSON (data) sin crear muchas tablas.
+Sirve para configuraciones, documentos simples, FAQs, etc.
+"""
+from __future__ import annotations  # Tipos adelantados.
+import json, threading  # json para serializar; lock para sincronizar SQLite.
+from datetime import datetime  # Timestamps ISO.
+from typing import Any, Dict, List, Optional  # Tipos.
+from contextlib import contextmanager  # Context manager para conexión.
+from ..core import db  # Abstracción de conexión DB.
 
-@contextmanager
+_lock = threading.Lock()  # Lock global para operaciones de escritura en SQLite.
+
+@contextmanager  # Uso: with get_conn() as conn:
 def get_conn():
     with db.get_connection() as conn:  # type: ignore
         yield conn
 
-def init_db() -> None:
+def init_db() -> None:  # Crea tabla + índice si no existen.
     with get_conn() as conn:
         cur = conn.cursor()
         if db.is_postgres():
@@ -44,7 +48,7 @@ def init_db() -> None:
             cur.execute("CREATE INDEX IF NOT EXISTS idx_data_items_tipo ON data_items(tipo)")
         conn.commit()
 
-def _row_to_dict(r: Any) -> Dict[str, Any]:  # type: ignore
+def _row_to_dict(r: Any) -> Dict[str, Any]:  # Convierte fila DB -> dict homogéneo.
     raw = r["data"]
     if isinstance(raw, str):
         try:
@@ -61,7 +65,7 @@ def _row_to_dict(r: Any) -> Dict[str, Any]:  # type: ignore
         "updated_at": str(r["updated_at"]),
     }
 
-def create_item(tipo: str, data: Dict[str, Any], item_id: Optional[str] = None) -> Dict[str, Any]:
+def create_item(tipo: str, data: Dict[str, Any], item_id: Optional[str] = None) -> Dict[str, Any]:  # Inserta nuevo registro.
     import uuid
     if not tipo:
         raise ValueError("'tipo' es requerido")
@@ -82,7 +86,7 @@ def create_item(tipo: str, data: Dict[str, Any], item_id: Optional[str] = None) 
         conn.commit()
     return get_item(item_id)  # type: ignore
 
-def get_item(item_id: str) -> Optional[Dict[str, Any]]:
+def get_item(item_id: str) -> Optional[Dict[str, Any]]:  # Recupera uno por id.
     with _lock, get_conn() as conn:
         cur = conn.cursor()
         if db.is_postgres():
@@ -92,7 +96,7 @@ def get_item(item_id: str) -> Optional[Dict[str, Any]]:
         row = cur.fetchone()
         return _row_to_dict(row) if row else None
 
-def update_item(item_id: str, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+def update_item(item_id: str, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:  # Reemplaza el JSON data.
     now = datetime.utcnow().isoformat()
     with _lock, get_conn() as conn:
         cur = conn.cursor()
@@ -111,7 +115,7 @@ def update_item(item_id: str, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         conn.commit()
     return get_item(item_id)
 
-def delete_item(item_id: str) -> bool:
+def delete_item(item_id: str) -> bool:  # Elimina por id.
     with _lock, get_conn() as conn:
         cur = conn.cursor()
         if db.is_postgres():
@@ -122,7 +126,7 @@ def delete_item(item_id: str) -> bool:
         conn.commit()
     return deleted
 
-def search_items(tipo: Optional[str] = None, q: Optional[str] = None, page: int = 1, page_size: int = 20) -> Dict[str, Any]:
+def search_items(tipo: Optional[str] = None, q: Optional[str] = None, page: int = 1, page_size: int = 20) -> Dict[str, Any]:  # Filtro + paginación.
     if page < 1: page = 1
     if page_size < 1: page_size = 20
     if page_size > 200: page_size = 200

@@ -1,17 +1,19 @@
-"""Store de noticias (movido a stores/).
-Fuente unificada para manejo de tabla news con soporte SQLite/Postgres.
+"""Store de noticias.
+
+Responsabilidad: hablar con la base de datos (SQLite o Postgres) para CRUD de la tabla `news`.
+No conoce nada de HTTP ni de Pydantic: solo datos primitivos (dicts, listas).
 """
-from __future__ import annotations
-import json, os, threading, sqlite3
-from datetime import datetime
-from typing import List, Dict, Any, Optional
-from contextlib import contextmanager
-from ..core import db
+from __future__ import annotations  # Soporte de anotaciones de tipos adelantadas.
+import json, os, threading, sqlite3  # json para serializar listas; threading.Lock para concurrencia en SQLite.
+from datetime import datetime  # Timestamps ISO.
+from typing import List, Dict, Any, Optional  # Tipos genéricos.
+from contextlib import contextmanager  # Para crear context manager de conexión.
+from ..core import db  # Módulo que abstrae conexión (Postgres o SQLite).
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-_lock = threading.Lock()
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # Carpeta base (rag_api/)
+_lock = threading.Lock()  # Asegura que operaciones en SQLite no se pisen simultáneamente (no necesario estricto en Postgres pero seguro).
 
-SEED_NEWS: List[Dict[str, Any]] = [
+SEED_NEWS: List[Dict[str, Any]] = [  # Datos de ejemplo insertados solo si la tabla está vacía.
 	{
 		"id": "2025-07-31-nuevo-laboratorio-metalurgico-inaugurado-0",
 		"fecha": "2025-07-31",
@@ -26,12 +28,12 @@ SEED_NEWS: List[Dict[str, Any]] = [
 	}
 ]
 
-@contextmanager
+@contextmanager  # Permite usar: with get_conn() as conn:
 def get_conn():
-	with db.get_connection() as conn:  # type: ignore
-		yield conn
+	with db.get_connection() as conn:  # type: ignore  # Delegamos a core.db
+		yield conn  # Entregamos la conexión y luego se cierra automáticamente.
 
-def init_db():
+def init_db():  # Crea tabla + índices si no existen; inserta seeds si está vacía.
 	with get_conn() as conn:
 		cur = conn.cursor()
 		if db.is_postgres():
@@ -103,15 +105,15 @@ def init_db():
 					)
 		conn.commit()
 
-def slug(text: str) -> str:
+def slug(text: str) -> str:  # Genera identificador URL-friendly limitado a 60 chars.
 	import unicodedata, re
-	t = unicodedata.normalize('NFD', text.lower())
-	t = ''.join(c for c in t if unicodedata.category(c) != 'Mn')
-	t = re.sub(r'[^a-z0-9\s-]', '', t)
-	t = re.sub(r'\s+', '-', t).strip('-')
-	return t[:60]
+	t = unicodedata.normalize('NFD', text.lower())  # Normaliza y pasa a minúsculas.
+	t = ''.join(c for c in t if unicodedata.category(c) != 'Mn')  # Quita acentos.
+	t = re.sub(r'[^a-z0-9\s-]', '', t)  # Elimina caracteres no permitidos.
+	t = re.sub(r'\s+', '-', t).strip('-')  # Reemplaza espacios por guiones y recorta extremos.
+	return t[:60]  # Limita tamaño.
 
-def _row_to_dict(row: Any) -> Dict[str, Any]:  # type: ignore
+def _row_to_dict(row: Any) -> Dict[str, Any]:  # Convierte fila DB a dict Python homogéneo.
 	categoria_raw = row["categoria"]
 	if db.is_postgres():
 		if isinstance(categoria_raw, str):
@@ -137,14 +139,14 @@ def _row_to_dict(row: Any) -> Dict[str, Any]:  # type: ignore
 		"vistas": row["vistas"],
 	}
 
-def list_news() -> List[Dict[str, Any]]:
+def list_news() -> List[Dict[str, Any]]:  # Devuelve todas las noticias ordenadas (para listados simples).
 	with _lock, get_conn() as conn:
 		cur = conn.cursor()
 		cur.execute("SELECT * FROM news ORDER BY fecha DESC, created_at DESC")
 		return [_row_to_dict(r) for r in cur.fetchall()]
 
 def search_news(q: Optional[str] = None, categoria: Optional[str] = None, destacada: Optional[bool] = None,
-				page: int = 1, page_size: int = 10) -> Dict[str, Any]:
+				page: int = 1, page_size: int = 10) -> Dict[str, Any]:  # Filtro + paginación.
 	if page < 1: page = 1
 	if page_size < 1: page_size = 10
 	if page_size > 100: page_size = 100
@@ -177,7 +179,7 @@ def search_news(q: Optional[str] = None, categoria: Optional[str] = None, destac
 		items = [_row_to_dict(r) for r in cur.fetchall()]
 	return {"items": items, "total": total, "page": page, "page_size": page_size}
 
-def get_news(nid: str) -> Optional[Dict[str, Any]]:
+def get_news(nid: str) -> Optional[Dict[str, Any]]:  # Obtiene una noticia por ID.
 	with _lock, get_conn() as conn:
 		cur = conn.cursor()
 		if db.is_postgres():
@@ -187,7 +189,7 @@ def get_news(nid: str) -> Optional[Dict[str, Any]]:
 		row = cur.fetchone()
 		return _row_to_dict(row) if row else None
 
-def increment_views(nid: str, amount: int = 1) -> Optional[Dict[str, Any]]:
+def increment_views(nid: str, amount: int = 1) -> Optional[Dict[str, Any]]:  # Incrementa contador vistas.
 	with _lock, get_conn() as conn:
 		cur = conn.cursor()
 		if db.is_postgres():
@@ -199,7 +201,7 @@ def increment_views(nid: str, amount: int = 1) -> Optional[Dict[str, Any]]:
 		conn.commit()
 	return get_news(nid)
 
-def upsert_news(item: Dict[str, Any]) -> Dict[str, Any]:
+def upsert_news(item: Dict[str, Any]) -> Dict[str, Any]:  # Inserta o actualiza según exista el ID.
 	required = ["titulo", "fecha", "descripcionCorta", "descripcionLarga", "autor", "categoria"]
 	for r in required:
 		if r not in item:
@@ -253,7 +255,7 @@ def upsert_news(item: Dict[str, Any]) -> Dict[str, Any]:
 		conn.commit()
 	return get_news(item["id"])  # type: ignore
 
-def delete_news(nid: str) -> bool:
+def delete_news(nid: str) -> bool:  # Elimina por ID. True si borró fila.
 	with _lock, get_conn() as conn:
 		cur = conn.cursor()
 		if db.is_postgres():
