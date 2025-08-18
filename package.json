@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node backend/node_backend/dist/index.js"
   },
   "dependencies": {
     "@xyflow/react": "^12.8.3",
@@ -35,4 +36,5 @@
     "typescript-eslint": "^8.35.1",
     "vite": "^7.0.4"
   }
+  
 }

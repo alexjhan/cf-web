@@ -4,7 +4,8 @@ import { ENV } from './config/env';
 
 // Construye instancia Express configurada
 const app = buildServer();
-// Levanta escucha en puerto definido
-app.listen(Number(ENV.PORT), () => {
-  console.log(`API listening on :${ENV.PORT}`);
+// Usa el puerto asignado por Railway o fallback
+const PORT = process.env.PORT || ENV.PORT || 4000;
+app.listen(Number(PORT), () => {
+  console.log(`API listening on :${PORT}`);
 });
