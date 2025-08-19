@@ -81,7 +81,7 @@ const Noticias: React.FC = () => {
     const load = async () => {
       setLoading(true); setError(null);
       try {
-        const res = await fetch(apiBase + '/news', { signal: controller.signal });
+  const res = await fetch(apiBase + '/api/noticias', { signal: controller.signal });
         if (!res.ok) throw new Error('status ' + res.status);
         const data = await res.json();
         if (Array.isArray(data)) setNoticias(data);
@@ -110,7 +110,7 @@ const Noticias: React.FC = () => {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(apiBase + '/news/' + encodeURIComponent(current.id));
+  const res = await fetch(apiBase + '/api/noticias/' + encodeURIComponent(current.id));
         if (!res.ok) return; // si falla dejamos la que tenemos
         const fresh = await res.json();
         if (cancelled) return;
