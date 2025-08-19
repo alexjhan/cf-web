@@ -1,5 +1,5 @@
 // Servicio para noticias (alineado a backend /api/noticias)
-const API_BASE = 'https://<TU_BACKEND_RAILWAY>.railway.app'; // Cambia por tu URL real
+const API_BASE = 'https://cf-backend-production-38d0.up.railway.app';
 const BASE_PATH = '/api/noticias';
 
 export interface NoticiaPayload {
