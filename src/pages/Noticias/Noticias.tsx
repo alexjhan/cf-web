@@ -27,7 +27,7 @@ const Noticias: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedIdx, setSelectedIdx] = useState<number>(0);
   const [shareMsg, setShareMsg] = useState<string | null>(null);
-  const apiBase = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8000';
+  const apiBase = (import.meta as any).env?.VITE_API_URL || 'https://cf-backend-production-38d0.up.railway.app';
 
   const handleShare = (n: Noticia) => {
     const url = `${window.location.origin}/noticias?id=${encodeURIComponent(n.id)}`;

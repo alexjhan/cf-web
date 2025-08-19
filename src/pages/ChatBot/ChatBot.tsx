@@ -20,7 +20,7 @@ const sugerencias = [
   "¿Cuáles son los requisitos de ingreso?"
 ];
 
-const API_URL = (import.meta as any).env?.VITE_API_URL ? `${(import.meta as any).env.VITE_API_URL}/ask` : "http://localhost:8000/ask";
+const API_URL = (import.meta as any).env?.VITE_API_URL ? `${(import.meta as any).env.VITE_API_URL}/ask` : "https://cf-backend-production-38d0.up.railway.app/ask";
 
 // Eliminado soporte FAQ y enriquecimiento: modo offline solo placeholders
 

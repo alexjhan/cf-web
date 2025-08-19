@@ -27,5 +27,5 @@
     X-Content-Type-Options = "nosniff"
     Permissions-Policy = "accelerometer=(), geolocation=(), microphone=()"
     # CSP que permite ser embebido por ui.dev para previews
-    Content-Security-Policy = "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'self' https://ui.dev;"
+  Content-Security-Policy = "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data:; connect-src 'self' https: https://cf-backend-production-38d0.up.railway.app; frame-ancestors 'self' https://ui.dev;"
     # No X-Frame-Options: la política la gestiona frame-ancestors

@@ -37,7 +37,7 @@ const AdminNoticiasContent = () => {
   const [noticias, setNoticias] = useState<Noticia[]>(defaultNoticias);
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const apiBase = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8000';
+  const apiBase = (import.meta as any).env?.VITE_API_URL || 'https://cf-backend-production-38d0.up.railway.app';
   const [pendingEditId, setPendingEditId] = useState<string | null>(null);
   const adminToken = (import.meta as any).env?.VITE_ADMIN_TOKEN || localStorage.getItem('adminToken') || '';
   useEffect(() => {
