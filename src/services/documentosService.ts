@@ -1,5 +1,5 @@
 // Servicio para consumir API de documentos
-const API_BASE = '/api/documentos';
+const API_BASE = 'https://<TU_BACKEND_RAILWAY>.railway.app/api/documentos'; // Cambia por tu URL real
 // Token se obtiene dinámicamente cuando se arma cada request
 
 export interface DocumentoPayload {

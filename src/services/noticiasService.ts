@@ -1,5 +1,5 @@
 // Servicio para noticias (alineado a backend /api/noticias)
-const API_BASE = (import.meta as any).env?.VITE_API_URL || '';
+const API_BASE = 'https://<TU_BACKEND_RAILWAY>.railway.app'; // Cambia por tu URL real
 const BASE_PATH = '/api/noticias';
 
 export interface NoticiaPayload {
