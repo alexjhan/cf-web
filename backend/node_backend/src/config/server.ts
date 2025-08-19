@@ -12,7 +12,7 @@ export function buildServer() {
   const app = express();
   // Habilita CORS solo para el frontend de Netlify
   app.use(cors({
-    origin: 'https://centro-federado.netlify.app/',
+    origin: 'https://centro-federado.netlify.app',
     credentials: true
   }));
   // Parser JSON
