@@ -1,203 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import EmptyOverlay from '../../components/Shared/EmptyOverlay';
+import * as api from '../../services/documentosService';
 
 const Documentos = () => {
-  const [categoriaActiva, setCategoriaActiva] = useState('academicos');
+  const [categoriaActiva, setCategoriaActiva] = useState('academico');
+  const [documentos, setDocumentos] = useState<api.Documento[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string|null>(null);
 
   const categorias = [
-    { id: 'academicos', nombre: 'Académicos', icono: '📚' },
-    { id: 'administrativos', nombre: 'Administrativos', icono: '📋' },
-    { id: 'reglamentos', nombre: 'Reglamentos', icono: '⚖️' },
-    { id: 'formularios', nombre: 'Formularios', icono: '📝' },
-    { id: 'guias', nombre: 'Guías', icono: '🗺️' },
-    { id: 'convenios', nombre: 'Convenios', icono: '🤝' }
+    { id: 'academico', nombre: 'Académicos', icono: '📚' },
+    { id: 'administrativo', nombre: 'Administrativos', icono: '📋' },
+    { id: 'reglamento', nombre: 'Reglamentos', icono: '⚖️' },
+    { id: 'formulario', nombre: 'Formularios', icono: '📝' },
+    { id: 'guia', nombre: 'Guías', icono: '🗺️' },
+    { id: 'convenio', nombre: 'Convenios', icono: '🤝' }
   ];
 
-  const documentos = {
-    academicos: [
-      {
-        titulo: 'Plan de Estudios 2024',
-        descripcion: 'Plan curricular actualizado de la carrera de Ingeniería Metalúrgica',
-        tipo: 'PDF',
-        tamaño: '2.5 MB',
-        fecha: '2024-03-15',
-        urgente: true,
-        enlace: '#'
-      },
-      {
-        titulo: 'Reglamento de Grados y Títulos',
-        descripcion: 'Normativas para obtención de grados académicos y títulos profesionales',
-        tipo: 'PDF',
-        tamaño: '1.8 MB',
-        fecha: '2024-02-10',
-        urgente: false,
-        enlace: '#'
-      },
-      {
-        titulo: 'Manual de Prácticas Pre-Profesionales',
-        descripcion: 'Lineamientos para el desarrollo de prácticas profesionales',
-        tipo: 'PDF',
-        tamaño: '3.2 MB',
-        fecha: '2024-01-20',
-        urgente: false,
-        enlace: '#'
-      },
-      {
-        titulo: 'Catálogo de Cursos Electivos',
-        descripcion: 'Lista completa de cursos electivos disponibles por semestre',
-        tipo: 'PDF',
-        tamaño: '1.2 MB',
-        fecha: '2024-03-01',
-        urgente: false,
-        enlace: '#'
-      }
-    ],
-    administrativos: [
-      {
-        titulo: 'Solicitud de Certificado de Estudios',
-        descripcion: 'Formato para solicitud de certificados académicos',
-        tipo: 'DOC',
-        tamaño: '125 KB',
-        fecha: '2024-03-10',
-        urgente: false,
-        enlace: '#'
-      },
-      {
-        titulo: 'Formato de Carta de Presentación',
-        descripcion: 'Plantilla oficial para cartas de presentación institucional',
-        tipo: 'DOC',
-        tamaño: '95 KB',
-        fecha: '2024-02-28',
-        urgente: false,
-        enlace: '#'
-      },
-      {
-        titulo: 'Procedimiento de Matrícula',
-        descripcion: 'Guía paso a paso para el proceso de matrícula estudiantil',
-        tipo: 'PDF',
-        tamaño: '890 KB',
-        fecha: '2024-03-05',
-        urgente: true,
-        enlace: '#'
-      }
-    ],
-    reglamentos: [
-      {
-        titulo: 'Reglamento General de Estudiantes',
-        descripcion: 'Normativas y derechos de los estudiantes universitarios',
-        tipo: 'PDF',
-        tamaño: '4.1 MB',
-        fecha: '2024-01-15',
-        urgente: false,
-        enlace: '#'
-      },
-      {
-        titulo: 'Reglamento de Evaluación Académica',
-        descripcion: 'Criterios y procedimientos de evaluación estudiantil',
-        tipo: 'PDF',
-        tamaño: '2.7 MB',
-        fecha: '2024-02-01',
-        urgente: false,
-        enlace: '#'
-      },
-      {
-        titulo: 'Código de Ética Universitaria',
-        descripcion: 'Principios éticos y conducta en la comunidad universitaria',
-        tipo: 'PDF',
-        tamaño: '1.5 MB',
-        fecha: '2024-01-10',
-        urgente: false,
-        enlace: '#'
-      }
-    ],
-    formularios: [
-      {
-        titulo: 'Solicitud de Beca de Estudios',
-        descripcion: 'Formato para postulación a becas académicas y socioeconómicas',
-        tipo: 'PDF',
-        tamaño: '275 KB',
-        fecha: '2024-03-12',
-        urgente: true,
-        enlace: '#'
-      },
-      {
-        titulo: 'Formato de Proyecto de Tesis',
-        descripcion: 'Plantilla oficial para presentación de proyectos de tesis',
-        tipo: 'DOC',
-        tamaño: '180 KB',
-        fecha: '2024-02-25',
-        urgente: false,
-        enlace: '#'
-      },
-      {
-        titulo: 'Evaluación Docente',
-        descripcion: 'Formulario de evaluación del desempeño docente',
-        tipo: 'PDF',
-        tamaño: '320 KB',
-        fecha: '2024-03-08',
-        urgente: false,
-        enlace: '#'
-      }
-    ],
-    guias: [
-      {
-        titulo: 'Guía de Laboratorios Metalúrgicos',
-        descripcion: 'Manual de uso seguro y procedimientos de laboratorio',
-        tipo: 'PDF',
-        tamaño: '5.8 MB',
-        fecha: '2024-02-20',
-        urgente: false,
-        enlace: '#'
-      },
-      {
-        titulo: 'Manual de Seguridad Industrial',
-        descripcion: 'Protocolos de seguridad en procesos metalúrgicos',
-        tipo: 'PDF',
-        tamaño: '3.4 MB',
-        fecha: '2024-02-15',
-        urgente: true,
-        enlace: '#'
-      },
-      {
-        titulo: 'Guía de Redacción Académica',
-        descripcion: 'Normas y estilo para documentos académicos y científicos',
-        tipo: 'PDF',
-        tamaño: '1.9 MB',
-        fecha: '2024-03-01',
-        urgente: false,
-        enlace: '#'
-      }
-    ],
-    convenios: [
-      {
-        titulo: 'Convenio Southern Copper Corporation',
-        descripcion: 'Acuerdo de cooperación académica y prácticas profesionales',
-        tipo: 'PDF',
-        tamaño: '2.1 MB',
-        fecha: '2024-01-30',
-        urgente: false,
-        enlace: '#'
-      },
-      {
-        titulo: 'Convenio Antamina S.A.',
-        descripcion: 'Colaboración en investigación y desarrollo tecnológico',
-        tipo: 'PDF',
-        tamaño: '1.7 MB',
-        fecha: '2024-02-14',
-        urgente: false,
-        enlace: '#'
-      },
-      {
-        titulo: 'Convenio Universidad de Chile',
-        descripcion: 'Intercambio académico y movilidad estudiantil',
-        tipo: 'PDF',
-        tamaño: '1.3 MB',
-        fecha: '2024-03-02',
-        urgente: false,
-        enlace: '#'
-      }
-    ]
-  };
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    api.list(1, 100)
+      .then(data => setDocumentos(data.items || []))
+      .catch(e => setError('Error cargando documentos'))
+      .finally(() => setLoading(false));
+  }, []);
 
   const estadisticas = [
     { icono: '📄', numero: '180+', texto: 'Documentos' },
@@ -215,7 +43,7 @@ const Documentos = () => {
     }
   };
 
-  const DATA_REAL = false; // bandera temporal para indicar si ya hay datos productivos
+
 
   return (
     <div 
@@ -320,46 +148,45 @@ const Documentos = () => {
         <div className="px-4 pb-16 md:pb-20 lg:pb-24">
           <div className="max-w-6xl mx-auto">
             <div className="grid gap-4 md:gap-6 lg:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {documentos[categoriaActiva as keyof typeof documentos].map((doc, index) => (
-                <div
-                  key={index}
-                  className="group bg-[#1a1a1a]/60 backdrop-blur-sm rounded-xl md:rounded-2xl lg:rounded-3xl p-4 md:p-6 lg:p-8 border border-[#FFD700]/20 hover:border-[#FFD700]/40 hover:bg-[#FFD700]/5 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-[#FFD700]/10"
-                >
-                  <div className="flex items-start justify-between mb-3 md:mb-4">
-                    <div className="flex items-center gap-2 md:gap-3">
-                      <div className="text-xl md:text-2xl lg:text-3xl">📄</div>
-                      {doc.urgente && (
-                        <div className="bg-red-500/20 text-red-300 text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded-full border border-red-500/30 animate-pulse">
-                          Urgente
+              {loading ? (
+                <div className="text-center py-10 text-gray-400">Cargando documentos...</div>
+              ) : error ? (
+                <div className="text-center py-10 text-red-400">{error}</div>
+              ) : (
+                documentos
+                  .filter(doc => doc.tipo === categoriaActiva)
+                  .map((doc, index) => (
+                    <div
+                      key={doc.id || index}
+                      className="group bg-[#1a1a1a]/60 backdrop-blur-sm rounded-xl md:rounded-2xl lg:rounded-3xl p-4 md:p-6 lg:p-8 border border-[#FFD700]/20 hover:border-[#FFD700]/40 hover:bg-[#FFD700]/5 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-[#FFD700]/10"
+                    >
+                      <div className="flex items-start justify-between mb-3 md:mb-4">
+                        <div className="flex items-center gap-2 md:gap-3">
+                          <div className="text-xl md:text-2xl lg:text-3xl">📄</div>
                         </div>
-                      )}
+                        <div className={`text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded-md md:rounded-lg border ${getTipoColor(doc.tipo)}`}>
+                          {doc.tipo}
+                        </div>
+                      </div>
+                      <h3 className="text-base md:text-lg lg:text-xl font-bold text-[#FFD700] mb-2 md:mb-3 group-hover:text-white transition-colors duration-300 leading-tight">
+                        {doc.titulo}
+                      </h3>
+                      <p className="text-gray-300 text-xs md:text-sm lg:text-base mb-3 md:mb-4 leading-relaxed">
+                        {doc.subtitulo || doc.descripcion || ''}
+                      </p>
+                      <div className="flex items-center justify-between text-[10px] md:text-xs text-gray-400 mb-3 md:mb-4">
+                        <span>📅 {doc.fecha || doc.created_at?.slice(0,10) || ''}</span>
+                        <span>📊 {doc.peso || ''}</span>
+                      </div>
+                      <a href={doc.link} target="_blank" rel="noopener noreferrer" className="w-full block bg-gradient-to-r from-[#FFD700] to-[#C9B037] text-black font-medium py-2.5 md:py-3 lg:py-4 px-3 md:px-4 lg:px-6 rounded-lg md:rounded-xl lg:rounded-2xl hover:shadow-lg hover:shadow-[#FFD700]/30 transition-all duration-300 hover:scale-105 text-sm md:text-base text-center">
+                        <span className="flex items-center justify-center gap-1 md:gap-2">
+                          <span className="text-sm md:text-base">⬇️</span>
+                          <span className="font-semibold">Descargar</span>
+                        </span>
+                      </a>
                     </div>
-                    <div className={`text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded-md md:rounded-lg border ${getTipoColor(doc.tipo)}`}>
-                      {doc.tipo}
-                    </div>
-                  </div>
-
-                  <h3 className="text-base md:text-lg lg:text-xl font-bold text-[#FFD700] mb-2 md:mb-3 group-hover:text-white transition-colors duration-300 leading-tight">
-                    {doc.titulo}
-                  </h3>
-                  
-                  <p className="text-gray-300 text-xs md:text-sm lg:text-base mb-3 md:mb-4 leading-relaxed">
-                    {doc.descripcion}
-                  </p>
-
-                  <div className="flex items-center justify-between text-[10px] md:text-xs text-gray-400 mb-3 md:mb-4">
-                    <span>📅 {doc.fecha}</span>
-                    <span>📊 {doc.tamaño}</span>
-                  </div>
-
-                  <button className="w-full bg-gradient-to-r from-[#FFD700] to-[#C9B037] text-black font-medium py-2.5 md:py-3 lg:py-4 px-3 md:px-4 lg:px-6 rounded-lg md:rounded-xl lg:rounded-2xl hover:shadow-lg hover:shadow-[#FFD700]/30 transition-all duration-300 hover:scale-105 text-sm md:text-base">
-                    <span className="flex items-center justify-center gap-1 md:gap-2">
-                      <span className="text-sm md:text-base">⬇️</span>
-                      <span className="font-semibold">Descargar</span>
-                    </span>
-                  </button>
-                </div>
-              ))}
+                  ))
+              )}
             </div>
           </div>
         </div>
