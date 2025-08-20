@@ -391,13 +391,14 @@ const Cursos: React.FC = () => {
                 
                 {/* Filtros */}
                 <div className="mb-6 space-y-4">
-                  <div className="flex flex-wrap gap-2">
-                    <span className="text-xs md:text-sm text-gray-400 self-center mr-2">Ciclo:</span>
+                  {/* Filtros responsivos: scroll horizontal en móvil */}
+                  <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-[#FFD700]/30 scrollbar-track-transparent -mx-2 px-2">
+                    <span className="text-xs md:text-sm text-gray-400 self-center mr-2 min-w-max">Ciclo:</span>
                     {cycles.map(cycle => (
                       <button
                         key={cycle}
                         onClick={() => setCycleFilter(cycle)}
-                        className={`px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all duration-200 ${
+                        className={`px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all duration-200 min-w-max ${
                           cycleFilter === cycle 
                             ? 'bg-[#FFD700] text-black shadow-md shadow-[#FFD700]/25' 
                             : 'bg-[#2a2a2a] text-gray-300 hover:bg-[#FFD700]/20 hover:text-[#FFD700]'
@@ -407,14 +408,13 @@ const Cursos: React.FC = () => {
                       </button>
                     ))}
                   </div>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    <span className="text-xs md:text-sm text-gray-400 self-center mr-2">Tipo:</span>
+                  <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-[#FFD700]/30 scrollbar-track-transparent -mx-2 px-2">
+                    <span className="text-xs md:text-sm text-gray-400 self-center mr-2 min-w-max">Tipo:</span>
                     {types.map(type => (
                       <button
                         key={type}
                         onClick={() => setTypeFilter(type)}
-                        className={`px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all duration-200 ${
+                        className={`px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all duration-200 min-w-max ${
                           typeFilter === type 
                             ? 'bg-[#FFD700] text-black shadow-md shadow-[#FFD700]/25' 
                             : 'bg-[#2a2a2a] text-gray-300 hover:bg-[#FFD700]/20 hover:text-[#FFD700]'
