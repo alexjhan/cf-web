@@ -14,7 +14,7 @@ export interface DocumentoPayload {
 export interface Documento extends DocumentoPayload { id: string; created_at: string; updated_at?: string; }
 
 function authHeaders(): Record<string,string> {
-  const token = localStorage.getItem('ADMIN_TOKEN') || '';
+  const token = (import.meta as any).env?.VITE_ADMIN_TOKEN || localStorage.getItem('adminToken') || '';
   return token ? { 'X-Admin-Token': token } : {};
 }
 
