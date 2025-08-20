@@ -1,11 +1,23 @@
 
 import { useState, useEffect } from 'react';
+
+type TipoDocumento = 'academico'|'administrativo'|'reglamento'|'formulario'|'guia'|'convenio';
+interface DocumentoFront {
+  id: string;
+  titulo: string;
+  subtitulo?: string;
+  tipo: TipoDocumento[];
+  fecha: string;
+  link: string;
+  created_at: string;
+  updated_at?: string;
+}
 import EmptyOverlay from '../../components/Shared/EmptyOverlay';
 import * as api from '../../services/documentosService';
 
 const Documentos = () => {
   const [categoriaActiva, setCategoriaActiva] = useState('academico');
-  const [documentos, setDocumentos] = useState<api.Documento[]>([]);
+  const [documentos, setDocumentos] = useState<DocumentoFront[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string|null>(null);
 
@@ -24,10 +36,12 @@ const Documentos = () => {
     setError(null);
     api.list(1, 100)
       .then(data => {
-        // Normalizar tipo: siempre array
-        const normalizados = (data.items || []).map(doc => ({
+        // Normalizar tipo: siempre array de strings válidos
+        const normalizados: DocumentoFront[] = (data.items || []).map((doc: any) => ({
           ...doc,
-          tipo: Array.isArray(doc.tipo) ? doc.tipo : (typeof doc.tipo === 'string' ? [doc.tipo] : [])
+          tipo: Array.isArray(doc.tipo)
+            ? doc.tipo.filter((t: any) => typeof t === 'string')
+            : (typeof doc.tipo === 'string' ? [doc.tipo] : [])
         }));
         setDocumentos(normalizados);
       })
@@ -173,7 +187,7 @@ const Documentos = () => {
                 <div className="text-center py-10 text-red-400">{error}</div>
               ) : (
                 documentos
-                  .filter(doc => doc.tipo.includes(categoriaActiva as any))
+                  .filter(doc => doc.tipo.includes(categoriaActiva as TipoDocumento))
                   .map((doc, index) => (
                     <div
                       key={doc.id || index}
@@ -185,7 +199,7 @@ const Documentos = () => {
                           {/* Si en el futuro Documento tiene 'urgente', mostrar aquí */}
                         </div>
                         {doc.tipo.map((t, i) => (
-                          <span key={t} className={`text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded-md md:rounded-lg border ${getTipoColor(t)} mr-1`}>
+                          <span key={t + i} className={`inline-block text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded-md md:rounded-lg border ${getTipoColor(t)} mr-1 mb-1`}>
                             {t}
                           </span>
                         ))}
