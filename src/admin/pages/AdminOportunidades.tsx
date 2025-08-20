@@ -228,9 +228,21 @@ function AdminOportunidadesContent(){
                 return;
               }
               if('requisitosTexto' in patch){
-                setForm(f=> ({ ...f, requisitos: (patch as any).requisitosTexto.split(/\r?\n/).map((x:string)=>x.trim()).filter((x:string)=> x!=='') }));
+                setForm(f=> ({
+                  ...f,
+                  requisitos: (patch as any).requisitosTexto
+                    .split(/\r?\n/)
+                    .map((x:string)=>x.trim())
+                    .filter((x:string)=> x.replace(/\s+/g, '') !== '')
+                }));
               } else if('beneficiosTexto' in patch){
-                setForm(f=> ({ ...f, beneficios: (patch as any).beneficiosTexto.split(/\r?\n/).map((x:string)=>x.trim()).filter((x:string)=> x!=='') }));
+                setForm(f=> ({
+                  ...f,
+                  beneficios: (patch as any).beneficiosTexto
+                    .split(/\r?\n/)
+                    .map((x:string)=>x.trim())
+                    .filter((x:string)=> x.replace(/\s+/g, '') !== '')
+                }));
               } else if('fecha' in patch){
                 setForm(f=> ({ ...f, fecha: (patch as any).fecha, fechaPublicacion: (patch as any).fecha }));
               } else {
