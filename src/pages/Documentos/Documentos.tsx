@@ -199,7 +199,7 @@ const Documentos = () => {
                           {/* Si en el futuro Documento tiene 'urgente', mostrar aquí */}
                         </div>
                         {doc.tipo.map((t, i) => (
-                          <span key={t + i} className={`inline-block text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded-md md:rounded-lg border ${getTipoColor(t)} mr-1`}>
+                          <span key={t + i} className={`inline-block text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded-md md:rounded-lg border ${getTipoColor(t)} mr-0.5`}>
                             {t}
                           </span>
                         ))}
