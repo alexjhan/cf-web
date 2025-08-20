@@ -163,6 +163,7 @@ const Documentos = () => {
                       <div className="flex items-start justify-between mb-3 md:mb-4">
                         <div className="flex items-center gap-2 md:gap-3">
                           <div className="text-xl md:text-2xl lg:text-3xl">📄</div>
+                          {/* Si en el futuro Documento tiene 'urgente', mostrar aquí */}
                         </div>
                         <div className={`text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded-md md:rounded-lg border ${getTipoColor(doc.tipo)}`}>
                           {doc.tipo}
@@ -172,7 +173,7 @@ const Documentos = () => {
                         {doc.titulo}
                       </h3>
                       <p className="text-gray-300 text-xs md:text-sm lg:text-base mb-3 md:mb-4 leading-relaxed">
-                        {doc.subtitulo || doc.descripcion || ''}
+                        {doc.subtitulo || ''}
                       </p>
                       <div className="flex items-center justify-between text-[10px] md:text-xs text-gray-400 mb-3 md:mb-4">
                         <span>📅 {doc.fecha || doc.created_at?.slice(0,10) || ''}</span>
