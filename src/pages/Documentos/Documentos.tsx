@@ -1,3 +1,12 @@
+// Utilidad para formatear el peso/tamaño del documento
+function formatPeso(peso: string | number): string {
+  if (!peso) return '';
+  const num = typeof peso === 'number' ? peso : parseFloat(peso as string);
+  if (isNaN(num)) return peso.toString();
+  if (num > 1000000) return (num / 1000000).toFixed(2) + ' MB';
+  if (num > 1000) return (num / 1000).toFixed(1) + ' KB';
+  return num + ' B';
+}
 import { useState, useEffect } from 'react';
 import EmptyOverlay from '../../components/Shared/EmptyOverlay';
 import * as api from '../../services/documentosService';
@@ -176,9 +185,14 @@ const Documentos = () => {
                         {doc.subtitulo || ''}
                       </p>
                       <div className="flex items-center justify-between text-[10px] md:text-xs text-gray-400 mb-3 md:mb-4">
-                        <span>📅 {doc.fecha || doc.created_at?.slice(0,10) || ''}</span>
-                        <span>📊 {doc.peso || ''}</span>
+                        <span>📅 {doc.fecha ? new Date(doc.fecha).toLocaleDateString() : (doc.created_at ? new Date(doc.created_at).toLocaleDateString() : '')}</span>
+                        <span>📊 {doc.peso ? formatPeso(doc.peso) : ''}</span>
                       </div>
+
+
+
+
+
                       <a href={doc.link} target="_blank" rel="noopener noreferrer" className="w-full block bg-gradient-to-r from-[#FFD700] to-[#C9B037] text-black font-medium py-2.5 md:py-3 lg:py-4 px-3 md:px-4 lg:px-6 rounded-lg md:rounded-xl lg:rounded-2xl hover:shadow-lg hover:shadow-[#FFD700]/30 transition-all duration-300 hover:scale-105 text-sm md:text-base text-center">
                         <span className="flex items-center justify-center gap-1 md:gap-2">
                           <span className="text-sm md:text-base">⬇️</span>
