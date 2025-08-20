@@ -47,8 +47,9 @@ export const useAuth = () => {
         user: username,
         timestamp: Date.now()
       };
-      
+      // Guardar sesión y token para servicios
       localStorage.setItem('adminAuth', JSON.stringify(authData));
+      localStorage.setItem('adminToken', 'admin'); // Token dummy para pruebas locales
       setAuthState({
         isAuthenticated: true,
         user: username
@@ -60,6 +61,7 @@ export const useAuth = () => {
 
   const logout = () => {
     localStorage.removeItem('adminAuth');
+    localStorage.removeItem('adminToken');
     setAuthState({
       isAuthenticated: false,
       user: null
