@@ -100,16 +100,16 @@ export function DynamicForm<T extends Record<string, any>>({
 						<label key={f.name} className="group flex flex-col gap-1 text-[11px] font-semibold tracking-wide text-gray-300">
 							<span className="uppercase text-[10px] font-bold text-[#FFD700]/90 group-focus-within:text-[#FFD700] transition">{f.label}{f.required && <span className="text-red-400 ml-0.5">*</span>}</span>
 							{/* Campo especial para requisitos y beneficios como lista editable tipo chip */}
-															{(f.name === 'requisitosTexto' || f.name === 'beneficiosTexto') ? (
-																<ListaEditable
-																	label={f.label}
-																	value={typeof val === 'string' ? val : Array.isArray(val) ? val.join('\n') : ''}
-																	onChange={v => handleFieldChange(f.name, v)}
-																	placeholder={f.placeholder}
-																	disabled={disabled || submitting}
-																	helperText={f.helperText}
-																/>
-															) : f.type === 'textarea' ? (
+																			{(f.name === 'requisitosTexto' || f.name === 'beneficiosTexto') ? (
+																				<ListaEditable
+																					label={f.label}
+																					value={typeof val === 'string' ? val : Array.isArray(val) ? val.join('\n') : ''}
+																					onChange={v => handleFieldChange(f.name, v)}
+																					placeholder={f.placeholder}
+																					disabled={disabled || submitting}
+																					helperText={f.helperText}
+																				/>
+																			) : f.type === 'textarea' ? (
 								<div className="relative w-full flex flex-col">
 									<textarea
 										{...common}
@@ -156,7 +156,9 @@ export function DynamicForm<T extends Record<string, any>>({
 							) : (
 								<input {...common} type={f.type || 'text'} value={val} onChange={e => handleFieldChange(f.name, e.target.value)} />
 							)}
-							{f.helperText && <span className="text-[10px] text-gray-500 tracking-wide">{f.helperText}</span>}
+											{!(f.name === 'requisitosTexto' || f.name === 'beneficiosTexto') && f.helperText && (
+												<span className="text-[10px] text-gray-500 tracking-wide">{f.helperText}</span>
+											)}
 						</label>
 					);
 				})}
