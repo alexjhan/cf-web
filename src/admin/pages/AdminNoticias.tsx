@@ -46,7 +46,7 @@ function AdminNoticiasContent() {
   const fields = useMemo(()=>{
     const fs: FieldConfig[] = [
       { name:'fecha', label:'Fecha publicación', type:'date', required:true },
-      { name:'categoria', label:'Categoría', type:'select', required:true, options: categoriasDisponibles.map(c=> ({ value:c, label:c })) },
+  { name:'categoria', label:'Categorías', type:'multiselect', required:true, options: categoriasDisponibles.map(c=> ({ value:c, label:c })) },
       { name:'autor', label:'Autor', required:true },
       { name:'titulo', label:'Título', required:true, maxLength:180 },
       { name:'descripcionCorta', label:'Contenido corto (máx 160 palabras)', type:'textarea', required:true, helperText:`${shortWords}/160 palabras` },
@@ -60,8 +60,9 @@ function AdminNoticiasContent() {
   const onChangeForm = (patch: Partial<Noticia>) => {
     const next: Partial<Noticia> = { ...patch };
     if ('categoria' in patch && typeof patch.categoria === 'string') {
-      // Guardar como array con un elemento para mantener compatibilidad del modelo
       (next as any).categoria = [patch.categoria];
+    } else if ('categoria' in patch && Array.isArray(patch.categoria)) {
+      (next as any).categoria = patch.categoria;
     }
     if ('descripcionCorta' in patch && typeof patch.descripcionCorta === 'string') {
       const words = patch.descripcionCorta.trim().split(/\s+/).filter(Boolean);
