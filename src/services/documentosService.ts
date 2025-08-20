@@ -1,5 +1,5 @@
 // Servicio para consumir API de documentos
-const API_BASE = 'https://cf-backend-production-38d0.up.railway.app/api/storage';
+const API_BASE = 'https://cf-backend-production-38d0.up.railway.app/api/documentos';
 // Token se obtiene dinámicamente cuando se arma cada request
 
 
@@ -23,69 +23,30 @@ function authHeaders(): Record<string,string> {
 }
 
 
-export async function list(page=1, pageSize=30, q?: string) {
-  const params = new URLSearchParams({ page: String(page), page_size: String(pageSize), tipo: 'documento' });
+  const params = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
   if (q) params.append('q', q);
   const r = await fetch(`${API_BASE}?${params.toString()}`);
   if (!r.ok) throw new Error('Error listando documentos');
-  const data = await r.json();
-  // Adaptar los items para exponerlos como Documento
-  const items = (data.items || []).map((item: any) => ({
-    ...item.data,
-    id: item.id,
-    created_at: item.created_at,
-    updated_at: item.updated_at
-  }));
-  return { ...data, items };
+  return r.json();
 }
 
 
-export async function get(id: string) {
   const r = await fetch(`${API_BASE}/${id}`);
   if (r.status === 404) return null;
   if (!r.ok) throw new Error('Error obteniendo documento');
-  const item = await r.json();
-  if (!item || !item.data) return null;
-  return {
-    ...item.data,
-    id: item.id,
-    created_at: item.created_at,
-    updated_at: item.updated_at
-  };
+  return r.json();
 }
 
 
-export async function create(payload: DocumentoPayload) {
-  const r = await fetch(API_BASE, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...authHeaders() },
-    body: JSON.stringify({ tipo: 'documento', data: payload })
-  });
+  const r = await fetch(API_BASE, { method: 'POST', headers: { 'Content-Type': 'application/json', ...authHeaders() }, body: JSON.stringify(payload) });
   if (!r.ok) throw new Error('Error creando documento');
-  const item = await r.json();
-  return {
-    ...item.data,
-    id: item.id,
-    created_at: item.created_at,
-    updated_at: item.updated_at
-  };
+  return r.json();
 }
 
 
-export async function update(id: string, payload: Partial<DocumentoPayload>) {
-  const r = await fetch(`${API_BASE}/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...authHeaders() },
-    body: JSON.stringify({ tipo: 'documento', data: payload })
-  });
+  const r = await fetch(`${API_BASE}/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', ...authHeaders() }, body: JSON.stringify(payload) });
   if (!r.ok) throw new Error('Error actualizando documento');
-  const item = await r.json();
-  return {
-    ...item.data,
-    id: item.id,
-    created_at: item.created_at,
-    updated_at: item.updated_at
-  };
+  return r.json();
 }
 
 
