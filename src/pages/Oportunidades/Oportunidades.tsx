@@ -1,172 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import EmptyOverlay from '../../components/Shared/EmptyOverlay';
 
-// Interfaces para los datos
-interface Oportunidad {
-  id: string;
-  titulo: string;
-  descripcion: string;
-  tipo: 'laboral' | 'pregrado' | 'posgrado' | 'especializacion';
-  empresa?: string;
-  universidad?: string;
-  duracion?: string;
-  modalidad?: string;
-  requisitos: string[];
-  beneficios: string[];
-  contacto: string;
-  fecha: string;
-  activa: boolean;
-}
+
+import * as oportunidadesApi from '../../services/oportunidadesService';
 
 const Oportunidades: React.FC = () => {
-  const [categoriaActiva, setCategoriaActiva] = useState<'laboral' | 'pregrado' | 'posgrado' | 'especializacion'>('laboral');
 
-  // Datos de ejemplo (después se pueden cargar desde API o JSON)
-  const oportunidades: Oportunidad[] = [
-    // LABORALES
-    {
-      id: '1',
-      titulo: 'Ingeniero Metalúrgico - Minera del Sur',
-      descripcion: 'Buscamos ingeniero metalúrgico para supervisar procesos de concentración y flotación de minerales en operaciones de gran escala.',
-      tipo: 'laboral',
-      empresa: 'Minera del Sur S.A.',
-      requisitos: ['Título universitario en Ingeniería Metalúrgica', 'Experiencia mínima 2 años', 'Conocimiento en software de simulación'],
-      beneficios: ['Sueldo competitivo S/. 8,000-12,000', 'Seguro médico completo', 'Bonos por productividad'],
-      contacto: 'rrhh@mineradelsur.com',
-      fecha: '2024-01-15',
-      activa: true
-    },
-    {
-      id: '2',
-      titulo: 'Especialista en Fundición - SIDERPERÚ',
-      descripcion: 'Posición para especialista en procesos de fundición y colada continua en planta siderúrgica de última generación.',
-      tipo: 'laboral',
-      empresa: 'SIDERPERÚ',
-      requisitos: ['Ingeniería Metalúrgica o Materiales', 'Experiencia en fundición', 'Conocimiento en control de calidad'],
-      beneficios: ['Salario desde S/. 10,000', 'Capacitaciones internacionales', 'Plan de carrera'],
-      contacto: 'talentos@siderperu.com.pe',
-      fecha: '2024-01-20',
-      activa: true
-    },
-    
-    // PREGRADO
-    {
-      id: '3',
-      titulo: 'Ingeniería Metalúrgica - UNI',
-      descripcion: 'Carrera universitaria enfocada en el procesamiento de minerales, metalurgia extractiva y desarrollo de materiales.',
-      tipo: 'pregrado',
-      universidad: 'Universidad Nacional de Ingeniería',
-      duracion: '5 años',
-      modalidad: 'Presencial',
-      requisitos: ['Bachillerato completo', 'Examen de admisión', 'Matemáticas y física avanzada'],
-      beneficios: ['Laboratorios especializados', 'Convenios con mineras', 'Prácticas profesionales'],
-      contacto: 'admision@uni.edu.pe',
-      fecha: '2024-02-01',
-      activa: true
-    },
-    {
-      id: '4',
-      titulo: 'Ingeniería de Materiales - PUCP',
-      descripcion: 'Programa universitario con énfasis en ciencia e ingeniería de materiales metálicos y no metálicos.',
-      tipo: 'pregrado',
-      universidad: 'Pontificia Universidad Católica del Perú',
-      duracion: '5 años',
-      modalidad: 'Presencial',
-      requisitos: ['Secundaria completa', 'Examen de admisión PUCP', 'Entrevista personal'],
-      beneficios: ['Becas de excelencia académica', 'Intercambios internacionales', 'Investigación aplicada'],
-      contacto: 'admision@pucp.edu.pe',
-      fecha: '2024-02-05',
-      activa: true
-    },
+  const [oportunidades, setOportunidades] = useState<oportunidadesApi.Oportunidad[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string|null>(null);
 
-    // POSGRADO
-    {
-      id: '5',
-      titulo: 'Maestría en Metalurgia Extractiva',
-      descripcion: 'Programa de posgrado enfocado en técnicas avanzadas de extracción y refinación de metales, con énfasis en sostenibilidad.',
-      tipo: 'posgrado',
-      universidad: 'Universidad Nacional de Ingeniería',
-      duracion: '2 años',
-      modalidad: 'Presencial',
-      requisitos: ['Título de Ingeniero Metalúrgico', 'Promedio mínimo 14', 'Certificado de inglés intermedio'],
-      beneficios: ['Becas de investigación', 'Laboratorios especializados', 'Convenios internacionales'],
-      contacto: 'posgrado@uni.edu.pe',
-      fecha: '2024-02-01',
-      activa: true
-    },
-    {
-      id: '6',
-      titulo: 'Doctorado en Ciencia e Ingeniería de Materiales',
-      descripcion: 'Programa doctoral para investigación avanzada en nanomateriales, biomateriales y materiales inteligentes.',
-      tipo: 'posgrado',
-      universidad: 'Universidad Nacional Mayor de San Marcos',
-      duracion: '4 años',
-      modalidad: 'Presencial',
-      requisitos: ['Maestría en área afín', 'Proyecto de investigación', 'Examen de suficiencia en inglés'],
-      beneficios: ['Beca completa CONCYTEC', 'Publicaciones internacionales', 'Pasantías en el extranjero'],
-      contacto: 'doctorado@unmsm.edu.pe',
-      fecha: '2024-01-25',
-      activa: true
-    },
-
-    // ESPECIALIZACIONES
-    {
-      id: '7',
-      titulo: 'Especialización en Soldadura Avanzada',
-      descripcion: 'Curso especializado en técnicas de soldadura para aplicaciones industriales de alta precisión y materiales especiales.',
-      tipo: 'especializacion',
-      universidad: 'TECSUP',
-      duracion: '6 meses',
-      modalidad: 'Semi-presencial',
-      requisitos: ['Conocimientos básicos de soldadura', 'Experiencia en el sector industrial'],
-      beneficios: ['Certificación internacional AWS', 'Prácticas en empresas', 'Kit de herramientas'],
-      contacto: 'especializaciones@tecsup.edu.pe',
-      fecha: '2024-01-20',
-      activa: true
-    },
-    {
-      id: '8',
-      titulo: 'Metalurgia de Polvos y Sinterizado',
-      descripcion: 'Especialización en tecnologías de metalurgia de polvos, compactación y sinterizado para componentes de precisión.',
-      tipo: 'especializacion',
-      universidad: 'SENATI',
-      duracion: '4 meses',
-      modalidad: 'Presencial',
-      requisitos: ['Título técnico o universitario', 'Experiencia en manufactura'],
-      beneficios: ['Certificación SENATI', 'Acceso a laboratorio especializado', 'Bolsa de trabajo'],
-      contacto: 'metalurgia@senati.edu.pe',
-      fecha: '2024-01-30',
-      activa: true
-    },
-    {
-      id: '9',
-      titulo: 'Control de Calidad en Procesos Metalúrgicos',
-      descripcion: 'Programa de especialización en sistemas de control de calidad, normas internacionales y certificación de procesos.',
-      tipo: 'especializacion',
-      universidad: 'Centro de Extensión UNI',
-      duracion: '3 meses',
-      modalidad: 'Virtual',
-      requisitos: ['Experiencia en industria metalúrgica', 'Conocimientos básicos de estadística'],
-      beneficios: ['Certificación internacional ISO', 'Modalidad flexible', 'Red de contactos profesionales'],
-      contacto: 'extension@uni.edu.pe',
-      fecha: '2024-02-10',
-      activa: true
-    },
-    {
-      id: '10',
-      titulo: 'Hidrometalurgia y Biolixiviación',
-      descripcion: 'Especialización avanzada en procesos hidrometalúrgicos y biotecnología aplicada a la extracción de metales.',
-      tipo: 'especializacion',
-      universidad: 'PONTIFICIA UNIVERSIDAD JAVERIANA',
-      duracion: '8 meses',
-      modalidad: 'Semi-presencial',
-      requisitos: ['Ingeniería Metalúrgica o Química', 'Conocimientos en microbiología'],
-      beneficios: ['Certificación internacional', 'Prácticas en laboratorio', 'Convenio con universidades extranjeras'],
-      contacto: 'especializaciones@javeriana.edu.co',
-      fecha: '2024-01-18',
-      activa: true
-    }
-  ];
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    oportunidadesApi.list(1, 100)
+      .then(data => setOportunidades(data.items || []))
+      .catch(e => setError('Error cargando oportunidades'))
+      .finally(() => setLoading(false));
+  }, []);
 
   const categorias = [
     {
@@ -203,9 +54,18 @@ const Oportunidades: React.FC = () => {
     }
   ];
 
-  const oportunidadesFiltradas = oportunidades.filter(op => op.tipo === categoriaActiva && op.activa);
+  // Mapear categorías del backend a las usadas en el frontend
+  function mapCategoriaBackendToFrontend(cat: string): 'laboral' | 'pregrado' | 'posgrado' | 'especializacion' {
+    if (cat === 'laborales') return 'laboral';
+    if (cat === 'educacion_pregrado') return 'pregrado';
+    if (cat === 'educacion_posgrado') return 'posgrado';
+    if (cat === 'especializaciones') return 'especializacion';
+    return 'laboral';
+  }
 
-  const DATA_REAL = false; // bandera temporal
+  const oportunidadesFiltradas = oportunidades.filter(op => mapCategoriaBackendToFrontend(op.categoria) === categoriaActiva && op.activa);
+
+  // const DATA_REAL = false; // bandera temporal
 
   return (
     <div 
@@ -275,7 +135,7 @@ const Oportunidades: React.FC = () => {
             {categorias.map((categoria) => (
               <div key={categoria.id} className="group bg-[#1a1a1a]/60 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-4 lg:p-6 border border-[#FFD700]/20 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 hover:scale-105 hover:shadow-xl hover:shadow-[#FFD700]/20 transition-all duration-500 cursor-pointer">
                 <div className="text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 text-[#FFD700] group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">{categoria.icono}</div>
-                <div className="text-base md:text-xl lg:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{oportunidades.filter(op => op.tipo === categoria.id && op.activa).length}</div>
+                <div className="text-base md:text-xl lg:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{oportunidades.filter(op => mapCategoriaBackendToFrontend(op.categoria) === categoria.id && op.activa).length}</div>
                 <div className="text-xs md:text-sm text-gray-400 group-hover:text-gray-200 transition-colors duration-300">{categoria.nombre}</div>
               </div>
             ))}
@@ -332,8 +192,12 @@ const Oportunidades: React.FC = () => {
                 <span className="truncate max-w-[70%] sm:max-w-none leading-snug">{categorias.find(c => c.id === categoriaActiva)?.nombre}</span>
               </h3>
               
-              {oportunidadesFiltradas.length > 0 ? (
-        <div className="space-y-6">
+              {loading ? (
+                <div className="text-center py-10 text-gray-400">Cargando oportunidades...</div>
+              ) : error ? (
+                <div className="text-center py-10 text-red-400">{error}</div>
+              ) : oportunidadesFiltradas.length > 0 ? (
+                <div className="space-y-6">
                   {oportunidadesFiltradas.map((oportunidad) => (
                     <div
                       key={oportunidad.id}
@@ -352,8 +216,8 @@ const Oportunidades: React.FC = () => {
                             {oportunidad.empresa && (
                               <p className="text-gray-300 font-medium text-sm md:text-base lg:text-lg">📢 {oportunidad.empresa}</p>
                             )}
-                            {oportunidad.universidad && (
-                              <p className="text-gray-300 font-medium text-sm md:text-base lg:text-lg">🏫 {oportunidad.universidad}</p>
+                            {oportunidad.institucion && (
+                              <p className="text-gray-300 font-medium text-sm md:text-base lg:text-lg">🏫 {oportunidad.institucion}</p>
                             )}
                           </div>
                           <div className="flex flex-row sm:flex-col items-center sm:items-end gap-2 sm:gap-2 self-start">
@@ -372,7 +236,7 @@ const Oportunidades: React.FC = () => {
 
                         {/* Descripción */}
                         <p className="text-gray-200 text-sm md:text-base lg:text-lg leading-relaxed mb-5 sm:mb-6 line-clamp-6">
-                          {oportunidad.descripcion}
+                          {oportunidad.texto || oportunidad.descripcion || ''}
                         </p>
 
                         {/* Requisitos y Beneficios */}
@@ -382,7 +246,7 @@ const Oportunidades: React.FC = () => {
                               <span>📋</span> Requisitos
                             </h5>
                             <ul className="space-y-1.5 sm:space-y-2">
-                              {oportunidad.requisitos.map((req, idx) => (
+                              {Array.isArray(oportunidad.requisitos) && oportunidad.requisitos.map((req, idx) => (
                                 <li key={idx} className="text-gray-300 flex items-start gap-2 text-sm md:text-base lg:text-lg break-words">
                                   <span className="text-[#FFD700] mt-1">▸</span>
                                   <span>{req}</span>
@@ -395,7 +259,7 @@ const Oportunidades: React.FC = () => {
                               <span>🎁</span> Beneficios
                             </h5>
                             <ul className="space-y-1.5 sm:space-y-2">
-                              {oportunidad.beneficios.map((ben, idx) => (
+                              {Array.isArray(oportunidad.beneficios) && oportunidad.beneficios.map((ben, idx) => (
                                 <li key={idx} className="text-gray-300 flex items-start gap-2 text-sm md:text-base lg:text-lg break-words">
                                   <span className="text-green-400 mt-1">✓</span>
                                   <span>{ben}</span>
@@ -408,7 +272,7 @@ const Oportunidades: React.FC = () => {
                         {/* Footer */}
                         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:justify-between sm:items-center pt-5 sm:pt-6 border-t border-[#FFD700]/10">
                           <div className="text-sm md:text-base lg:text-lg text-gray-400 order-2 sm:order-1">
-                            📅 Publicado: {new Date(oportunidad.fecha).toLocaleDateString('es-ES')}
+                            📅 Publicado: {oportunidad.fechaPublicacion ? new Date(oportunidad.fechaPublicacion).toLocaleDateString('es-ES') : (oportunidad.fecha ? new Date(oportunidad.fecha).toLocaleDateString('es-ES') : '')}
                           </div>
                           <div className="flex gap-2 sm:gap-3 order-1 sm:order-2">
                             <button className="px-3.5 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-[#FFD700] to-[#C9B037] text-black font-bold rounded-lg sm:rounded-xl hover:from-[#C9B037] hover:to-[#B8860B] transition-all duration-300 transform hover:scale-105 text-sm md:text-base lg:text-lg">
