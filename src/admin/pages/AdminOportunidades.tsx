@@ -206,8 +206,8 @@ function AdminOportunidadesContent(){
                 { name:'contacto', label:'Contacto', required:true }
               );
               base.push(
-                { name:'requisitosTexto', label:'Requisitos (uno por línea)', type:'textarea', helperText:'Se convertirá en lista' },
-                { name:'beneficiosTexto', label:'Beneficios (uno por línea)', type:'textarea', helperText:'Se convertirá en lista' }
+                { name:'requisitosTexto', label:'Requisitos (uno por línea)', type:'textarea', helperText:'Se convertirá en lista', placeholder:'Ejemplo:\nSer egresado universitario\nTener experiencia en metalurgia\nDisponibilidad inmediata', className:'min-h-36' },
+                { name:'beneficiosTexto', label:'Beneficios (uno por línea)', type:'textarea', helperText:'Se convertirá en lista', placeholder:'Ejemplo:\nSueldo competitivo\nCapacitación continua\nAmbiente laboral agradable', className:'min-h-36' }
               );
               return base;
             // eslint-disable-next-line react-hooks/exhaustive-deps
