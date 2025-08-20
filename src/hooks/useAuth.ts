@@ -41,7 +41,7 @@ export const useAuth = () => {
 
   const login = (username: string, password: string): boolean => {
     // Credenciales hardcodeadas (en producción deberían venir de un servidor)
-    if (username === 'admin' && password === 'admin') {
+    if (username === 'admin' && password === 'admin2025/') {
       const authData = {
         isAuthenticated: true,
         user: username,
