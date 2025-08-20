@@ -229,7 +229,14 @@ const Oportunidades: React.FC = () => {
                                 ⏱️ {oportunidad.duracion}
                               </span>
                             )}
-                            {/* modalidad no existe en backend, se omite */}
+                            {/* Mostrar modalidad si existe (solo para educación y especializaciones) */}
+                            {['educacion_pregrado','educacion_posgrado','especializaciones'].includes(oportunidad.categoria) && oportunidad.tipoEstudio && (
+                              <span className="px-2.5 py-1 bg-[#C9B037]/20 text-[#FFD700] rounded-xl text-[11px] sm:text-sm font-bold border border-[#FFD700]/30 whitespace-nowrap">
+                                {oportunidad.tipoEstudio === 'presencial' && '🏫 Presencial'}
+                                {oportunidad.tipoEstudio === 'virtual' && '💻 Virtual'}
+                                {oportunidad.tipoEstudio === 'semipresencial' && '🌀 Semipresencial'}
+                              </span>
+                            )}
                           </div>
                         </div>
 
