@@ -7,8 +7,9 @@ import AdminFormPanel from '../components/AdminFormPanel';
 import { useToast } from '../../components/Toast/ToastContext';
 
 interface ListState { items: api.Documento[]; total: number; page: number; pageSize: number; }
-const tipos: Array<api.DocumentoPayload['tipo']> = ['academico','administrativo','reglamento','formulario','guia','convenio'];
-const emptyForm = { titulo: '', subtitulo: '', tipo: ['academico'], fecha: new Date().toISOString().slice(0,10), link: '' };
+const tipos = ['academico','administrativo','reglamento','formulario','guia','convenio'] as const;
+type TipoDocumento = typeof tipos[number];
+const emptyForm = { titulo: '', subtitulo: '', tipo: ['academico'] as TipoDocumento[], fecha: new Date().toISOString().slice(0,10), link: '' };
 
 export default function AdminDocumentosPage(){
   const { isAuthenticated } = useAuth();
@@ -34,15 +35,16 @@ export default function AdminDocumentosPage(){
   useEffect(()=>{ const t = setTimeout(()=> load(1), 400); return ()=> clearTimeout(t); /* eslint-disable-next-line react-hooks/exhaustive-deps */}, [search]);
 
   function startCreate(){ setEditingId(null); setForm({...emptyForm}); setFormError(null); setModalOpen(true); }
-  async function startEdit(id: string){ setError(null); setFormError(null); try{ const d = await api.get(id); if(!d){ setError('No encontrado'); toast.push({ type:'warning', message:'Documento no encontrado'}); return;} const { titulo, subtitulo, tipo, fecha, link } = d; setForm({ titulo, subtitulo, tipo: tipo ? (Array.isArray(tipo) ? tipo : [tipo]) : [], fecha, link }); setEditingId(id); setModalOpen(true);} catch(e:any){ setError(e.message); toast.push({ type:'error', message:'Error cargando documento'});} }
+  async function startEdit(id: string){ setError(null); setFormError(null); try{ const d = await api.get(id); if(!d){ setError('No encontrado'); toast.push({ type:'warning', message:'Documento no encontrado'}); return;} const { titulo, subtitulo, tipo, fecha, link } = d; setForm({ titulo, subtitulo, tipo: tipo ? (Array.isArray(tipo) ? tipo.filter((t: any) => tipos.includes(t)) : [tipo].filter((t: any) => tipos.includes(t))) : [], fecha, link }); setEditingId(id); setModalOpen(true);} catch(e:any){ setError(e.message); toast.push({ type:'error', message:'Error cargando documento'});} }
   async function save(){
     setSaving(true); setFormError(null);
     try {
       if(!form.titulo.trim()) throw new Error('Título requerido');
       if(!form.link.trim()) throw new Error('Link requerido');
       if(!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(form.fecha)) throw new Error('Fecha inválida');
-      // Guardar solo el primer tipo (por compatibilidad backend actual)
-  const payload = { ...form, tipo: Array.isArray(form.tipo) ? form.tipo : [form.tipo] };
+      // Validar que todos los tipos sean válidos
+      const tiposValidos = Array.isArray(form.tipo) ? form.tipo.filter((t: any) => tipos.includes(t)) : [form.tipo].filter((t: any) => tipos.includes(t));
+      const payload = { ...form, tipo: tiposValidos as TipoDocumento[] };
       if(editingId) await api.update(editingId, payload); else await api.create(payload);
       await load(1);
       setModalOpen(false); setEditingId(null); setForm({...emptyForm});
@@ -54,7 +56,7 @@ export default function AdminDocumentosPage(){
 
   if(!isAuthenticated) return <div className="p-6 text-center text-red-400">No autorizado</div>;
 
-  const filtrados = list.items.filter(d=> (tipoFiltro==='todos' || (Array.isArray(d.tipo) ? d.tipo.includes(tipoFiltro) : d.tipo===tipoFiltro)) && (!search.trim() || [d.titulo, d.subtitulo, d.tipo].some(v=> (v||'').toString().toLowerCase().includes(search.toLowerCase()))));
+  const filtrados = list.items.filter(d=> (tipoFiltro==='todos' || (Array.isArray(d.tipo) ? d.tipo.includes(tipoFiltro as TipoDocumento) : d.tipo===tipoFiltro)) && (!search.trim() || [d.titulo, d.subtitulo, d.tipo].some(v=> (v||'').toString().toLowerCase().includes(search.toLowerCase()))));
 
   return (
     <AdminLayout title="Documentos">
