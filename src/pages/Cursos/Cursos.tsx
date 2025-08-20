@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
+import BackToHomeButton from '../../components/Shared/BackToHomeButton';
 import { ReactFlow, Background, addEdge, useEdgesState, useNodesState, Handle, Position, MarkerType, BaseEdge } from '@xyflow/react';
 import type { EdgeProps, ReactFlowInstance } from '@xyflow/react';
 import type { NodeProps, Edge, Connection, Node } from '@xyflow/react';
@@ -524,6 +525,7 @@ const Cursos: React.FC = () => {
     className="min-h-screen text-white overflow-hidden relative"
     style={{ background: 'radial-gradient(ellipse at top, #1a1a1a 0%, #2a2a2a 30%, #0f0f0f 60%, #000000 100%)' }}
   >
+      <BackToHomeButton />
       {/* Fondo y partículas igual que en Carrera */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 via-transparent to-[#C9B037]/3"></div>

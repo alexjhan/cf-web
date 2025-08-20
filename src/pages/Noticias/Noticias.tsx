@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import BackToHomeButton from '../../components/Shared/BackToHomeButton';
 import EmptyOverlay from '../../components/Shared/EmptyOverlay';
 import { useAuth } from '../../hooks/useAuth';
 import noticiasBase from '../../data/noticias.json';
@@ -204,6 +205,7 @@ const Noticias: React.FC = () => {
       className="min-h-screen text-white overflow-hidden relative"
       style={{ background: 'radial-gradient(ellipse at top, #1a1a1a 0%, #2a2a2a 30%, #0f0f0f 60%, #000000 100%)' }}
     >
+      <BackToHomeButton />
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
           <div className="px-6 py-4 bg-[#1a1a1a] border border-[#FFD700]/40 rounded-xl text-[#FFD700] animate-pulse">Cargando noticias...</div>

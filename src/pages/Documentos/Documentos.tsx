@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+import BackToHomeButton from '../../components/Shared/BackToHomeButton';
 
 type TipoDocumento = 'academico'|'administrativo'|'reglamento'|'formulario'|'guia'|'convenio';
 interface DocumentoFront {
@@ -85,6 +86,7 @@ const Documentos = () => {
         background: 'radial-gradient(ellipse at top, #1a1a1a 0%, #2a2a2a 30%, #0f0f0f 60%, #000000 100%)'
       }}
     >
+  <BackToHomeButton />
       {/* Efectos de fondo épicos con partículas flotantes */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 via-transparent to-[#C9B037]/3"></div>
