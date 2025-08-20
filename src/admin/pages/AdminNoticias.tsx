@@ -41,7 +41,7 @@ function AdminNoticiasContent() {
   const [modalOpen, setModalOpen] = useState(false);
   const toast = useToast();
   useEffect(()=>{ if(pendingEditId && noticias.length){ const idx = noticias.findIndex(n=> n.id===pendingEditId); if(idx>=0){ setEditIdx(idx); setForm(noticias[idx]); setPreview(noticias[idx].imagen||''); setPendingEditId(null); const params=new URLSearchParams(location.search); params.delete('edit'); navigate({ pathname: location.pathname, search: params.toString() }, { replace:true }); } } }, [pendingEditId, noticias]);
-  const categoriasDisponibles = ['Actualidad','Evento','Economía','Investigación','Premios','Charlas','Conferencias','Oportunidades','Otros'];
+  const categoriasDisponibles = ['Actualidad','Evento','Economía','Investigación','Premios','Charlas','Conferencias','Oportunidades','Deporte','Otros'];
   const shortWords = form.descripcionCorta.trim() ? form.descripcionCorta.trim().split(/\s+/).filter(Boolean).length : 0;
   const fields = useMemo(()=>{
     const fs: FieldConfig[] = [
