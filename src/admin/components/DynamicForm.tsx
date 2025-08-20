@@ -74,7 +74,17 @@ export default function DynamicForm<T extends Record<string, any>>({
           return (
             <label key={f.name} className="group flex flex-col gap-1 text-[11px] font-semibold tracking-wide text-gray-300">
               <span className="uppercase text-[10px] font-bold text-[#FFD700]/90 group-focus-within:text-[#FFD700] transition">{f.label}{f.required && <span className="text-red-400 ml-0.5">*</span>}</span>
-              {f.type === 'textarea' ? (
+              {/* Campo especial para requisitos y beneficios como lista editable tipo chip */}
+              {(f.name === 'requisitosTexto' || f.name === 'beneficiosTexto') ? (
+                <ListaEditable
+                  label={f.label}
+                  value={val}
+                  onChange={v => handleFieldChange(f.name, v)}
+                  placeholder={f.placeholder}
+                  disabled={disabled || submitting}
+                  helperText={f.helperText}
+                />
+              ) : f.type === 'textarea' ? (
                 <div className="relative w-full flex flex-col">
                   <textarea
                     {...common}
@@ -83,6 +93,61 @@ export default function DynamicForm<T extends Record<string, any>>({
                     className={common.className + ' min-h-28 resize-y'}
                   />
                 </div>
+
+
+
+
+
+// Componente para lista editable de requisitos/beneficios
+interface ListaEditableProps {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  disabled?: boolean;
+  helperText?: string;
+}
+
+function ListaEditable({ label, value, onChange, placeholder, disabled, helperText }: ListaEditableProps) {
+  const [input, setInput] = React.useState('');
+  const items = (value || '').split(/\r?\n/).map(x => x.trim()).filter(x => x);
+  const addItem = () => {
+    const val = input.trim();
+    if (val && !items.includes(val)) {
+      onChange([...items, val].join('\n'));
+      setInput('');
+    }
+  };
+  const removeItem = (idx: number) => {
+    onChange(items.filter((_, i) => i !== idx).join('\n'));
+  };
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addItem(); } }}
+          placeholder={placeholder || `Agregar ${label.toLowerCase()}`}
+          disabled={disabled}
+          className="flex-1 bg-gray-800/70 px-3 py-2 rounded-lg border border-gray-700 focus:border-[#FFD700] focus:ring-2 focus:ring-[#FFD700]/30 outline-none transition text-sm placeholder-gray-500"
+        />
+        <button type="button" onClick={addItem} disabled={disabled || !input.trim()} className="px-3 py-2 bg-[#FFD700] text-black rounded font-bold text-xs hover:bg-[#C9B037] transition disabled:opacity-50">Agregar</button>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {items.map((item, idx) => (
+          <span key={idx} className="flex items-center bg-[#FFD700]/20 text-[#FFD700] px-2 py-1 rounded text-xs font-semibold">
+            {item}
+            <button type="button" onClick={() => removeItem(idx)} className="ml-1 text-red-500 hover:text-red-700 font-bold" title="Eliminar" disabled={disabled}>×</button>
+          </span>
+        ))}
+      </div>
+      {helperText && <span className="text-[10px] text-gray-500 tracking-wide">{helperText}</span>}
+    </div>
+  );
+}
+
               ) : f.type === 'select' ? (
                 <select {...common} value={val} onChange={e => handleFieldChange(f.name, e.target.value)} className={common.className + ' cursor-pointer'}>
                   <option value="" disabled>{f.placeholder || 'Seleccione...'}</option>
