@@ -43,9 +43,9 @@ export default function AdminDocumentosPage(){
       if(!form.link.trim()) throw new Error('Link requerido');
       if(!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(form.fecha)) throw new Error('Fecha inválida');
       // Validar que todos los tipos sean válidos
-      const tiposValidos = Array.isArray(form.tipo) ? form.tipo.filter((t: any) => tipos.includes(t)) : [form.tipo].filter((t: any) => tipos.includes(t));
-      const payload = { ...form, tipo: tiposValidos as TipoDocumento[] };
-      if(editingId) await api.update(editingId, payload); else await api.create(payload);
+  const tiposValidos = Array.isArray(form.tipo) ? form.tipo.filter((t: any) => tipos.includes(t)) : [form.tipo].filter((t: any) => tipos.includes(t));
+  const payload = { ...form, tipo: tiposValidos[0] as TipoDocumento };
+  if(editingId) await api.update(editingId, payload); else await api.create(payload);
       await load(1);
       setModalOpen(false); setEditingId(null); setForm({...emptyForm});
       toast.push({ type:'success', message: editingId? 'Documento actualizado':'Documento creado'});
