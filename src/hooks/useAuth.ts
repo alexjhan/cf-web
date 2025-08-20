@@ -48,8 +48,8 @@ export const useAuth = () => {
         timestamp: Date.now()
       };
       // Guardar sesión y token para servicios
-      localStorage.setItem('adminAuth', JSON.stringify(authData));
-      localStorage.setItem('adminToken', 'admin'); // Token dummy para pruebas locales
+  localStorage.setItem('adminAuth', JSON.stringify(authData));
+  localStorage.setItem('adminToken', 'supersecreto'); // Token real esperado por el backend
       setAuthState({
         isAuthenticated: true,
         user: username
