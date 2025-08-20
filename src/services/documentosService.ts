@@ -7,7 +7,6 @@ export interface DocumentoPayload {
   subtitulo?: string;
   tipo: 'academico'|'administrativo'|'reglamento'|'formulario'|'guia'|'convenio';
   fecha: string; // YYYY-MM-DD
-  peso: string | number;
   link: string;
 }
 

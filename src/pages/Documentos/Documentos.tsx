@@ -1,12 +1,4 @@
-// Utilidad para formatear el peso/tamaño del documento
-function formatPeso(peso: string | number): string {
-  if (!peso) return '';
-  const num = typeof peso === 'number' ? peso : parseFloat(peso as string);
-  if (isNaN(num)) return peso.toString();
-  if (num > 1000000) return (num / 1000000).toFixed(2) + ' MB';
-  if (num > 1000) return (num / 1000).toFixed(1) + ' KB';
-  return num + ' B';
-}
+
 import { useState, useEffect } from 'react';
 import EmptyOverlay from '../../components/Shared/EmptyOverlay';
 import * as api from '../../services/documentosService';
@@ -197,7 +189,7 @@ const Documentos = () => {
                       </p>
                       <div className="flex items-center justify-between text-[10px] md:text-xs text-gray-400 mb-3 md:mb-4">
                         <span>📅 {doc.fecha ? new Date(doc.fecha).toLocaleDateString() : (doc.created_at ? new Date(doc.created_at).toLocaleDateString() : '')}</span>
-                        <span>📊 {doc.peso ? formatPeso(doc.peso) : ''}</span>
+
                       </div>
 
 

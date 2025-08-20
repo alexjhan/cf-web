@@ -8,14 +8,14 @@ import { useToast } from '../../components/Toast/ToastContext';
 
 interface ListState { items: api.Documento[]; total: number; page: number; pageSize: number; }
 const tipos: Array<api.DocumentoPayload['tipo']> = ['academico','administrativo','reglamento','formulario','guia','convenio'];
-const emptyForm: api.DocumentoPayload = { titulo: '', subtitulo: '', tipo: 'academico', fecha: new Date().toISOString().slice(0,10), peso: '', link: '' };
+const emptyForm = { titulo: '', subtitulo: '', tipo: ['academico'], fecha: new Date().toISOString().slice(0,10), link: '' };
 
 export default function AdminDocumentosPage(){
   const { isAuthenticated } = useAuth();
   const [list, setList] = useState<ListState>({ items: [], total:0, page:1, pageSize:30 });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string|null>(null);
-  const [form, setForm] = useState<api.DocumentoPayload>({...emptyForm});
+  const [form, setForm] = useState<typeof emptyForm>({...emptyForm});
   const [editingId, setEditingId] = useState<string|null>(null);
   const [search, setSearch] = useState('');
   const [tipoFiltro, setTipoFiltro] = useState<string>('todos');
@@ -34,14 +34,17 @@ export default function AdminDocumentosPage(){
   useEffect(()=>{ const t = setTimeout(()=> load(1), 400); return ()=> clearTimeout(t); /* eslint-disable-next-line react-hooks/exhaustive-deps */}, [search]);
 
   function startCreate(){ setEditingId(null); setForm({...emptyForm}); setFormError(null); setModalOpen(true); }
-  async function startEdit(id: string){ setError(null); setFormError(null); try{ const d = await api.get(id); if(!d){ setError('No encontrado'); toast.push({ type:'warning', message:'Documento no encontrado'}); return;} const { titulo, subtitulo, tipo, fecha, peso, link } = d; setForm({ titulo, subtitulo, tipo: tipo as any, fecha, peso, link }); setEditingId(id); setModalOpen(true);} catch(e:any){ setError(e.message); toast.push({ type:'error', message:'Error cargando documento'});} }
+  async function startEdit(id: string){ setError(null); setFormError(null); try{ const d = await api.get(id); if(!d){ setError('No encontrado'); toast.push({ type:'warning', message:'Documento no encontrado'}); return;} const { titulo, subtitulo, tipo, fecha, link } = d; setForm({ titulo, subtitulo, tipo: tipo ? (Array.isArray(tipo) ? tipo : [tipo]) : [], fecha, link }); setEditingId(id); setModalOpen(true);} catch(e:any){ setError(e.message); toast.push({ type:'error', message:'Error cargando documento'});} }
   async function save(){
     setSaving(true); setFormError(null);
     try {
       if(!form.titulo.trim()) throw new Error('Título requerido');
       if(!form.link.trim()) throw new Error('Link requerido');
       if(!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(form.fecha)) throw new Error('Fecha inválida');
-      if(editingId) await api.update(editingId, form); else await api.create(form);
+      // Guardar solo el primer tipo (por compatibilidad backend actual)
+  const tipoVal = Array.isArray(form.tipo) ? form.tipo[0] : form.tipo;
+  const payload = { ...form, tipo: tipoVal as api.DocumentoPayload['tipo'] };
+      if(editingId) await api.update(editingId, payload); else await api.create(payload);
       await load(1);
       setModalOpen(false); setEditingId(null); setForm({...emptyForm});
       toast.push({ type:'success', message: editingId? 'Documento actualizado':'Documento creado'});
@@ -52,7 +55,7 @@ export default function AdminDocumentosPage(){
 
   if(!isAuthenticated) return <div className="p-6 text-center text-red-400">No autorizado</div>;
 
-  const filtrados = list.items.filter(d=> (tipoFiltro==='todos' || d.tipo===tipoFiltro) && (!search.trim() || [d.titulo, d.subtitulo, d.tipo, d.peso+''].some(v=> (v||'').toString().toLowerCase().includes(search.toLowerCase()))));
+  const filtrados = list.items.filter(d=> (tipoFiltro==='todos' || (Array.isArray(d.tipo) ? d.tipo.includes(tipoFiltro) : d.tipo===tipoFiltro)) && (!search.trim() || [d.titulo, d.subtitulo, d.tipo].some(v=> (v||'').toString().toLowerCase().includes(search.toLowerCase()))));
 
   return (
     <AdminLayout title="Documentos">
@@ -81,7 +84,7 @@ export default function AdminDocumentosPage(){
               </div>
               <h3 className="text-sm font-semibold text-[#FFD700] leading-snug line-clamp-2" title={d.titulo}>{d.titulo}</h3>
               {d.subtitulo && <p className="text-[11px] text-gray-400 line-clamp-2" title={d.subtitulo}>{d.subtitulo}</p>}
-              {d.peso && <p className="text-[11px] text-gray-500">Peso: {d.peso}</p>}
+
               <div className="flex flex-wrap gap-2 mt-2">
                 <button onClick={()=> startEdit(d.id)} className="px-3 py-1.5 text-[11px] rounded bg-yellow-600 hover:bg-yellow-500 font-semibold">Editar</button>
                 <a href={d.link} target="_blank" rel="noopener" className="px-3 py-1.5 text-[11px] rounded bg-blue-600 hover:bg-blue-500 font-semibold">Ver</a>
@@ -104,12 +107,11 @@ export default function AdminDocumentosPage(){
           fields={[
             { name:'titulo', label:'Título', required:true, placeholder:'Título del documento' },
             { name:'subtitulo', label:'Subtítulo', placeholder:'Opcional' },
-            { name:'tipo', label:'Tipo', type:'select', required:true, options: tipos.map(t=> ({ value:t, label:t })) },
+            { name:'tipo', label:'Tipo(s)', type:'multiselect', required:true, options: tipos.map(t=> ({ value:t, label:t })) },
             { name:'fecha', label:'Fecha', type:'date', required:true },
-            { name:'peso', label:'Peso', placeholder:'Ej: 1.2 MB' },
             { name:'link', label:'Link', required:true, placeholder:'URL de descarga' },
           ] as FieldConfig[]}
-          value={form as any}
+          value={{...form, tipo: Array.isArray(form.tipo) ? form.tipo : [form.tipo] } as any}
           onChange={patch=> setForm(f=> ({...f, ...patch}))}
           onSubmit={save}
           submitLabel={editingId? 'Guardar Cambios':'Agregar'}
