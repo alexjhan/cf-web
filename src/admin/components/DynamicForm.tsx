@@ -75,25 +75,49 @@ export default function DynamicForm<T extends Record<string, any>>({
             <label key={f.name} className="group flex flex-col gap-1 text-[11px] font-semibold tracking-wide text-gray-300">
               <span className="uppercase text-[10px] font-bold text-[#FFD700]/90 group-focus-within:text-[#FFD700] transition">{f.label}{f.required && <span className="text-red-400 ml-0.5">*</span>}</span>
               {f.type === 'textarea' ? (
-                <textarea
-                  {...common}
-                  value={val}
-                  onChange={e => handleFieldChange(f.name, e.target.value)}
-                  className={common.className + ' min-h-28 resize-y'}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      const target = e.target as HTMLTextAreaElement;
-                      const start = target.selectionStart;
-                      const end = target.selectionEnd;
-                      const newValue = val.substring(0, start) + '\n' + val.substring(end);
-                      handleFieldChange(f.name, newValue);
-                      setTimeout(() => {
-                        target.selectionStart = target.selectionEnd = start + 1;
-                      }, 0);
-                    }
-                  }}
-                />
+                <div className="relative w-full flex flex-col">
+                  <textarea
+                    {...common}
+                    value={val}
+                    onChange={e => handleFieldChange(f.name, e.target.value)}
+                    className={common.className + ' min-h-28 resize-y pr-16'}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        const target = e.target as HTMLTextAreaElement;
+                        const start = target.selectionStart;
+                        const end = target.selectionEnd;
+                        const newValue = val.substring(0, start) + '\n' + val.substring(end);
+                        handleFieldChange(f.name, newValue);
+                        setTimeout(() => {
+                          target.selectionStart = target.selectionEnd = start + 1;
+                        }, 0);
+                      }
+                    }}
+                  />
+                  {(f.name === 'requisitosTexto' || f.name === 'beneficiosTexto') && (
+                    <button
+                      type="button"
+                      className="absolute right-2 bottom-2 px-2 py-1 bg-[#FFD700] text-black rounded text-xs font-bold shadow hover:bg-[#C9B037] transition"
+                      tabIndex={-1}
+                      onClick={e => {
+                        const textarea = (e.currentTarget.parentElement?.querySelector('textarea') as HTMLTextAreaElement);
+                        if (textarea) {
+                          const start = textarea.selectionStart;
+                          const end = textarea.selectionEnd;
+                          const newValue = val.substring(0, start) + '; ' + val.substring(end);
+                          handleFieldChange(f.name, newValue);
+                          setTimeout(() => {
+                            textarea.focus();
+                            textarea.selectionStart = textarea.selectionEnd = start + 2;
+                          }, 0);
+                        }
+                      }}
+                    >
+                      ;
+                    </button>
+                  )}
+                </div>
               ) : f.type === 'select' ? (
                 <select {...common} value={val} onChange={e => handleFieldChange(f.name, e.target.value)} className={common.className + ' cursor-pointer'}>
                   <option value="" disabled>{f.placeholder || 'Seleccione...'}</option>
