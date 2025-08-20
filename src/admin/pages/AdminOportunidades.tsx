@@ -3,7 +3,8 @@ import * as oportunidadesApi from '../../services/oportunidadesService';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import AdminLayout from '../components/AdminLayout';
-import DynamicForm, { type FieldConfig } from '../components/DynamicForm';
+import { DynamicForm } from '../components/DynamicForm';
+import type { FieldConfig } from '../components/DynamicForm';
 import AdminFormPanel from '../components/AdminFormPanel';
 import { useToast } from '../../components/Toast/ToastContext';
 

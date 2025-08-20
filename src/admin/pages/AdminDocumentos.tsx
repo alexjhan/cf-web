@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import * as api from '../../services/documentosService';
 import { useAuth } from '../../hooks/useAuth';
 import AdminLayout from '../components/AdminLayout';
-import DynamicForm, { type FieldConfig } from '../components/DynamicForm';
+import { DynamicForm } from '../components/DynamicForm';
+import type { FieldConfig } from '../components/DynamicForm';
 import AdminFormPanel from '../components/AdminFormPanel';
 import { useToast } from '../../components/Toast/ToastContext';
 
