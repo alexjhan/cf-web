@@ -42,8 +42,7 @@ export default function AdminDocumentosPage(){
       if(!form.link.trim()) throw new Error('Link requerido');
       if(!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(form.fecha)) throw new Error('Fecha inválida');
       // Guardar solo el primer tipo (por compatibilidad backend actual)
-  const tipoVal = Array.isArray(form.tipo) ? form.tipo[0] : form.tipo;
-  const payload = { ...form, tipo: tipoVal as api.DocumentoPayload['tipo'] };
+  const payload = { ...form, tipo: Array.isArray(form.tipo) ? form.tipo : [form.tipo] };
       if(editingId) await api.update(editingId, payload); else await api.create(payload);
       await load(1);
       setModalOpen(false); setEditingId(null); setForm({...emptyForm});

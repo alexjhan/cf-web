@@ -5,7 +5,7 @@ const API_BASE = 'https://cf-backend-production-38d0.up.railway.app/api/document
 export interface DocumentoPayload {
   titulo: string;
   subtitulo?: string;
-  tipo: 'academico'|'administrativo'|'reglamento'|'formulario'|'guia'|'convenio';
+  tipo: ('academico'|'administrativo'|'reglamento'|'formulario'|'guia'|'convenio') | ('academico'|'administrativo'|'reglamento'|'formulario'|'guia'|'convenio')[];
   fecha: string; // YYYY-MM-DD
   link: string;
 }
