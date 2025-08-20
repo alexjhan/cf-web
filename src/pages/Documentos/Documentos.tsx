@@ -180,7 +180,7 @@ const Documentos = () => {
         {/* Contenido principal - Responsive mejorado */}
         <div className="px-4 pb-16 md:pb-20 lg:pb-24">
           <div className="max-w-6xl mx-auto">
-            <div className="grid gap-4 md:gap-6 lg:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-2 md:gap-3 lg:gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {loading ? (
                 <div className="text-center py-10 text-gray-400">Cargando documentos...</div>
               ) : error ? (
@@ -199,7 +199,7 @@ const Documentos = () => {
                           {/* Si en el futuro Documento tiene 'urgente', mostrar aquí */}
                         </div>
                         {doc.tipo.map((t, i) => (
-                          <span key={t + i} className={`inline-block text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded-md md:rounded-lg border ${getTipoColor(t)} mr-1 mb-1`}>
+                          <span key={t + i} className={`inline-block text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded-md md:rounded-lg border ${getTipoColor(t)} mr-1`}>
                             {t}
                           </span>
                         ))}
