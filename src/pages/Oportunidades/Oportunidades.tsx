@@ -6,6 +6,7 @@ import * as oportunidadesApi from '../../services/oportunidadesService';
 
 const Oportunidades: React.FC = () => {
 
+  const [categoriaActiva, setCategoriaActiva] = useState<'laboral' | 'pregrado' | 'posgrado' | 'especializacion'>('laboral');
   const [oportunidades, setOportunidades] = useState<oportunidadesApi.Oportunidad[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string|null>(null);
@@ -135,7 +136,7 @@ const Oportunidades: React.FC = () => {
             {categorias.map((categoria) => (
               <div key={categoria.id} className="group bg-[#1a1a1a]/60 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-4 lg:p-6 border border-[#FFD700]/20 hover:border-[#FFD700]/50 hover:bg-[#FFD700]/5 hover:scale-105 hover:shadow-xl hover:shadow-[#FFD700]/20 transition-all duration-500 cursor-pointer">
                 <div className="text-xl md:text-2xl lg:text-3xl mb-2 md:mb-3 text-[#FFD700] group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">{categoria.icono}</div>
-                <div className="text-base md:text-xl lg:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{oportunidades.filter(op => mapCategoriaBackendToFrontend(op.categoria) === categoria.id && op.activa).length}</div>
+                <div className="text-base md:text-xl lg:text-2xl font-bold text-[#FFD700] group-hover:text-white transition-colors duration-300">{oportunidades.filter(op => mapCategoriaBackendToFrontend(op.categoria) === categoria.id && op.activa).length} disponibles</div>
                 <div className="text-xs md:text-sm text-gray-400 group-hover:text-gray-200 transition-colors duration-300">{categoria.nombre}</div>
               </div>
             ))}
@@ -177,7 +178,7 @@ const Oportunidades: React.FC = () => {
                         {categoria.descripcion}
                       </p>
                       <div className="pt-0.5 text-xs md:text-sm text-gray-500">
-                        {oportunidades.filter(op => op.tipo === categoria.id && op.activa).length} disponibles
+                        {oportunidades.filter(op => mapCategoriaBackendToFrontend(op.categoria) === categoria.id && op.activa).length} disponibles
                       </div>
                     </div>
                   </button>
@@ -226,17 +227,13 @@ const Oportunidades: React.FC = () => {
                                 ⏱️ {oportunidad.duracion}
                               </span>
                             )}
-                            {oportunidad.modalidad && (
-                              <span className="px-2.5 py-1 bg-blue-500/20 text-blue-300 rounded-xl text-[11px] sm:text-sm font-bold border border-blue-400/30 whitespace-nowrap">
-                                💻 {oportunidad.modalidad}
-                              </span>
-                            )}
+                            {/* modalidad no existe en backend, se omite */}
                           </div>
                         </div>
 
                         {/* Descripción */}
                         <p className="text-gray-200 text-sm md:text-base lg:text-lg leading-relaxed mb-5 sm:mb-6 line-clamp-6">
-                          {oportunidad.texto || oportunidad.descripcion || ''}
+                          {oportunidad.texto || ''}
                         </p>
 
                         {/* Requisitos y Beneficios */}
