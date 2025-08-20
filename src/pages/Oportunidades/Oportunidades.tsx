@@ -242,7 +242,9 @@ const Oportunidades: React.FC = () => {
 
                         {/* Descripción */}
                         <p className="text-gray-200 text-sm md:text-base lg:text-lg leading-relaxed mb-5 sm:mb-6 line-clamp-6">
-                          {oportunidad.texto || ''}
+                          {(['educacion_pregrado','educacion_posgrado'].includes(oportunidad.categoria) && oportunidad.contenido)
+                            ? oportunidad.contenido
+                            : (oportunidad.texto || '')}
                         </p>
 
                         {/* Requisitos y Beneficios */}
