@@ -23,6 +23,7 @@ function authHeaders(): Record<string,string> {
 }
 
 
+export async function list(page=1, pageSize=30, q?: string) {
   const params = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
   if (q) params.append('q', q);
   const r = await fetch(`${API_BASE}?${params.toString()}`);
@@ -31,6 +32,7 @@ function authHeaders(): Record<string,string> {
 }
 
 
+export async function get(id: string) {
   const r = await fetch(`${API_BASE}/${id}`);
   if (r.status === 404) return null;
   if (!r.ok) throw new Error('Error obteniendo documento');
@@ -38,12 +40,14 @@ function authHeaders(): Record<string,string> {
 }
 
 
+export async function create(payload: DocumentoPayload) {
   const r = await fetch(API_BASE, { method: 'POST', headers: { 'Content-Type': 'application/json', ...authHeaders() }, body: JSON.stringify(payload) });
   if (!r.ok) throw new Error('Error creando documento');
   return r.json();
 }
 
 
+export async function update(id: string, payload: Partial<DocumentoPayload>) {
   const r = await fetch(`${API_BASE}/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', ...authHeaders() }, body: JSON.stringify(payload) });
   if (!r.ok) throw new Error('Error actualizando documento');
   return r.json();
