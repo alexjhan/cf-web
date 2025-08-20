@@ -30,7 +30,7 @@ function ListaEditable({ label, value, onChange, placeholder, disabled, helperTe
 			<textarea
 				value={value || ''}
 				onChange={e => onChange(e.target.value)}
-				placeholder={placeholder || `Ingrese ${label.toLowerCase()} (uno por línea)`}
+			placeholder={placeholder || `Ingrese ${label.toLowerCase()}`}
 				disabled={disabled}
 				className="bg-gray-800/70 px-3 py-2 rounded-lg border border-gray-700 focus:border-[#FFD700] focus:ring-2 focus:ring-[#FFD700]/30 outline-none transition text-sm placeholder-gray-500 min-h-24 resize-y"
 			/>
