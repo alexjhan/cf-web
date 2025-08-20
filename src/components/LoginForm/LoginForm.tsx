@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 interface LoginFormProps {
-  onLogin: (username: string, password: string) => boolean;
+  onLogin: (username: string, password: string) => Promise<boolean>;
   title?: string;
 }
 
@@ -19,7 +19,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, title = "Admin Login" })
     // Simular un pequeño delay para mejor UX
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    const success = onLogin(username, password);
+    const success = await onLogin(username, password);
     
     if (!success) {
       setError('Usuario o contraseña incorrectos');
