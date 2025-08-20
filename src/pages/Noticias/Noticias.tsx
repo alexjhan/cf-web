@@ -83,8 +83,9 @@ const Noticias: React.FC = () => {
       try {
   const res = await fetch(apiBase + '/api/noticias', { signal: controller.signal });
         if (!res.ok) throw new Error('status ' + res.status);
-        const data = await res.json();
-        if (Array.isArray(data)) setNoticias(data);
+  const data = await res.json();
+  if (Array.isArray(data.items)) setNoticias(data.items);
+  else if (Array.isArray(data)) setNoticias(data);
       } catch (e:any) {
         setError('Sin conexión al servidor (modo demo)');
       } finally { setLoading(false); }
