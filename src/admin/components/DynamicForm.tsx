@@ -25,40 +25,34 @@ interface ListaEditableProps {
 }
 
 function ListaEditable({ label, value, onChange, placeholder, disabled, helperText }: ListaEditableProps) {
-	const [input, setInput] = useState('');
 	const items = value || [];
-	const addItem = () => {
-		const val = input.trim();
-		if (val && !items.includes(val)) {
-			onChange([...items, val]);
-			setInput('');
-		}
+	const handleChange = (idx: number, newVal: string) => {
+		const arr = [...items];
+		arr[idx] = newVal;
+		onChange(arr);
 	};
 	const removeItem = (idx: number) => {
 		onChange(items.filter((_, i) => i !== idx));
 	};
+	const addItem = () => {
+		onChange([...items, '']);
+	};
 	return (
 		<div className="flex flex-col gap-2">
-			<div className="flex gap-2">
-				<input
-					type="text"
-					value={input}
-					onChange={e => setInput(e.target.value)}
-					onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addItem(); } }}
-					placeholder={placeholder || `Agregar ${label.toLowerCase()}`}
-					disabled={disabled}
-					className="flex-1 bg-gray-800/70 px-3 py-2 rounded-lg border border-gray-700 focus:border-[#FFD700] focus:ring-2 focus:ring-[#FFD700]/30 outline-none transition text-sm placeholder-gray-500"
-				/>
-				<button type="button" onClick={addItem} disabled={disabled || !input.trim()} className="px-3 py-2 bg-[#FFD700] text-black rounded font-bold text-xs hover:bg-[#C9B037] transition disabled:opacity-50">Agregar</button>
-			</div>
-			<div className="flex flex-wrap gap-2">
-				{items.map((item, idx) => (
-					<span key={idx} className="flex items-center bg-[#FFD700]/20 text-[#FFD700] px-2 py-1 rounded text-xs font-semibold">
-						{item}
-						<button type="button" onClick={() => removeItem(idx)} className="ml-1 text-red-500 hover:text-red-700 font-bold" title="Eliminar" disabled={disabled}>×</button>
-					</span>
-				))}
-			</div>
+			{items.map((item, idx) => (
+				<div key={idx} className="flex gap-2 items-center">
+					<input
+						type="text"
+						value={item}
+						onChange={e => handleChange(idx, e.target.value)}
+						placeholder={placeholder || `${label} #${idx + 1}`}
+						disabled={disabled}
+						className="flex-1 bg-gray-800/70 px-3 py-2 rounded-lg border border-gray-700 focus:border-[#FFD700] focus:ring-2 focus:ring-[#FFD700]/30 outline-none transition text-sm placeholder-gray-500"
+					/>
+					<button type="button" onClick={() => removeItem(idx)} disabled={disabled} className="text-red-500 hover:text-red-700 font-bold text-lg px-2">×</button>
+				</div>
+			))}
+			<button type="button" onClick={addItem} disabled={disabled} className="w-fit px-3 py-2 bg-[#FFD700] text-black rounded font-bold text-xs hover:bg-[#C9B037] transition disabled:opacity-50 mt-1">Agregar {label.slice(0, -1)}</button>
 			{helperText && <span className="text-[10px] text-gray-500 tracking-wide">{helperText}</span>}
 		</div>
 	);
