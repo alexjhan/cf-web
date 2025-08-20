@@ -108,8 +108,12 @@ export default function DynamicForm<T extends Record<string, any>>({
                           const newValue = val.substring(0, start) + '; ' + val.substring(end);
                           handleFieldChange(f.name, newValue);
                           setTimeout(() => {
+                            textarea.value = newValue;
                             textarea.focus();
                             textarea.selectionStart = textarea.selectionEnd = start + 2;
+                            // Forzar evento input para que React lo detecte
+                            const event = new Event('input', { bubbles: true });
+                            textarea.dispatchEvent(event);
                           }, 0);
                         }
                       }}
