@@ -39,25 +39,33 @@ export const useAuth = () => {
     }
   }, []);
 
-  const login = (username: string, password: string): boolean => {
-    // Credenciales hardcodeadas (en producción deberían venir de un servidor)
-    if (username === 'admin' && password === 'admin2025/') {
-      const authData = {
-        isAuthenticated: true,
-        user: username,
-        timestamp: Date.now()
-      };
-      // Guardar sesión y token para servicios
-  localStorage.setItem('adminAuth', JSON.stringify(authData));
-  localStorage.setItem('adminToken', 'supersecreto'); // Token real esperado por el backend
-      setAuthState({
-        isAuthenticated: true,
-        user: username
-      });
-      return true;
-    }
-    return false;
-  };
+    const login = async (username: string, password: string): Promise<boolean> => {
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        if (res.ok) {
+          const { token } = await res.json();
+          const authData = {
+            isAuthenticated: true,
+            user: username,
+            timestamp: Date.now()
+          };
+          localStorage.setItem('adminAuth', JSON.stringify(authData));
+          localStorage.setItem('adminToken', token);
+          setAuthState({
+            isAuthenticated: true,
+            user: username
+          });
+          return true;
+        }
+      } catch (error) {
+        // Puedes mostrar un mensaje de error aquí si lo deseas
+      }
+      return false;
+    };
 
   const logout = () => {
     localStorage.removeItem('adminAuth');
