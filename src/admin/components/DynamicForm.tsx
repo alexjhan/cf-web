@@ -75,7 +75,25 @@ export default function DynamicForm<T extends Record<string, any>>({
             <label key={f.name} className="group flex flex-col gap-1 text-[11px] font-semibold tracking-wide text-gray-300">
               <span className="uppercase text-[10px] font-bold text-[#FFD700]/90 group-focus-within:text-[#FFD700] transition">{f.label}{f.required && <span className="text-red-400 ml-0.5">*</span>}</span>
               {f.type === 'textarea' ? (
-                <textarea {...common} value={val} onChange={e => handleFieldChange(f.name, e.target.value)} className={common.className + ' min-h-28 resize-y'} />
+                <textarea
+                  {...common}
+                  value={val}
+                  onChange={e => handleFieldChange(f.name, e.target.value)}
+                  className={common.className + ' min-h-28 resize-y'}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      const target = e.target as HTMLTextAreaElement;
+                      const start = target.selectionStart;
+                      const end = target.selectionEnd;
+                      const newValue = val.substring(0, start) + '\n' + val.substring(end);
+                      handleFieldChange(f.name, newValue);
+                      setTimeout(() => {
+                        target.selectionStart = target.selectionEnd = start + 1;
+                      }, 0);
+                    }
+                  }}
+                />
               ) : f.type === 'select' ? (
                 <select {...common} value={val} onChange={e => handleFieldChange(f.name, e.target.value)} className={common.className + ' cursor-pointer'}>
                   <option value="" disabled>{f.placeholder || 'Seleccione...'}</option>
