@@ -207,8 +207,8 @@ function AdminOportunidadesContent(){
                 { name:'contacto', label:'Contacto', required:true }
               );
               base.push(
-                { name:'requisitosTexto', label:'Requisitos (separados por punto y coma)', type:'textarea', helperText:'Ejemplo: Requisito 1; Requisito 2; Requisito 3', placeholder:'Ser egresado universitario; Tener experiencia en metalurgia; Disponibilidad inmediata', className:'min-h-36' },
-                { name:'beneficiosTexto', label:'Beneficios (separados por punto y coma)', type:'textarea', helperText:'Ejemplo: Beneficio 1; Beneficio 2; Beneficio 3', placeholder:'Sueldo competitivo; Capacitación continua; Ambiente laboral agradable', className:'min-h-36' }
+                { name:'requisitosTexto', label:'Requisitos (uno por línea)', type:'textarea', helperText:'Un requisito por línea. Usa Enter para agregar más.', placeholder:'Ser egresado universitario\nTener experiencia en metalurgia\nDisponibilidad inmediata', className:'min-h-36' },
+                { name:'beneficiosTexto', label:'Beneficios (uno por línea)', type:'textarea', helperText:'Un beneficio por línea. Usa Enter para agregar más.', placeholder:'Sueldo competitivo\nCapacitación continua\nAmbiente laboral agradable', className:'min-h-36' }
               );
               return base;
             // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -216,8 +216,8 @@ function AdminOportunidadesContent(){
             value={useMemo(()=>({
               ...form,
               fecha: (form as any).fecha || form.fechaPublicacion,
-              requisitosTexto: (form.requisitos||[]).join('; '),
-              beneficiosTexto: (form.beneficios||[]).join('; ')
+              requisitosTexto: (form.requisitos||[]).join('\n'),
+              beneficiosTexto: (form.beneficios||[]).join('\n')
             }), [form])}
             onChange={(patch)=>{
               if(patch.categoria){
@@ -228,9 +228,9 @@ function AdminOportunidadesContent(){
                 return;
               }
               if('requisitosTexto' in patch){
-                setForm(f=> ({ ...f, requisitos: (patch as any).requisitosTexto.split(';').map((x:string)=>x.trim()).filter((x:string)=> x!=='') }));
+                setForm(f=> ({ ...f, requisitos: (patch as any).requisitosTexto.split(/\r?\n/).map((x:string)=>x.trim()).filter((x:string)=> x!=='') }));
               } else if('beneficiosTexto' in patch){
-                setForm(f=> ({ ...f, beneficios: (patch as any).beneficiosTexto.split(';').map((x:string)=>x.trim()).filter((x:string)=> x!=='') }));
+                setForm(f=> ({ ...f, beneficios: (patch as any).beneficiosTexto.split(/\r?\n/).map((x:string)=>x.trim()).filter((x:string)=> x!=='') }));
               } else if('fecha' in patch){
                 setForm(f=> ({ ...f, fecha: (patch as any).fecha, fechaPublicacion: (patch as any).fecha }));
               } else {

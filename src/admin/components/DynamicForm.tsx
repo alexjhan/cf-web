@@ -80,47 +80,8 @@ export default function DynamicForm<T extends Record<string, any>>({
                     {...common}
                     value={val}
                     onChange={e => handleFieldChange(f.name, e.target.value)}
-                    className={common.className + ' min-h-28 resize-y pr-16'}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        const target = e.target as HTMLTextAreaElement;
-                        const start = target.selectionStart;
-                        const end = target.selectionEnd;
-                        const newValue = val.substring(0, start) + '\n' + val.substring(end);
-                        handleFieldChange(f.name, newValue);
-                        setTimeout(() => {
-                          target.selectionStart = target.selectionEnd = start + 1;
-                        }, 0);
-                      }
-                    }}
+                    className={common.className + ' min-h-28 resize-y'}
                   />
-                  {(f.name === 'requisitosTexto' || f.name === 'beneficiosTexto') && (
-                    <button
-                      type="button"
-                      className="absolute right-2 bottom-2 px-2 py-1 bg-[#FFD700] text-black rounded text-xs font-bold shadow hover:bg-[#C9B037] transition"
-                      tabIndex={-1}
-                      onClick={e => {
-                        const textarea = (e.currentTarget.parentElement?.querySelector('textarea') as HTMLTextAreaElement);
-                        if (textarea) {
-                          const start = textarea.selectionStart;
-                          const end = textarea.selectionEnd;
-                          const newValue = val.substring(0, start) + '; ' + val.substring(end);
-                          handleFieldChange(f.name, newValue);
-                          setTimeout(() => {
-                            textarea.value = newValue;
-                            textarea.focus();
-                            textarea.selectionStart = textarea.selectionEnd = start + 2;
-                            // Forzar evento input para que React lo detecte
-                            const event = new Event('input', { bubbles: true });
-                            textarea.dispatchEvent(event);
-                          }, 0);
-                        }
-                      }}
-                    >
-                      ;
-                    </button>
-                  )}
                 </div>
               ) : f.type === 'select' ? (
                 <select {...common} value={val} onChange={e => handleFieldChange(f.name, e.target.value)} className={common.className + ' cursor-pointer'}>
