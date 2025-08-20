@@ -80,7 +80,11 @@ export default function AdminDocumentosPage(){
           {filtrados.map(d => (
             <div key={d.id} className="relative bg-gray-900 rounded-xl border border-gray-700 p-4 flex flex-col gap-2 shadow hover:shadow-lg hover:border-[#FFD700]/50 transition group">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-[10px] px-2 py-1 rounded-full bg-[#23232a] border border-gray-600 font-semibold tracking-wide text-gray-300 group-hover:border-[#FFD700]/60 capitalize">{d.tipo}</span>
+                <div className="flex flex-wrap gap-1">
+                  {(Array.isArray(d.tipo) ? d.tipo : [d.tipo]).map((t, i) => (
+                    <span key={t + i} className="text-[10px] px-2 py-1 rounded-full bg-[#23232a] border border-gray-600 font-semibold tracking-wide text-gray-300 group-hover:border-[#FFD700]/60 capitalize">{t}</span>
+                  ))}
+                </div>
                 <span className="text-[10px] px-2 py-1 rounded bg-[#23232a] border border-gray-700 text-gray-400">{d.fecha}</span>
               </div>
               <h3 className="text-sm font-semibold text-[#FFD700] leading-snug line-clamp-2" title={d.titulo}>{d.titulo}</h3>
@@ -112,7 +116,7 @@ export default function AdminDocumentosPage(){
             { name:'fecha', label:'Fecha', type:'date', required:true },
             { name:'link', label:'Link', required:true, placeholder:'URL de descarga' },
           ] as FieldConfig[]}
-          value={{...form, tipo: Array.isArray(form.tipo) ? form.tipo : [form.tipo] } as any}
+          value={{...form, tipo: Array.isArray(form.tipo) ? form.tipo : (typeof form.tipo === 'string' ? [form.tipo] : []) } as any}
           onChange={patch=> setForm(f=> ({...f, ...patch}))}
           onSubmit={save}
           submitLabel={editingId? 'Guardar Cambios':'Agregar'}
