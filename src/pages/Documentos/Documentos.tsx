@@ -23,7 +23,14 @@ const Documentos = () => {
     setLoading(true);
     setError(null);
     api.list(1, 100)
-      .then(data => setDocumentos(data.items || []))
+      .then(data => {
+        // Normalizar tipo: siempre array
+        const normalizados = (data.items || []).map(doc => ({
+          ...doc,
+          tipo: Array.isArray(doc.tipo) ? doc.tipo : (typeof doc.tipo === 'string' ? [doc.tipo] : [])
+        }));
+        setDocumentos(normalizados);
+      })
       .catch(e => setError('Error cargando documentos'))
       .finally(() => setLoading(false));
   }, []);
@@ -166,7 +173,7 @@ const Documentos = () => {
                 <div className="text-center py-10 text-red-400">{error}</div>
               ) : (
                 documentos
-                  .filter(doc => Array.isArray(doc.tipo) ? doc.tipo.includes(categoriaActiva as any) : doc.tipo === (categoriaActiva as any))
+                  .filter(doc => doc.tipo.includes(categoriaActiva as any))
                   .map((doc, index) => (
                     <div
                       key={doc.id || index}
@@ -177,17 +184,11 @@ const Documentos = () => {
                           <div className="text-xl md:text-2xl lg:text-3xl">📄</div>
                           {/* Si en el futuro Documento tiene 'urgente', mostrar aquí */}
                         </div>
-                        {Array.isArray(doc.tipo) ? (
-                          doc.tipo.map((t, i) => (
-                            <span key={t} className={`text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded-md md:rounded-lg border ${getTipoColor(t)} mr-1`}>
-                              {t}
-                            </span>
-                          ))
-                        ) : (
-                          <div className={`text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded-md md:rounded-lg border ${getTipoColor(doc.tipo)}`}>
-                            {doc.tipo}
-                          </div>
-                        )}
+                        {doc.tipo.map((t, i) => (
+                          <span key={t} className={`text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded-md md:rounded-lg border ${getTipoColor(t)} mr-1`}>
+                            {t}
+                          </span>
+                        ))}
                       </div>
                       <h3 className="text-base md:text-lg lg:text-xl font-bold text-[#FFD700] mb-2 md:mb-3 group-hover:text-white transition-colors duration-300 leading-tight">
                         {doc.titulo}
