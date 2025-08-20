@@ -114,7 +114,7 @@ const Documentos = () => {
           {/* Stats rápidas épicas - Responsive */}
           <div className="flex justify-center gap-3 md:gap-8 text-center mb-6 md:mb-10">
             <div className="group cursor-pointer md:hover:scale-110 transition-all duration-500">
-              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">180+</div>
+              <div className="text-lg md:text-2xl lg:text-3xl font-bold text-[#FFD700] group-hover:text-white group-hover:drop-shadow-lg transition-all duration-300">+5</div>
               <div className="text-gray-400 text-xs md:text-sm group-hover:text-gray-200 transition-colors duration-300">Documentos</div>
             </div>
             <div className="group cursor-pointer md:hover:scale-110 transition-all duration-500">
@@ -207,7 +207,7 @@ const Documentos = () => {
                       <a href={doc.link} target="_blank" rel="noopener noreferrer" className="w-full block bg-gradient-to-r from-[#FFD700] to-[#C9B037] text-black font-medium py-2.5 md:py-3 lg:py-4 px-3 md:px-4 lg:px-6 rounded-lg md:rounded-xl lg:rounded-2xl hover:shadow-lg hover:shadow-[#FFD700]/30 transition-all duration-300 hover:scale-105 text-sm md:text-base text-center">
                         <span className="flex items-center justify-center gap-1 md:gap-2">
                           <span className="text-sm md:text-base">⬇️</span>
-                          <span className="font-semibold">Descargar</span>
+                          <span className="font-semibold">Visitar y Descargar</span>
                         </span>
                       </a>
                     </div>
