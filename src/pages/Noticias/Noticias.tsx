@@ -408,9 +408,6 @@ const Noticias: React.FC = () => {
                                     <button className="px-3 sm:px-4 py-2 bg-[#1a1a1a]/60 backdrop-blur-sm text-[#FFD700] rounded-lg sm:rounded-xl hover:bg-[#FFD700]/20 transition-all duration-300 border border-[#FFD700]/30 text-sm md:text-base lg:text-lg" onClick={() => navigate('/admin-noticias?edit=' + principal.id)}>
                                       ✏️ Editar
                                     </button>
-                                    <button className="px-3 sm:px-4 py-2 bg-[#1a1a1a]/60 backdrop-blur-sm text-[#FFD700] rounded-lg sm:rounded-xl hover:bg-[#FFD700]/20 transition-all duration-300 border border-[#FFD700]/30 text-sm md:text-base lg:text-lg">
-                                      🔖 Guardar
-                                    </button>
                                   </>
                                 )}
                               </div>
