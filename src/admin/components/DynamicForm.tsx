@@ -17,8 +17,8 @@ export type FieldConfig = {
 
 interface ListaEditableProps {
 	label: string;
-	value: string;
-	onChange: (v: string) => void;
+	value: string[];
+	onChange: (v: string[]) => void;
 	placeholder?: string;
 	disabled?: boolean;
 	helperText?: string;
@@ -26,16 +26,16 @@ interface ListaEditableProps {
 
 function ListaEditable({ label, value, onChange, placeholder, disabled, helperText }: ListaEditableProps) {
 	const [input, setInput] = useState('');
-	const items = (value || '').split(/\r?\n/).map(x => x.trim()).filter(x => x);
+	const items = value || [];
 	const addItem = () => {
 		const val = input.trim();
 		if (val && !items.includes(val)) {
-			onChange([...items, val].join('\n'));
+			onChange([...items, val]);
 			setInput('');
 		}
 	};
 	const removeItem = (idx: number) => {
-		onChange(items.filter((_, i) => i !== idx).join('\n'));
+		onChange(items.filter((_, i) => i !== idx));
 	};
 	return (
 		<div className="flex flex-col gap-2">
@@ -125,16 +125,16 @@ export function DynamicForm<T extends Record<string, any>>({
 						<label key={f.name} className="group flex flex-col gap-1 text-[11px] font-semibold tracking-wide text-gray-300">
 							<span className="uppercase text-[10px] font-bold text-[#FFD700]/90 group-focus-within:text-[#FFD700] transition">{f.label}{f.required && <span className="text-red-400 ml-0.5">*</span>}</span>
 							{/* Campo especial para requisitos y beneficios como lista editable tipo chip */}
-							{(f.name === 'requisitosTexto' || f.name === 'beneficiosTexto') ? (
-								<ListaEditable
-									label={f.label}
-									value={val}
-									onChange={v => handleFieldChange(f.name, v)}
-									placeholder={f.placeholder}
-									disabled={disabled || submitting}
-									helperText={f.helperText}
-								/>
-							) : f.type === 'textarea' ? (
+											{(f.name === 'requisitosTexto' || f.name === 'beneficiosTexto') ? (
+												<ListaEditable
+													label={f.label}
+													value={Array.isArray(val) ? val : (typeof val === 'string' && val ? val.split(/\r?\n/) : [])}
+													onChange={v => handleFieldChange(f.name, v)}
+													placeholder={f.placeholder}
+													disabled={disabled || submitting}
+													helperText={f.helperText}
+												/>
+											) : f.type === 'textarea' ? (
 								<div className="relative w-full flex flex-col">
 									<textarea
 										{...common}
