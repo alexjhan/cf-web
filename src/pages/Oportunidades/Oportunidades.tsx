@@ -10,6 +10,8 @@ const Oportunidades: React.FC = () => {
   const [oportunidades, setOportunidades] = useState<oportunidadesApi.Oportunidad[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string|null>(null);
+  const [modalContacto, setModalContacto] = useState<string|null>(null);
+  const [modalCompartir, setModalCompartir] = useState<boolean>(false);
 
   useEffect(() => {
     setLoading(true);
@@ -277,9 +279,9 @@ const Oportunidades: React.FC = () => {
                               onClick={() => {
                                 const contacto = oportunidad.contacto || '';
                                 if (contacto) {
-                                  window.alert(`Contacto: ${contacto}`);
+                                  setModalContacto(contacto);
                                 } else {
-                                  window.alert('No hay información de contacto disponible.');
+                                  setModalContacto('No hay información de contacto disponible.');
                                 }
                               }}
                             >
@@ -290,7 +292,7 @@ const Oportunidades: React.FC = () => {
                               onClick={() => {
                                 const url = window.location.origin + window.location.pathname + `#oportunidad-${oportunidad.id}`;
                                 navigator.clipboard.writeText(url);
-                                window.alert('¡Enlace copiado para compartir!');
+                                setModalCompartir(true);
                               }}
                             >
                               📤 Compartir
@@ -318,7 +320,36 @@ const Oportunidades: React.FC = () => {
             </div>
           </div>
       </main>
-    </div>
+    {/* Modal de contacto */}
+    {modalContacto && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+        <div className="bg-[#23232a] rounded-2xl shadow-2xl p-6 max-w-xs w-full text-center border border-[#FFD700]/40 animate-fade-in">
+          <h4 className="text-lg font-bold text-[#FFD700] mb-3 flex items-center justify-center gap-2">📧 Contacto</h4>
+          <div className="text-white text-base break-words mb-4">{modalContacto}</div>
+          <button
+            className="px-5 py-2 bg-gradient-to-r from-[#FFD700] to-[#C9B037] text-black font-semibold rounded-lg hover:from-[#C9B037] hover:to-[#FFD700] transition-all duration-300"
+            onClick={() => setModalContacto(null)}
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+    )}
+    {modalCompartir && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+        <div className="bg-[#23232a] rounded-2xl shadow-2xl p-6 max-w-xs w-full text-center border border-[#FFD700]/40 animate-fade-in">
+          <h4 className="text-lg font-bold text-[#FFD700] mb-3 flex items-center justify-center gap-2">📤 Compartir</h4>
+          <div className="text-white text-base break-words mb-4">¡Enlace copiado al portapapeles!</div>
+          <button
+            className="px-5 py-2 bg-gradient-to-r from-[#FFD700] to-[#C9B037] text-black font-semibold rounded-lg hover:from-[#C9B037] hover:to-[#FFD700] transition-all duration-300"
+            onClick={() => setModalCompartir(false)}
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+    )}
+  </div>
   );
 };
 
