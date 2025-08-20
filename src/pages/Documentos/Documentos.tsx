@@ -36,11 +36,22 @@ const Documentos = () => {
       .finally(() => setLoading(false));
   }, []);
 
+
+  // Calcular la fecha de última actualización real
+  const ultimaActualizacion = documentos.length > 0
+    ? documentos.reduce((max, doc) => {
+        const fecha = doc.fecha || doc.created_at;
+        if (!fecha) return max;
+        const dateObj = new Date(fecha);
+        return dateObj > max ? dateObj : max;
+      }, new Date(0))
+    : null;
+
   const estadisticas = [
-    { icono: '📄', numero: '180+', texto: 'Documentos' },
+    { icono: '📄', numero: documentos.length.toString(), texto: 'Documentos' },
     { icono: '📁', numero: '6', texto: 'Categorías' },
-    { icono: '⬇️', numero: '2.5K+', texto: 'Descargas/mes' },
-    { icono: '🔄', numero: '24/7', texto: 'Actualizado' }
+    { icono: '🕒', numero: ultimaActualizacion ? ultimaActualizacion.toLocaleDateString() : '-', texto: 'Última actualización' },
+    { icono: '🔄', numero: '24/7', texto: 'Disponible' }
   ];
 
   const getTipoColor = (tipo: string) => {
