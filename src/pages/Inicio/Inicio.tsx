@@ -37,9 +37,19 @@ function Inicio() {
       }} />
 
       {/* Efectos futuristas */}
-      {/* Fondo limpio sin puntos ni círculos animados */}
+      {/* Fondo con puntos titilantes y círculos animados restaurado */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/5 via-transparent to-[#C9B037]/3"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#FFD700]/8 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[#C9B037]/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#B8860B]/6 rounded-full blur-3xl"></div>
+        {/* Partículas flotantes */}
+        <div className="absolute top-20 left-10 w-3 h-3 bg-[#FFD700]/60 rounded-full animate-pulse delay-300"></div>
+        <div className="absolute top-40 right-20 w-2 h-2 bg-[#C9B037]/70 rounded-full animate-pulse delay-700"></div>
+        <div className="absolute bottom-32 left-20 w-4 h-4 bg-[#FFD700]/50 rounded-full animate-pulse delay-1000"></div>
+        <div className="absolute bottom-20 right-10 w-2 h-2 bg-[#B8860B]/80 rounded-full animate-pulse delay-500"></div>
+        <div className="absolute top-60 left-1/3 w-3 h-3 bg-[#C9B037]/60 rounded-full animate-pulse delay-1200"></div>
+        <div className="absolute bottom-60 right-1/3 w-2 h-2 bg-[#FFD700]/70 rounded-full animate-pulse delay-800"></div>
       </div>
 
       {/* Header Responsive */}
