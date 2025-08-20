@@ -490,7 +490,16 @@ const Cursos: React.FC = () => {
 
             {/* Panel lateral de información del curso seleccionado */}
             {selectedNode && selectedNode.data && (
-              <div className="fixed top-0 right-0 z-50 w-full max-w-xs md:max-w-sm h-full bg-[#18181b] border-l border-[#FFD700]/30 shadow-2xl p-6 md:p-8 flex flex-col gap-4 animate-fade-in overflow-y-auto">
+              <div
+                className="fixed md:static top-0 right-0 z-50 w-full max-w-full sm:max-w-xs md:max-w-sm h-full md:h-auto bg-[#18181b] border-l md:border-l border-t-2 md:border-t-0 border-[#FFD700]/30 shadow-2xl p-4 sm:p-6 md:p-8 flex flex-col gap-4 animate-fade-in overflow-y-auto transition-all duration-300"
+                style={{
+                  borderLeft: '1px solid rgba(255, 215, 0, 0.18)',
+                  borderTop: '2px solid rgba(255, 215, 0, 0.18)',
+                  maxHeight: '100vh',
+                  minHeight: '220px',
+                  borderRadius: '0 0 1.5rem 1.5rem',
+                }}
+              >
                 <button
                   className="absolute top-4 right-4 text-gray-400 hover:text-[#FFD700] text-2xl font-bold"
                   onClick={() => setSelectedNode(null)}
@@ -498,9 +507,9 @@ const Cursos: React.FC = () => {
                 >×</button>
                 <div className="flex items-center gap-3 mb-2">
                   <span className="text-3xl">📚</span>
-                  <h2 className="text-xl md:text-2xl font-bold text-[#FFD700]">{((selectedNode.data as unknown) as CourseData).label}</h2>
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-[#FFD700] break-words">{((selectedNode.data as unknown) as CourseData).label}</h2>
                 </div>
-                <div className="text-gray-300 text-sm md:text-base">
+                <div className="text-gray-300 text-xs sm:text-sm md:text-base">
                   <div><b>Código:</b> {((selectedNode.data as unknown) as CourseData).code}</div>
                   <div><b>Créditos:</b> {((selectedNode.data as unknown) as CourseData).credits}</div>
                   <div><b>Ciclo:</b> {((selectedNode.data as unknown) as CourseData).cycle}</div>
