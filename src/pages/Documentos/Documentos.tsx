@@ -166,7 +166,7 @@ const Documentos = () => {
                 <div className="text-center py-10 text-red-400">{error}</div>
               ) : (
                 documentos
-                  .filter(doc => doc.tipo === categoriaActiva)
+                  .filter(doc => Array.isArray(doc.tipo) ? doc.tipo.includes(categoriaActiva as any) : doc.tipo === (categoriaActiva as any))
                   .map((doc, index) => (
                     <div
                       key={doc.id || index}
