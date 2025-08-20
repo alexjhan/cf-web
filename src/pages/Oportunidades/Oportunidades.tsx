@@ -272,11 +272,28 @@ const Oportunidades: React.FC = () => {
                             📅 Publicado: {oportunidad.fechaPublicacion ? new Date(oportunidad.fechaPublicacion).toLocaleDateString('es-ES') : (oportunidad.fecha ? new Date(oportunidad.fecha).toLocaleDateString('es-ES') : '')}
                           </div>
                           <div className="flex gap-2 sm:gap-3 order-1 sm:order-2">
-                            <button className="px-3.5 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-[#FFD700] to-[#C9B037] text-black font-bold rounded-lg sm:rounded-xl hover:from-[#C9B037] hover:to-[#B8860B] transition-all duration-300 transform hover:scale-105 text-sm md:text-base lg:text-lg">
+                            <button
+                              className="px-3.5 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-[#FFD700] to-[#C9B037] text-black font-bold rounded-lg sm:rounded-xl hover:from-[#C9B037] hover:to-[#B8860B] transition-all duration-300 transform hover:scale-105 text-sm md:text-base lg:text-lg"
+                              onClick={() => {
+                                const contacto = oportunidad.contacto || '';
+                                if (contacto) {
+                                  window.alert(`Contacto: ${contacto}`);
+                                } else {
+                                  window.alert('No hay información de contacto disponible.');
+                                }
+                              }}
+                            >
                               📧 Contactar
                             </button>
-                            <button className="px-3.5 sm:px-6 py-2 sm:py-3 bg-[#1a1a1a]/60 backdrop-blur-sm text-[#FFD700] rounded-lg sm:rounded-xl hover:bg-[#FFD700]/20 transition-all duration-300 border border-[#FFD700]/30 text-sm md:text-base lg:text-lg">
-                              🔖 Guardar
+                            <button
+                              className="px-3.5 sm:px-6 py-2 sm:py-3 bg-[#1a1a1a]/60 backdrop-blur-sm text-[#FFD700] rounded-lg sm:rounded-xl hover:bg-[#FFD700]/20 transition-all duration-300 border border-[#FFD700]/30 text-sm md:text-base lg:text-lg"
+                              onClick={() => {
+                                const url = window.location.origin + window.location.pathname + `#oportunidad-${oportunidad.id}`;
+                                navigator.clipboard.writeText(url);
+                                window.alert('¡Enlace copiado para compartir!');
+                              }}
+                            >
+                              📤 Compartir
                             </button>
                           </div>
                         </div>
