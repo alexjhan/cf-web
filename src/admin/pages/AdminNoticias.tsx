@@ -90,7 +90,7 @@ function AdminNoticiasContent() {
 
   return (
     <AdminLayout title="Noticias">
-      {loading && <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-40"><div className="px-6 py-3 bg-[#1a1a1a] border border-[#FFD700]/40 rounded-xl text-[#FFD700] animate-pulse text-sm">Cargando...</div></div>}
+  {/* Eliminado overlay de carga para no interrumpir la lectura */}
       <div className="mb-6 flex flex-col md:flex-row gap-4 md:items-center">
         <div className="flex flex-wrap gap-2">
           <button onClick={()=> setCategoriaFiltro('todas')} className={`px-3 py-1 rounded text-xs font-semibold ${categoriaFiltro==='todas'?'bg-[#FFD700] text-black':'bg-[#23232a] text-gray-300 hover:bg-gray-700'}`}>Todas</button>

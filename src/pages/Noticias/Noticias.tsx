@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import BackToHomeButton from '../../components/Shared/BackToHomeButton';
 import EmptyOverlay from '../../components/Shared/EmptyOverlay';
 import { useAuth } from '../../hooks/useAuth';
-import noticiasBase from '../../data/noticias.json';
+// import noticiasBase from '../../data/noticias.json';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 // Interfaz simplificada para las noticias
@@ -54,27 +54,11 @@ const Noticias: React.FC = () => {
   };
 
   // Normalizar base (importada) añadiendo id, vistas, destacada si faltan
-  const baseNormalizada: Noticia[] = useMemo(() => {
-    if (noticias.length > 0) return [];
-    const toSlug = (t: string) => t.toLowerCase().normalize('NFD').replace(/[^\w\s-]/g,'').replace(/\s+/g,'-');
-    return (noticiasBase as any[]).map((n, i) => ({
-      id: `${n.fecha || '0000-00-00'}-${toSlug(n.titulo || 'noticia')}-${i}`,
-      titulo: n.titulo || 'Sin título',
-      descripcionCorta: n.descripcionCorta || '',
-      descripcionLarga: n.descripcionLarga || '',
-      imagen: n.imagen,
-      categoria: Array.isArray(n.categoria) ? n.categoria : [],
-      fecha: n.fecha || new Date().toISOString().slice(0,10),
-      autor: n.autor || 'Desconocido',
-      vistas: (n as any).vistas ?? 0,
-      destacada: (n as any).destacada ?? false,
-    }));
-  }, [noticias.length]);
+  // Eliminado: baseNormalizada (noticias de ejemplo)
 
   // Merge base con localStorage (store sobrescribe por id)
-  const mergedNoticias: Noticia[] = useMemo(() => {
-    return noticias.length ? noticias : baseNormalizada;
-  }, [noticias, baseNormalizada]);
+  // Solo usar noticias reales del backend
+  const mergedNoticias: Noticia[] = noticias;
 
   // Cargar desde backend
   useEffect(() => {
@@ -206,11 +190,7 @@ const Noticias: React.FC = () => {
       style={{ background: 'radial-gradient(ellipse at top, #1a1a1a 0%, #2a2a2a 30%, #0f0f0f 60%, #000000 100%)' }}
     >
       <BackToHomeButton />
-      {loading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-          <div className="px-6 py-4 bg-[#1a1a1a] border border-[#FFD700]/40 rounded-xl text-[#FFD700] animate-pulse">Cargando noticias...</div>
-        </div>
-      )}
+  {/* Eliminado overlay de carga para no interrumpir la lectura */}
       {error && !loading && (
         <div className="fixed top-4 right-4 bg-red-700/80 text-white px-4 py-2 rounded-lg text-sm border border-red-400 shadow-lg z-50">
           {error}
