@@ -423,7 +423,7 @@ const Noticias: React.FC = () => {
                     <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-br from-[#FFD700] to-[#C9B037] flex items-center justify-center text-black text-xs sm:text-sm">📋</span>
                     <span className="truncate">Lista de Noticias</span>
                   </h2>
-                  <div className="space-y-2.5 sm:space-y-3 max-h-full lg:max-h-[calc(100vh-230px)] lg:overflow-y-auto pr-1 lg:pr-2" style={{
+                  <div className="space-y-2.5 sm:space-y-3 max-h-full lg:max-h-[calc(100vh-100px)] lg:overflow-y-auto pr-1 lg:pr-2" style={{
                     scrollbarWidth: 'thin',
                     scrollbarColor: '#FFD700 transparent'
                   }}>
