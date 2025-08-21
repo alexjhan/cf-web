@@ -191,7 +191,8 @@ function AdminOportunidadesContent(){
                 { name:'institucion', label:'Institución', required:true },
                 { name:'duracion', label:'Duración', required:true },
                 { name:'tipoEstudio', label:'Tipo de Estudio', type:'select', required:true, options:[{value:'presencial',label:'Presencial'},{value:'virtual',label:'Virtual'}] },
-                { name:'contenido', label:'Contenido', type:'textarea', required:true }
+                { name:'contenido', label:'Contenido', type:'textarea', required:true },
+                { name:'contacto', label:'Contacto', required:false, placeholder:'Correo o teléfono de contacto (opcional)' }
               );
               if(form.categoria==='educacion_posgrado') base.push(
                 { name:'institucion', label:'Institución', required:true },
