@@ -45,21 +45,19 @@ export const useAuth = () => {
           import.meta.env.PROD
             ? 'https://cf-backend-production-38d0.up.railway.app/api/admin/login'
             : '/api/admin/login';
-        // Solo enviar el token (contraseña) al backend, pero permitir que el usuario escriba usuario y contraseña en el frontend
         const res = await fetch(apiUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ token: password })
         });
         if (res.ok) {
-          const { token } = await res.json();
           const authData = {
             isAuthenticated: true,
             user: username,
             timestamp: Date.now()
           };
           localStorage.setItem('adminAuth', JSON.stringify(authData));
-          localStorage.setItem('adminToken', token);
+          localStorage.setItem('adminToken', password); // Guardar el password como token
           setAuthState({
             isAuthenticated: true,
             user: username
