@@ -41,7 +41,11 @@ export const useAuth = () => {
 
     const login = async (username: string, password: string): Promise<boolean> => {
       try {
-        const res = await fetch('/api/admin/login', {
+        const apiUrl =
+          import.meta.env.PROD
+            ? 'https://cf-backend-production-38d0.up.railway.app/api/admin/login'
+            : '/api/admin/login';
+        const res = await fetch(apiUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username, password })
