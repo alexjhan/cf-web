@@ -16,7 +16,12 @@ export interface Noticia extends NoticiaPayload { id: string; vistas?: number; c
 
 function authHeaders(): Record<string,string> {
   const token = (import.meta as any).env?.VITE_ADMIN_TOKEN || localStorage.getItem('adminToken') || '';
-  return token ? { 'X-Admin-Token': token } : {};
+  return token
+    ? {
+        'X-Admin-Token': token,
+        'Authorization': `Bearer ${token}`
+      }
+    : {};
 }
 
 export interface PaginatedNoticias { items: Noticia[]; total: number; page: number; pageSize: number; }
