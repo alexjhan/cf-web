@@ -40,21 +40,21 @@ const Representacion: React.FC = () => {
 
   // Directiva oficial Centro Federado EPIMT 2025-2
   const directivaActual = [
-    { cargo: 'Presidente', nombre: 'Álvaro Huiza Flores', codigo: '183172' },
-    { cargo: 'Vicepresidenta', nombre: 'Barra Huacho María Fernanda', codigo: '215859' },
-    { cargo: 'Secretario de Organización', nombre: 'Huillca Alvaro Alexandro', codigo: '222018' },
-    { cargo: 'Secretaria de Actas y Archivos', nombre: 'Villacorta Salcedo Vanessa', codigo: '215340' },
-    { cargo: 'Secretario de Economía', nombre: 'Pila Huaracha Iván Vides', codigo: '231926' },
-    { cargo: 'Secretaria de Arte y Cultura', nombre: 'Huamani Tejada Ariana Valentina', codigo: '240499' },
-    { cargo: 'Secretario de Recreación y Deportes', nombre: 'Silva Nina Leonel Filiberto', codigo: '211428' },
-    { cargo: 'Secretaria de Eventos Sociales', nombre: 'Millones Montesinos Atzumy Francisca', codigo: '231022' },
-    { cargo: 'Secretario de Asuntos Académicos', nombre: 'Challco Choque Lucio Alex', codigo: '216332' },
-    { cargo: 'Secretaria de Ambiente', nombre: 'Quillahuaman Chaman Summy Marisel', codigo: '231928' },
-    { cargo: 'Secretario de Proyección, Asistencia Social y Asuntos Exteriores', nombre: 'Guzman Candia Marcelo Tito', codigo: '215323' },
-    { cargo: 'Secretario de Acreditación', nombre: 'Campar Carrión Rony Antony', codigo: '224926' },
-    { cargo: 'Secretario de Infraestructura', nombre: 'Quispe Quispe Ronal Raúl', codigo: '215333' },
-    { cargo: 'Secretaria de Medios y Difusión', nombre: 'Lucero Guadalupe Cjuiro Laupa', codigo: '234959' },
-    { cargo: 'Secretaria de Investigación e Innovación Tecnológica', nombre: 'Jorge Luis Tito Durand', codigo: '191925' }
+    { cargo: 'Presidente', nombre: 'Álvaro Huiza Flores', codigo: '183172', telefono: '939 674 596' },
+    { cargo: 'Vicepresidenta', nombre: 'Barra Huacho María Fernanda', codigo: '215859', telefono: '952 724 192' },
+    { cargo: 'Secretario de Organización', nombre: 'Huillca Alvaro Alexandro', codigo: '222018', telefono: '973 679 697' },
+    { cargo: 'Secretaria de Actas y Archivos', nombre: 'Villacorta Salcedo Vanessa', codigo: '215340', telefono: '950 371 921' },
+    { cargo: 'Secretario de Economía', nombre: 'Pila Huaracha Iván Vides', codigo: '231926', telefono: '973 202 574' },
+    { cargo: 'Secretaria de Arte y Cultura', nombre: 'Huamani Tejada Ariana Valentina', codigo: '240499', telefono: '947 606 719' },
+    { cargo: 'Secretario de Recreación y Deportes', nombre: 'Silva Nina Leonel Filiberto', codigo: '211428', telefono: '944 546 622' },
+    { cargo: 'Secretaria de Eventos Sociales', nombre: 'Millones Montesinos Atzumy Francisca', codigo: '231022', telefono: '982 455 548' },
+    { cargo: 'Secretario de Asuntos Académicos', nombre: 'Challco Choque Lucio Alex', codigo: '216332', telefono: '928 101 508' },
+    { cargo: 'Secretaria de Ambiente', nombre: 'Quillahuaman Chaman Summy Marisel', codigo: '231928', telefono: '971 050 518' },
+    { cargo: 'Secretario de Proyección, Asistencia Social y Asuntos Exteriores', nombre: 'Guzman Candia Marcelo Tito', codigo: '215323', telefono: '941 392 757' },
+    { cargo: 'Secretario de Acreditación', nombre: 'Campar Carrión Rony Antony', codigo: '224926', telefono: '997 888 756' },
+    { cargo: 'Secretario de Infraestructura', nombre: 'Quispe Quispe Ronal Raúl', codigo: '215333', telefono: '930 945 807' },
+    { cargo: 'Secretaria de Medios y Difusión', nombre: 'Lucero Guadalupe Cjuiro Laupa', codigo: '234959', telefono: '928 489 114' },
+    { cargo: 'Secretaria de Investigación e Innovación Tecnológica', nombre: 'Jorge Luis Tito Durand', codigo: '191925', telefono: '948 347 208' }
   ];
 
   const comisiones = [
