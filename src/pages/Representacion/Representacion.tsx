@@ -202,7 +202,13 @@ const Representacion: React.FC = () => {
                     </div>
                     <h4 className="text-[#FFD700] font-bold mb-2 text-sm md:text-base">{miembro.cargo}</h4>
                     <p className="text-gray-300 text-xs md:text-sm font-medium mb-2">{miembro.nombre}</p>
-                    <p className="text-gray-400 text-xs">Cód. {miembro.codigo}</p>
+                    <p className="text-gray-400 text-xs mb-1">Cód. {miembro.codigo}</p>
+                    {miembro.telefono && (
+                      <p className="text-[#FFD700] text-xs md:text-sm font-semibold flex items-center justify-center gap-1">
+                        <span className="inline-block">📞</span>
+                        <span>{miembro.telefono}</span>
+                      </p>
+                    )}
                   </div>
                 ))}
               </div>
