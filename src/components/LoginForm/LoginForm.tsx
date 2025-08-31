@@ -6,8 +6,8 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ onLogin, title = "Admin Login" }) => {
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('admin2025/');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
