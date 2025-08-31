@@ -24,12 +24,12 @@ export interface PaginatedNoticias { items: Noticia[]; total: number; page: numb
 export async function list(page=1, pageSize=30, q?: string): Promise<PaginatedNoticias> {
   const params = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
   if(q) params.append('q', q);
-  const r = await fetch(`${API_BASE + BASE_PATH}?${params.toString()}`);
+  const r = await fetch(`${API_BASE + BASE_PATH}?${params.toString()}`, { headers: { ...authHeaders() } });
   if(!r.ok) throw new Error('Error listando noticias');
   return r.json();
 }
 export async function get(id: string): Promise<Noticia|null> {
-  const r = await fetch(API_BASE + BASE_PATH + '/' + id);
+  const r = await fetch(API_BASE + BASE_PATH + '/' + id, { headers: { ...authHeaders() } });
   if(r.status===404) return null;
   if(!r.ok) throw new Error('Error obteniendo noticia');
   return r.json();

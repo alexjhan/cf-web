@@ -28,7 +28,7 @@ export interface PaginatedOportunidades { items: Oportunidad[]; total: number; p
 export async function list(page=1, pageSize=30, q?: string): Promise<PaginatedOportunidades> {
   const params = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
   if(q) params.append('q', q);
-  const r = await fetch(`${API_BASE + BASE_PATH}?${params.toString()}`);
+  const r = await fetch(`${API_BASE + BASE_PATH}?${params.toString()}`, { headers: { ...authHeaders() } });
   if(!r.ok) throw new Error('Error listando oportunidades');
   return r.json();
 }

@@ -26,14 +26,14 @@ function authHeaders(): Record<string,string> {
 export async function list(page=1, pageSize=30, q?: string) {
   const params = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
   if (q) params.append('q', q);
-  const r = await fetch(`${API_BASE}?${params.toString()}`);
+  const r = await fetch(`${API_BASE}?${params.toString()}`, { headers: { ...authHeaders() } });
   if (!r.ok) throw new Error('Error listando documentos');
   return r.json();
 }
 
 
 export async function get(id: string) {
-  const r = await fetch(`${API_BASE}/${id}`);
+  const r = await fetch(`${API_BASE}/${id}`, { headers: { ...authHeaders() } });
   if (r.status === 404) return null;
   if (!r.ok) throw new Error('Error obteniendo documento');
   return r.json();
